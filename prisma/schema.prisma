@@ -1,0 +1,1948 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+// =============================================
+// 1. CORE & CONFIGURATION
+// =============================================
+
+model SystemConfig {
+  id          Int      @id @default(autoincrement())
+  section     String
+  key         String   @unique
+  value       String
+  dataType   ConfigDataType
+  isEncrypted Boolean @default(false)
+  description String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  createdBy String
+  createdById Int
+  updatedBy String?
+  updatedById Int?
+
+  creator UserAuthentication? @relation(fields: [createdById], references: [id],name: "CreatedSystemConfigs")
+  updater UserAuthentication? @relation(fields: [updatedById], references: [id],name: "UpdatedSystemConfigs")
+
+  @@unique([section, key])
+  @@map("system_config")
+}
+
+enum ConfigDataType {
+  STRING
+  NUMBER
+  BOOLEAN
+  JSON
+  ARRAY
+}
+
+model FeatureFlag {
+  id           Int      @id @default(autoincrement())
+  name         String   @unique
+  description  String?
+  isEnabled   Boolean  @default(false)
+  targetUsers Json?    // {include: [1,2,3], exclude: [4,5,6]}
+  percentage   Int?     // Rollout percentage
+  conditions   Json?    // Conditional logic
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+
+  @@map("feature_flags")
+}
+
+// =============================================
+// 2. AUDIT & LOGGING
+// =============================================
+
+model AuditLog {
+  id               Int       @id @default(autoincrement())
+  level            LogLevelType
+  entity           String
+  entityId        Int?
+  action           String    // CREATE, UPDATE, DELETE
+  previousData    Json?
+  newData         Json?
+  ipAddress       String?
+  userAgent       String?
+  createdBy       String
+  createdAt       DateTime  @default(now())
+
+  @@index([entity, entityId])
+  @@index([createdAt])
+  @@index([level])
+  @@map("audit_logs")
+}
+
+enum LogLevelType {
+  DEBUG
+  INFO
+  WARN
+  ERROR
+  FATAL
+}
+
+model SystemLog {
+  id         Int      @id @default(autoincrement())
+  key        String   @unique @db.VarChar(500)
+  value      Json
+  expiresA DateTime
+  entityType String
+  entityId   Int?
+  
+  @@index([expiresA])
+  @@index([entityType, entityId])
+  @@map("system_cache")
+}
+
+// =============================================
+// 3. COMPANY & APPLICATION
+// =============================================
+
+model Company {
+  id               Int     @id @default(autoincrement())
+  legalName       String?
+  commercialName  String?
+  taxId           String?  // RUC
+  fiscalAddress   String?
+  phone            String?
+  email            String?
+  logoUrl         String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  isDeleted       Boolean  @default(false)
+  deletedAt       DateTime?
+
+  @@index([commercialName])
+  @@index([legalName])
+  @@index([taxId])
+  @@map("companies")
+}
+
+// =============================================
+// 4. AUTHENTICATION & USERS
+// =============================================
+
+model User {
+  id               Int       @id @default(autoincrement())
+  firstName       String
+  lastName        String
+  email            String?
+  phone            String?
+  documentType    String?
+  documentNumber  String?
+  publicId        String    @unique @default(uuid())
+  profilePicture  String?
+  lastOrderDate  DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  isDeleted       Boolean   @default(false)
+  deletedAt       DateTime?
+
+  // Relations
+  reviews          ProductReview[]
+  authentication   UserAuthentication[]
+  shoppingCarts            ShoppingCart[]
+  addresses        UserAddress[]
+  wishlists        UserWishlist[]
+  paymentMethods  PaymentMethod[]
+  orders           Order[]
+  userPreferences UserPreferences?
+  notifications    UserNotification[]
+  promotionUses   PromotionUse[]
+  mediaFile  MediaFile[]
+  
+@@index([lastName, firstName])
+@@index([email])
+@@index([phone])
+@@index([isDeleted])
+@@index([lastOrderDate])
+
+  @@map("users")
+}
+
+model UserAuthentication {
+  id                     Int           @id @default(autoincrement())
+  userId                Int?
+  supplierUserId       Int?
+  verificationStatusId Int
+  email                  String
+  phone                  String?
+  passwordHash          String
+  failedAttempts        Int?          @default(0)
+  authMethod            AuthMethodType
+  primaryRole         RoleType
+  verificationToken     String?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime?     @updatedAt
+  isDeleted             Boolean       @default(false)
+  deletedAt             DateTime?
+
+  recordStatusId Int
+  recordStatus RecordStatus @relation(fields: [recordStatusId], references: [id])
+
+ // Relations
+  userRoles      UserRole[]
+  userSessions   UserSession[]
+  statusChangesHistory  StatusChangeHistory[]
+
+  createdBy String
+  createdById Int?
+  updatedBy String?
+  updatedById Int?
+
+  creator UserAuthentication? @relation("UserCreatedBy",fields: [createdById], references: [id])
+  updater UserAuthentication? @relation("UserUpdatedBy",fields: [updatedById], references: [id])
+
+  createdUsers UserAuthentication[] @relation("UserCreatedBy")
+  updatedUsers UserAuthentication[] @relation("UserUpdatedBy")
+
+  createdAddress UserAddress[] @relation("AddressCreatedBy")
+  updatedAddress UserAddress[] @relation("AddressUpdatedBy")
+
+  createdCurrency Currency[] @relation("CurrencyCreatedBy")
+  updatedCurrency Currency[] @relation("CurrencyUpdatedBy")
+
+  createdProduct Product[] @relation("ProductCreatedBy")
+  updatedProduct Product[] @relation("ProductUpdatedBy")
+
+  createdVariant ProductVariant[] @relation("VariantCreatedBy")
+  updatedVariant ProductVariant[] @relation("VariantUpdatedBy")
+
+  createdCategory Category[] @relation("CategoryCreatedBy")
+  updatedCategory Category[] @relation("CategoryUpdatedBy")
+
+  createdAttrDef AttributeDefinition[] @relation("AttrDefinitionCreatedBy")
+  updatedAttrDef AttributeDefinition[] @relation("AttrDefinitionUpdatedBy")
+
+  createdShipping Shipping[] @relation("ShippingCreatedBy")
+  updatedShipping Shipping[] @relation("ShippingUpdatedBy")
+
+  createdOrder Order[] @relation("OrderCreatedBy")
+  updatedOrder Order[] @relation("OrderUpdatedBy")
+
+  createdInvoice Invoice[] @relation("InvoiceCreatedBy")
+  updatedInvoice Invoice[] @relation("InvoiceUpdatedBy")
+
+  createdPaymentMethod PaymentMethod[] @relation("PaymentMethodCreatedBy")
+  updatedPaymentMethod PaymentMethod[] @relation("PaymentMethodUpdatedBy")
+
+  createdSupplier Supplier[] @relation("SupplierCreatedBy")
+  updatedSupplier Supplier[] @relation("SupplierUpdatedBy")
+
+  createdSupplierProduct SupplierProduct[] @relation("SupplierProductCreatedBy")
+  updatedSupplierProduct SupplierProduct[] @relation("SupplierProductUpdatedBy")
+
+  createdPromotion Promotion[] @relation("PromotionCreatedBy")
+  updatedPromotion Promotion[] @relation("PromotionUpdatedBy")
+
+  createdFeaturedAd featuredAd[] @relation("FeaturedAddCreatedBy")
+  updatedFeaturedAd featuredAd[] @relation("FeaturedAddUpdatedBy")
+ 
+  createdSystemConfigs SystemConfig[] @relation("CreatedSystemConfigs")
+  updatedSystemConfigs SystemConfig[] @relation("UpdatedSystemConfigs")
+
+  user User? @relation(fields: [userId], references: [id])
+  supplierUser   SupplierUser?       @relation(fields: [supplierUserId], references: [id])
+  verificationStatus VerificationStatus @relation(fields: [verificationStatusId], references: [id])
+
+
+
+@@unique([email, authMethod])
+
+@@unique([userId])
+@@unique([supplierUserId])
+
+@@index([email])
+@@index([phone])
+@@index([verificationStatusId])
+@@index([isDeleted])
+
+  @@map("user_authentications")
+}
+
+model UserSession {
+  id                     Int       @id @default(autoincrement())
+  authId                Int
+  sessionToken          String    @unique
+  startTime             DateTime  @default(now())
+  lastActivity          DateTime? @default(now())
+  isOnline              Boolean   @default(true)
+  ipAddress             String?
+  device                 String?
+  browser                String?
+
+  userAuthentication UserAuthentication @relation(fields: [authId], references: [id], onDelete: Cascade)
+
+  @@index([authId])
+  @@map("user_sessions")
+}
+
+model UserPreferences {
+  userId                    Int     @id
+  preferredPaymentMethod   String?
+  notificationPreferences   Boolean? @default(true)
+  preferredSize             String?
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("user_preferences")
+}
+
+// =============================================
+// 5. ROLES & PERMISSIONS (RBAC)
+// =============================================
+
+model Role {
+  id           Int        @id @default(autoincrement())
+  name         RoleType   @unique
+  description  String?
+  level        Int        @default(0) // Para jerarquía
+  
+  userRoles    UserRole[]
+  permissions  RolePermission[]
+
+  @@map("roles")
+}
+
+model UserRole {
+  authId Int
+  roleId Int
+  
+  userAuthentication UserAuthentication @relation(fields: [authId], references: [id], onDelete: Cascade)
+  role                Role                @relation(fields: [roleId], references: [id])
+
+  @@id([authId, roleId])
+  @@map("user_roles")
+}
+
+model Permission {
+  id          Int    @id @default(autoincrement())
+  resource    String // 'Product', 'User', 'Order'
+  action      String // 'read', 'write', 'delete', 'approve'
+  description String?
+  
+  rolePermissions RolePermission[]
+
+  @@unique([resource, action])
+  @@map("permissions")
+}
+
+model RolePermission {
+  roleId       Int
+  permissionId Int
+  conditions    Json? // Conditional permissions
+  
+  role       Role       @relation(fields: [roleId], references: [id])
+  permission Permission @relation(fields: [permissionId], references: [id])
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+enum RoleType {
+  // Sistema
+  SUPER_ADMIN        // Dueño/creador
+  SYSTEM_ADMIN       // Configuración técnica
+  
+  // Plataforma
+  PLATFORM_ADMIN     // Admin de toda la plataforma
+  PLATFORM_MANAGER   // Gestión operativa
+  
+  // Proveedores (Supplier)
+  SUPPLIER_ADMIN     // Dueño/admin del proveedor
+  SUPPLIER_MANAGER   // Encargado general
+  SUPPLIER_SALES     // Ventas del proveedor
+  SUPPLIER_INVENTORY // Inventario del proveedor
+  SUPPLIER_SUPPORT   // Soporte del proveedor
+  SUPPLIER_FINANCE   // Finanzas del proveedor
+  
+  //  STORE (Tiendas / sucursales)
+  STORE_OWNER               // Dueño de tienda
+  STORE_MANAGER          // Jefe de tienda
+  STORE_STAFF               // Personal general
+  STORE_CASHIER          // Caja / POS
+  STORE_INVENTORY      // Control de stock interno
+
+  // Clientes
+  CUSTOMER           // Cliente regular
+  VIP_CUSTOMER       // Cliente VIP/premium
+  
+  // Staff interno
+  SUPPORT_AGENT      // Soporte al cliente
+  WAREHOUSE_MANAGER  // Jefe de bodega
+  WAREHOUSE_STAFF    // Personal de bodega
+  MARKETING_MANAGER  // Jefe de marketing
+  MARKETING_AGENT    // Ejecutivo de marketing
+  
+  // Otros
+  AFFILIATE          // Afiliado
+  GUEST              // Invitado
+}
+
+enum AuthMethodType {
+  EMAIL
+  GOOGLE
+  FACEBOOK
+  APPLE
+  PHONE
+}
+
+
+// =============================================
+// 6. ADDRESS & LOCATION
+// =============================================
+
+model UserAddress {
+  id              Int       @id @default(autoincrement())
+  userId         Int?
+  country         String?
+  addressLine    String?
+  department      String?
+  province        String?
+  district        String?
+  phone           String?
+  type            String?
+  firstName      String?
+  lastName       String?
+  documentType   String?
+  documentNumber String?
+  postalCode     String?
+  isDefault      Boolean?  @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  isDeleted      Boolean   @default(false)
+  deletedAt      DateTime?
+
+  createdBy String
+  createdById Int
+  updatedBy String?
+  updatedById Int?
+
+  creator UserAuthentication? @relation(fields: [createdById], references: [id],name: "AddressCreatedBy")
+  updater UserAuthentication? @relation(fields: [updatedById], references: [id],name: "AddressUpdatedBy")
+
+
+  user            User? @relation(fields: [userId], references: [id])
+  invoices        Invoice[]
+  paymentMethods PaymentMethod[]
+  ordersBilling  Order[] @relation("order_billing_address")
+  ordersShipping Order[] @relation("order_shipping_address")
+
+  @@index([userId])
+  @@map("user_addresses")
+}
+
+// =============================================
+// 7. CURRENCY & INTERNATIONALIZATION
+// =============================================
+
+model Currency {
+  id           Int      @id
+  code         String   @unique // USD, PEN, EUR
+  name         String
+  symbol       String
+  exchangeRate Decimal @default(1.0) @db.Decimal(10,4)
+  isPrimary   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  createdBy String?
+  createdById Int?
+  updatedBy String?
+  updatedById Int?
+
+  creator UserAuthentication? @relation(fields: [createdById], references: [id],name: "CurrencyCreatedBy")
+  updater UserAuthentication? @relation(fields: [updatedById], references: [id],name: "CurrencyUpdatedBy")
+
+  dailySalesSummary DailySalesSummary[]
+  paymentMethod PaymentMethod[]
+  invoices Invoice[]
+  order Order[]
+  product Product[]
+
+  @@map("currencies")
+}
+
+// =============================================
+// 8. PRODUCT CATALOG
+// =============================================
+
+model Product {
+  id                   Int       @id @default(autoincrement())
+  supplierId          Int
+  verificationStatusId Int
+  mainCategoryId     Int
+  lastCategoryId      Int
+  name                 String
+  publicId            String    @unique @default(uuid())
+  parentSku           String @unique
+  longDescription     String?   @db.VarChar(500)
+  shortDescription    String
+  slug                 String    @unique
+  currencyId          Int       @default(1) // Default Currency
+  createdAt           DateTime? @default(now())
+  updatedAt           DateTime? @updatedAt
+  deletedAt           DateTime?
+
+  recordStatusId Int  
+  recordStatus RecordStatus @relation(fields: [recordStatusId], references: [id])
+
+  saleStatusId Int
+  saleStatus SaleStatus @relation(fields: [saleStatusId], references: [id])
+
+  inventoryStatusId Int
+  inventoryStatus InventoryStatus @relation(fields: [inventoryStatusId], references: [id])
+  
+  createdBy String
+  createdById Int
+  updatedBy String?
+  updatedById Int?
+
+  creator UserAuthentication? @relation(fields: [createdById], references: [id],name: "ProductCreatedBy")
+  updater UserAuthentication? @relation(fields: [updatedById], references: [id],name: "ProductUpdatedBy")
+  // Relations
+  attributeValues        ProductAttributeValue[]
+  wishlistItems          WishlistItem[]
+  featuredAds            FeaturedAdItem[]
+  reviews                 ProductReview[]
+  supplier                Supplier?                @relation(fields: [supplierId], references: [id])
+  mainCategory           Category                 @relation(fields: [mainCategoryId], references: [id], name: "MainCategory")
+  lastCategory           Category                 @relation(fields: [lastCategoryId], references: [id], name: "LastCategory")
+  verificationStatus     VerificationStatus      @relation(fields: [verificationStatusId], references: [id])
+  productCategories      ProductCategory[]
+  images                  ProductImage[]
+  movies                  ProductMovie[]
+  productVariants                ProductVariant[]
+  shippingTimes          ProductShippingTime[]
+  statistics              ProductStatistics[]
+  promotions              Promotion[]
+  supplierProducts       SupplierProduct[]
+  extraAttributes        ProductExtraAttribute[]
+
+  currency                Currency                 @relation(fields: [currencyId], references: [id])
+  productSearchIndex ProductSearchIndex?
+
+@@index([supplierId, recordStatusId])
+
+@@index([saleStatusId])
+@@index([inventoryStatusId])
+
+
+@@index([mainCategoryId])
+
+@@index([deletedAt])
+@@index([lastCategoryId])
+@@index([recordStatusId])
+@@index([supplierId])
+@@index([verificationStatusId])
+
+
+  @@map("products")
+}
+
+model ProductVariant {
+  id              Int             @id @default(autoincrement())
+  productId      Int
+  sku             String          @unique
+  stockQuantity  Int
+  minStock       Int?
+  price           Decimal         @db.Decimal(10,2)
+  discount        Decimal         @default(0.00) @db.Decimal(5,2)
+  isMainVariant Boolean         @default(false)
+  displayOrder   Int
+  isUnique       Boolean         @default(false)
+  tags            ProductTag[]    @default([])
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  deletedAt      DateTime?
+
+  recordStatusId Int  
+  recordStatus RecordStatus @relation(fields: [recordStatusId], references: [id])
+
+  saleStatusId Int
+  saleStatus SaleStatus @relation(fields: [saleStatusId], references: [id])
+
+  inventoryStatusId Int
+  inventoryStatus InventoryStatus @relation(fields: [inventoryStatusId], references: [id])
+
+  createdBy String
+  createdById Int
+  updatedBy String?
+  updatedById Int?
+
+  creator UserAuthentication? @relation(fields: [createdById], references: [id],name: "VariantCreatedBy")
+  updater UserAuthentication? @relation(fields: [updatedById], references: [id],name: "VariantUpdatedBy")
+
+  supplierProducts     SupplierProduct[]
+  varianAttributesValue    VariantAttributeValue[]
+  cartItems            CartItem[]
+  invoiceItems         InvoiceItem[]
+  orderItems           OrderItem[]
+  images                ProductImage[]
+  movies                ProductMovie[]
+  product               Product              @relation(fields: [productId], references: [id])
+  stockMovements       StockMovement[]
+
+@@index([productId, deletedAt])
+@@index([productId, price])
+@@index([productId, stockQuantity])
+@@index([productId])
+@@index([productId, recordStatusId])
+@@index([recordStatusId])
+@@index([saleStatusId])
+@@index([inventoryStatusId])
+@@index([productId, isMainVariant])
+
+  @@map("product_variants")
+}
+
+
+model RecordStatus{
+  id Int @id 
+  name RecordStatusType
+
+  productVariants ProductVariant[]
+  products Product[]
+  Categories Category[]
+  suppliers  Supplier[]
+  supplierUsers   SupplierUser[]
+  userAuthenticatios UserAuthentication[]
+  @@map("record_status")
+}
+
+enum RecordStatusType {
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+  DELETED
+}
+
+model SaleStatus{
+  id Int @id
+  name SaleStatusType
+  productVariants ProductVariant[]
+  products Product[]
+  @@map("sales_status")
+}
+
+enum SaleStatusType {
+  AVAILABLE
+  COMING_SOON
+  DISCONTINUED
+  MADE_TO_ORDER
+}
+
+model InventoryStatus{
+  id Int @id
+  name InventoryStatusType
+  productVariants ProductVariant[]
+  products Product[]
+  @@map("inventory_status")
+}
+
+enum InventoryStatusType {
+  IN_STOCK
+  OUT_OF_STOCK
+  PENDING_RESTOCK
+  IN_TRANSIT
+  RESERVED
+}
+
+enum ProductTag {
+  ON_SALE
+  NEW
+  POPULAR
+  LOW_STOCK
+  IN_STORE_ONLY
+}
+
+// =============================================
+// 9. CATEGORIES & ATTRIBUTES
+// =============================================
+
+model Category {
+  id                  Int        @id @default(autoincrement())
+  publicId           String     @default(uuid())
+  name                String
+  description         String?
+  slug                String
+  imageUrl           String?
+  parentId           Int?
+  isProductCategory Boolean   @default(false) // Si es una categoría de tipo producto
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime?  @updatedAt
+
+  recordStatusId Int
+  recordStatus RecordStatus @relation(fields: [recordStatusId], references: [id]) 
+
+  createdBy String
+  createdById Int
+  updatedBy String?
+  updatedById Int?
+
+  creator UserAuthentication? @relation(fields: [createdById], references: [id],name: "CategoryCreatedBy")
+  updater UserAuthentication? @relation(fields: [updatedById], references: [id],name: "CategoryUpdatedBy")
+
+  mainProducts          Product[] @relation("MainCategory")
+  lastProducts          Product[] @relation("LastCategory")
+  productCategories ProductCategory[]
+  promotions         Promotion[]
+  categoryAttributes CategoryAttribute[]
+
+  @@index([slug])
+  @@index([recordStatusId])
+  @@map("categories")
+}
+
+
+model AttributeDefinition {
+  id           Int          @id @default(autoincrement())
+  name         String
+  dataType    AttributeDataType
+  description  String?
+  isActive    Boolean      @default(false)
+  toProduct Boolean        @default(true)
+  createdAt   DateTime?    @default(now())
+  updatedAt   DateTime?    @updatedAt
+
+  createdBy String
+  createdById Int?
+  updatedBy String?
+  updatedById Int?
+
+  creator UserAuthentication? @relation(fields: [createdById], references: [id],name: "AttrDefinitionCreatedBy")
+  updater UserAuthentication? @relation(fields: [updatedById], references: [id],name: "AttrDefinitionUpdatedBy")
+
+  productAttributesValue ProductAttributeValue[]
+  variantAttributesValue VariantAttributeValue[]
+  categoryAttributes CategoryAttribute[]
+
+  @@map("attribute_definitions")
+}
+
+model CategoryAttribute {
+  id                     Int @id @default(autoincrement())
+  categoryId            Int
+  attributeDefinitionId Int
+
+  isRequired        Boolean // True = mandatory
+  isFilter          Boolean @default(false)
+  displayOrder      Int?
+
+  category           Category           @relation(fields: [categoryId], references: [id])
+  attributeDefinition AttributeDefinition @relation(fields: [attributeDefinitionId], references: [id])
+
+  @@unique([categoryId, attributeDefinitionId])
+  @@map("category_attributes")
+}
+
+model ProductExtraAttribute {
+  id          Int      @id @default(autoincrement())
+  productId  Int
+  attributes  Json     // stores custom key:value pairs
+  createdAt  DateTime @default(now())
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_extra_attributes")
+}
+
+model ProductAttributeValue {
+  id                     Int                @id @default(autoincrement())
+  productId             Int
+  attributeDefinitionId Int
+  value                  String
+
+  product            Product            @relation(fields: [productId], references: [id])
+  attributeDefinition AttributeDefinition @relation(fields: [attributeDefinitionId], references: [id])
+
+  @@index([attributeDefinitionId])
+  @@index([productId])
+  @@index([value])
+  @@map("product_attribute_values")
+}
+
+model VariantAttributeValue {
+  id                     Int                @id @default(autoincrement())
+  variantId             Int
+  attributeDefinitionId Int
+  value                  String
+
+  productVariant            ProductVariant    @relation(fields: [variantId], references: [id])
+  attributeDefinition AttributeDefinition @relation(fields: [attributeDefinitionId], references: [id])
+
+  @@index([variantId])
+  @@index([attributeDefinitionId])
+  @@index([value])
+  @@map("variant_attribute_values")
+}
+
+enum AttributeDataType {
+  VARCHAR
+  INT
+  DECIMAL
+  BOOLEAN
+  DATE
+}
+
+model ProductCategory {
+  productId  Int
+  categoryId Int
+  
+  product  Product  @relation(fields: [productId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
+
+  @@id([productId, categoryId])
+  @@index([categoryId])
+  @@map("product_categories")
+}
+
+// =============================================
+// 10. IMAGES & MEDIA
+// =============================================
+
+model ProductImage {
+  id          Int  @id  @default(autoincrement())
+  variantId  Int?
+  productId  Int?
+  fileId     Int  @unique
+  description String?
+  isPrimary  Boolean
+  isFeatured  Boolean  @default(false)  // ← Para slider/promociones
+  displayOrder Int
+  featuredOrder Int?                    // ← Orden específico en slider
+
+  product       Product?       @relation(fields: [productId], references: [id])
+  productvariant       ProductVariant? @relation(fields: [variantId], references: [id])
+  mediaFile    MediaFile     @relation(fields: [fileId], references: [id])
+
+  @@index([productId])
+  @@index([variantId])
+  @@index([productId,fileId])
+  @@index([variantId,fileId])
+  @@map("product_images")
+}
+
+model ProductMovie {
+  id          Int  @id @default(autoincrement())
+  fileId     Int  @unique
+  variantId  Int?
+  productId  Int?
+  description String?
+  isPrimary  Boolean
+  displayOrder Int
+
+  product       Product?       @relation(fields: [productId], references: [id])
+  productvariant       ProductVariant? @relation(fields: [variantId], references: [id])
+  mediaFile    MediaFile     @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([variantId])
+  @@map("product_movies")
+}
+
+model MediaFile {
+  id           Int      @id @default(autoincrement())
+  fileName    String
+  filePath    String
+  fileSize    Int
+  mimeType    String
+  bucket       String?  // For cloud storage
+  isPublic    Boolean  @default(true)
+  metadata     Json?
+  uploadedBy  Int?
+  uploadedAt  DateTime @default(now())
+
+
+  uploadedByUser User? @relation(fields: [uploadedBy], references: [id])
+  productImage ProductImage?
+  productMovie ProductMovie?
+  reviewImage ReviewImage[]
+
+  @@map("media_files")
+}
+
+model ReviewImage {
+  id         Int      @id @default(autoincrement())
+  reviewId  Int
+  fileId    Int
+  isPrimary Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  review     ProductReview @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  mediaFile MediaFile     @relation(fields: [fileId], references: [id])
+
+  @@index([reviewId])
+  @@map("review_images")
+}
+
+// =============================================
+// 11. INVENTORY & STOCK MANAGEMENT
+// =============================================
+
+model StockMovement {
+  id          Int       @id @default(autoincrement())
+  variantId  Int
+  type        StockMovementType    // IN, OUT, ADJUSTMENT
+  quantity    Int
+  date        DateTime  @default(now())
+  reason      String?
+  reference   String?   // PO number, etc.
+
+  productvariant ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+  @@map("stock_movements")
+}
+enum StockMovementType {
+  IN          // compra / devolución
+  OUT         // venta
+  RETURN      // devolución cliente
+  ADJUSTMENT  // corrección manual
+  DAMAGED     // pérdida
+  RESERVED    // carrito
+  RELEASED   // cancelación
+}
+
+// =============================================
+// 12. SHIPPING & DELIVERY
+// =============================================
+
+model Shipping {
+  id               Int       @id @default(autoincrement())
+  orderId         Int
+  methodId        Int
+  carrierId       Int
+  shippingCost    Decimal   @default(0.00) @db.Decimal(8,2)
+  shippedDate     DateTime
+  estimatedDelivery DateTime
+  trackingMumber  String?
+  lastUpdated     DateTime  @updatedAt
+  customerNotes   String?   @db.VarChar(500)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  createdBy String
+  createdById Int
+  updatedBy String?
+  updatedById Int?
+
+  creator UserAuthentication? @relation(fields: [createdById], references: [id],name: "ShippingCreatedBy")
+  updater UserAuthentication? @relation(fields: [updatedById], references: [id],name: "ShippingUpdatedBy")
+
+  shippingHistory ShippingHistory[]
+  shippingMethod  ShippingMethod?   @relation(fields: [methodId], references: [id])
+  order            Order?             @relation(fields: [orderId], references: [id])
+  shippingCarrier          ShippingCarrier?  @relation(fields: [carrierId], references: [id])
+  shippingStatus           ShippingStatus  
+  shippingEvent ShippingEvent
+  @@index([shippingStatus])
+  @@index([orderId])
+  @@index([carrierId])
+  @@index([methodId])
+  @@map("shippings")
+}
+
+model ShippingHistory {
+  id           Int       @id @default(autoincrement())
+  shippingId  Int
+  changedAt   DateTime  @default(now())
+  notes        String?
+  changedBy   String?   // operator, system, external API
+
+  shipping Shipping @relation(fields: [shippingId], references: [id], onDelete: Cascade)
+  shippingStatus   ShippingStatus
+  shippingEvent ShippingEvent
+
+  @@index([shippingStatus])
+  @@index([shippingId])
+  @@map("shipping_history")
+}
+
+
+
+enum ShippingStatus {
+  PENDING
+  PREPARING
+  IN_TRANSIT
+  DELIVERED
+  RETURNED
+  CANCELLED
+  FAILED
+}
+
+enum ShippingEvent {
+  RECEIVED_AGENCY
+  DEPARTED_AGENCY
+  ARRIVED_DESTINATION_AGENCY
+  IN_TRANSIT_AGENCY
+  DELIVERED_LOCAL
+}
+
+
+model ShippingMethod {
+  id               Int               @id @default(autoincrement())
+  type             ShippingMethodType
+  name             String
+  description      String?
+  baseCost        Decimal?
+  estimatedDays   Int?     // general estimated delivery days
+  isActive        Boolean           @default(true)
+  isFree          Boolean           @default(false)
+  
+  shippingTimes   ProductShippingTime[]
+  shippings        Shipping[]
+
+  @@map("shipping_methods")
+}
+
+enum ShippingMethodType {
+  // --- HOME DELIVERY ---
+  STANDARD_HOME_DELIVERY
+  EXPRESS_HOME_DELIVERY
+  SAME_DAY_DELIVERY
+  NIGHT_DELIVERY
+  SCHEDULED_DELIVERY
+
+  // --- PICKUP ---
+  STORE_PICKUP
+  PICKUP_POINT
+  WAREHOUSE_PICKUP
+
+  // --- SPECIAL ---
+  INTERNATIONAL
+  DIGITAL
+  CUSTOM_SHIPPING
+  SUBSCRIPTION_SHIPPING
+  EVENT_SCHEDULED_SHIPPING
+  ECO_SHIPPING
+}
+
+model ShippingCarrier {
+  id       Int      @id @default(autoincrement())
+  name     String
+  phone    String
+  email    String?
+  
+  shippings Shipping[]
+
+  @@map("shipping_carriers")
+}
+
+model ProductShippingTime {
+  id                     Int       @id @default(autoincrement())
+  methodId              Int
+  productId             Int
+  supplierId            Int
+  name                   String
+  lastUpdated           DateTime  @updatedAt
+  minDays               Int?
+  maxDays               Int?
+  isPrimary             Boolean   @default(false)
+  isSameDay            Boolean   @default(false)
+  cutoffTime            DateTime?
+  scheduledStartDate   DateTime?
+  scheduledEndDate     DateTime?
+
+  shippingTimeStatus         ShippingTimeStatus
+  product        Product?              @relation(fields: [productId], references: [id])
+  supplier       Supplier?             @relation(fields: [supplierId], references: [id])
+  shippingMethod ShippingMethod      @relation(fields: [methodId], references: [id])
+
+  @@index([shippingTimeStatus])
+  @@index([productId])
+  @@index([supplierId])
+  @@map("product_shipping_times")
+}
+
+
+enum ShippingTimeStatus {
+  ACTIVE
+  UNDER_REVIEW
+  SUSPENDED
+  EXPIRED
+  SCHEDULED
+  DISCONTINUED
+  REPLACED
+}
+
+// =============================================
+// 13. SHOPPING CART & WISHLIST
+// =============================================
+
+model ShoppingCart {
+  id           Int       @id @default(autoincrement())
+  userId      Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user      User?     @relation(fields: [userId], references: [id])
+  cartItems   CartItem[]
+
+  @@index([userId])
+  @@map("shopping_carts")
+}
+
+model CartItem {
+  id          Int       @id @default(autoincrement())
+  cartId     Int
+  variantId  Int
+  quantity    Int       @default(1)
+  addedAt    DateTime  @default(now())
+
+  shoppingCart        ShoppingCart? @relation(fields: [cartId], references: [id])
+  productVariant     ProductVariant @relation(fields: [variantId], references: [id])
+
+  @@index([cartId])
+  @@index([variantId])
+  @@map("cart_items")
+}
+
+model UserWishlist {
+  id           Int       @id @default(autoincrement())
+  userId      Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  wishlistItems WishlistItem[]
+  user         User?     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@map("user_wishlists")
+}
+
+model WishlistItem {
+  id          Int       @id @default(autoincrement())
+  wishlistId Int
+  productId  Int
+  addedAt    DateTime  @default(now())
+
+  wishlist    UserWishlist? @relation(fields: [wishlistId], references: [id])
+  product     Product?       @relation(fields: [productId], references: [id])
+
+  @@index([wishlistId])
+  @@index([productId])
+  @@map("wishlist_items")
+}
+
+// =============================================
+// 14. ORDERS & SALES
+// =============================================
+
+model Order {
+  id                  Int           @id @default(autoincrement())
+  userId             Int?
+  orderNumber        String        @unique
+  paymentMethodId   Int
+  publicId           String        @unique @default(uuid())
+  totalDiscount      Decimal?      @default(0.00) @db.Decimal(10,2)
+  orderDate          DateTime      @default(now())
+  billingAddressId  Int?
+  shippingAddressId Int
+  specialInstructions String?
+  totalAmount        Decimal       @db.Decimal(12,2)
+  trackingCode       String?
+  currencyId         Int           @default(1)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  createdBy String
+  createdById Int
+  updatedBy String?
+  updatedById Int?
+
+  creator UserAuthentication? @relation(fields: [createdById], references: [id],name: "OrderCreatedBy")
+  updater UserAuthentication? @relation(fields: [updatedById], references: [id],name: "OrderUpdatedBy")
+
+  orderItems         OrderItem[]
+  shippings           Shipping[]
+  invoices            Invoice[]
+  billingAddress     UserAddress? @relation("order_billing_address", fields: [billingAddressId], references: [id])
+
+  orderStatusId Int
+  orderStatus OrderStatus @relation(fields: [orderStatusId], references: [id])
+
+  returnStatusId Int
+  returnStatus ReturnStatus @relation(fields: [returnStatusId], references: [id])
+
+  refundStatusId        Int
+  refundStatus RefundStatus @relation(fields: [refundStatusId], references: [id])
+
+
+  paymentMethod      PaymentMethod? @relation(fields: [paymentMethodId], references: [id])
+  shippingAddress    UserAddress? @relation("order_shipping_address", fields: [shippingAddressId], references: [id])
+  user                User?         @relation(fields: [userId], references: [id])
+  promotionUses      PromotionUse[]
+  currency            Currency      @relation(fields: [currencyId], references: [id])
+
+  @@index([userId])
+@@index([orderStatusId])
+@@index([refundStatusId])
+@@index([orderStatusId, refundStatusId])
+@@index([createdAt])
+@@index([orderNumber])
+@@index([trackingCode])
+
+  @@map("orders")
+}
+
+
+model OrderStatus{
+  id Int @id  
+  name OrderStatusType
+  orders Order[]
+  @@map("order_status")
+}
+
+enum OrderStatusType {
+  PENDING_PAYMENT
+  PAYMENT_VERIFICATION
+  PAID
+  PREPARING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  COMPLETED
+  FAILED
+}
+
+model ReturnStatus{
+  id Int @id   
+  name ReturnStatusType
+  orders Order[]
+  @@map("return_status")
+}
+enum ReturnStatusType {
+  REQUESTED
+  APPROVED
+  REJECTED
+  IN_TRANSIT
+  RECEIVED
+  COMPLETED
+}
+
+model RefundStatus{
+  id Int @id  
+  name RefundStatusType
+  orders Order[]
+  @@map("refund_status")
+}
+enum RefundStatusType {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+
+
+model OrderItem {
+  id               Int       @id @default(autoincrement())
+  orderId         Int
+  quantity         Int
+  unitPrice       Decimal   @db.Decimal(10,2)
+  discount         Decimal   @default(0.00) @db.Decimal(5,2)
+  totalPrice      Decimal   @db.Decimal(10,2)
+  variantId       Int
+
+  order        Order?          @relation(fields: [orderId], references: [id])
+  productVariant      ProductVariant? @relation(fields: [variantId], references: [id])
+
+  @@index([orderId])
+  @@index([variantId])
+  @@map("order_items")
+}
+
+// =======I====================================
+// 15. INVOICING & BILLING
+// =============================================
+
+model Invoice {
+  id                   Int           @id @default(autoincrement())
+  invoiceNumber       String        @unique
+  documentType        String
+  orderId             Int
+  statusId             Int
+  customerStatus      InvoiceCustomerStatus?
+  totalAmount         Decimal       @db.Decimal(12,2)
+  subtotal             Decimal       @db.Decimal(12,2)
+  paymentMethodId    Int?
+  currencyId          Int           @default(1)
+  totalDiscount       Decimal       @default(0.00) @db.Decimal(10,2)
+  issueDate           DateTime      @default(now())
+  shippingAddressId  Int?
+  taxAmount           Decimal?      @db.Decimal(10,2)
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  createdBy String
+  createdById Int
+  updatedBy String?
+  updatedById Int?
+
+  invoiceStatus InvoiceStatus @relation(fields: [statusId], references: [id])
+  creator UserAuthentication? @relation(fields: [createdById], references: [id],name: "InvoiceCreatedBy")
+  updater UserAuthentication? @relation(fields: [updatedById], references: [id],name: "InvoiceUpdatedBy")
+
+  invoiceItems        InvoiceItem[]
+  shippingAddress     UserAddress? @relation(fields: [shippingAddressId], references: [id])
+  order                Order?        @relation(fields: [orderId], references: [id])
+  paymentMethod       PaymentMethod? @relation(fields: [paymentMethodId], references: [id])
+  currency             Currency      @relation(fields: [currencyId], references: [id])
+
+  @@index([shippingAddressId])
+  @@index([orderId])
+  @@index([paymentMethodId])
+  @@index([issueDate])
+  @@map("invoices")
+}
+
+model InvoiceItem {
+  id               Int       @id @default(autoincrement())
+  invoiceId       Int
+  quantity         Int
+  unitPrice       Decimal   @db.Decimal(10,2)
+  discount         Decimal   @default(0.00) @db.Decimal(5,2)
+  totalPrice      Decimal   @db.Decimal(10,2)
+  variantId       Int
+  subtotal         Decimal   @db.Decimal(10,2)
+  taxAmount       Decimal?  @db.Decimal(10,2)
+
+  invoice   Invoice?         @relation(fields: [invoiceId], references: [id])
+  productVariant   ProductVariant  @relation(fields: [variantId], references: [id])
+
+  @@index([invoiceId])
+  @@index([variantId])
+  @@map("invoice_items")
+}
+
+model InvoiceStatus {
+  id Int @id 
+  name InvoiceStatusType
+
+  invoice Invoice[]
+  @@map("invoice_status")
+}
+
+enum InvoiceStatusType {
+  PENDING_ISSUANCE
+  ISSUED
+  SENT_TO_AUTHORITY
+  ACCEPTED_BY_AUTHORITY
+  REJECTED_BY_AUTHORITY
+  CANCELLED
+  REPLACED
+}
+
+enum InvoiceCustomerStatus {
+  VISIBLE
+  DOWNLOADED
+  UNDER_REVIEW
+  RETURNED
+  HIDDEN
+}
+
+// =============================================
+// 16. PAYMENTS
+// =============================================
+
+model PaymentMethod {
+  id               Int             @id @default(autoincrement())
+  currencyId   Int
+  userId          Int
+  expiryDate      DateTime?       @db.Date
+  billingAddressId Int?
+  cardNumber      String?
+  cardType        String?         // VISA, CREDIT
+  cardHolder      String?
+  methodType      PaymentMethodType
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  isDeleted       Boolean         @default(false)
+  deletedAt       DateTime?
+
+  createdBy String
+  createdById Int
+  updatedBy String?
+  updatedById Int?
+
+  creator UserAuthentication? @relation(fields: [createdById], references: [id],name: "PaymentMethodCreatedBy")
+  updater UserAuthentication? @relation(fields: [updatedById], references: [id],name: "PaymentMethodUpdatedBy")
+
+  invoices         Invoice[]
+  billingAddress  UserAddress?   @relation(fields: [billingAddressId], references: [id])
+  user             User?           @relation(fields: [userId], references: [id])
+  currency Currency @relation(fields: [currencyId], references: [id])
+  orders           Order[]
+
+  @@index([billingAddressId])
+  @@index([userId])
+  @@map("payment_methods")
+}
+
+enum PaymentMethodType {
+  WHATSAPP
+  YAPE
+  PLIN
+  CARD
+  PAYPAL
+  CASH
+}
+
+// =============================================
+// 17. SUPPLIERS & PROCUREMENT
+// =============================================
+
+model Supplier {
+  id               Int           @id @default(autoincrement())
+  publicId        String        @unique @default(uuid())
+  name             String
+  address          String
+  description      String
+  logoUrl         String?
+ 
+  capabilities    SupplierCapability[]
+  relationMode    SupplierRelationMode
+   
+  createdAt       DateTime?     @default(now())
+  updatedAt       DateTime?     @updatedAt
+  deletedAt       DateTime?
+
+  
+  recordStatusId        Int
+  recordStatus        RecordStatus @relation(fields: [recordStatusId], references: [id])
+
+  createdBy String
+  createdById Int
+  updatedBy String?
+  updatedById Int?
+
+  creator UserAuthentication? @relation(fields: [createdById], references: [id],name: "SupplierCreatedBy")
+  updater UserAuthentication? @relation(fields: [updatedById], references: [id],name: "SupplierUpdatedBy")
+
+  products         Product[]
+  supplierProducts SupplierProduct[]
+  promotions       Promotion[]
+  shippingTimes   ProductShippingTime[]
+  providerUsers   SupplierUser[]
+  contacts SupplierContact[]
+
+  @@index([name])
+  @@index([recordStatusId])
+  @@map("suppliers")
+}
+
+enum SupplierRelationMode {
+  OWNED      // Operación propia / Dueño
+  PARTNER    // Proveedor externo con acceso al sistema
+  CATALOG    // Solo catálogo (proveedor pasivo/pasante)
+}
+
+
+ enum SupplierCapability {
+  PRODUCT_MANUFACTURING   // Fabrica productos
+  PRODUCT_DISTRIBUTION    // Distribuye productos
+  WHOLESALE               // Mayorista
+  RETAIL                  // Minorista
+  SERVICE_PROVISION       // Provee servicios
+}
+
+
+
+enum SupplierOperationalStatus {
+  NORMAL
+  SUSPENDED
+  BLOCKED
+}
+
+
+
+model SupplierUser {
+  id               Int                 @id @default(autoincrement())
+  supplierId      Int?
+  firstName       String
+  lastName        String
+  email            String
+  phone            String?
+  operationalStatus SupplierOperationalStatus
+
+  
+  recordStatusId       Int
+  recordStatus        RecordStatus @relation(fields: [recordStatusId], references: [id])
+
+
+  authentication  UserAuthentication[]
+  supplier         Supplier?           @relation(fields: [supplierId], references: [id])
+
+  @@index([supplierId])
+  @@index([recordStatusId])
+  @@map("supplier_users")
+}
+
+model SupplierContact {
+  id           Int    @id @default(autoincrement())
+  supplierId   Int
+
+  fullName     String
+  email        String?
+  phone        String?
+  role         SupplierContactRole
+  isPrimary    Boolean @default(false)
+  isActive     Boolean @default(true)
+
+  supplier     Supplier @relation(fields: [supplierId], references: [id])
+
+  @@unique([supplierId, isPrimary])
+  @@index([supplierId])
+  @@map("supplier_contacts")
+}
+
+enum SupplierContactRole {
+  SALES
+  SUPPORT
+  LOGISTICS
+  BILLING
+  LEGAL
+  GENERAL
+}
+
+
+model SupplierProduct {
+  id                  Int       @id @default(autoincrement())
+  variantId          Int?
+  productId          Int
+  supplierId         Int
+  purchasePrice      Decimal?
+  supplierStock      Int?
+  shippingCost       Decimal?
+  promotionStart     DateTime?
+  usesOwnShipping   Boolean   @default(false)
+  promotionEnd       DateTime?
+  notes               String?
+  createdAt          DateTime? @default(now())
+  updatedAt          DateTime? @updatedAt
+
+  createdBy String
+  createdById Int
+  updatedBy String?
+  updatedById Int?
+
+  creator UserAuthentication? @relation(fields: [createdById], references: [id],name: "SupplierProductCreatedBy")
+  updater UserAuthentication? @relation(fields: [updatedById], references: [id],name: "SupplierProductUpdatedBy")
+
+  productVariant   ProductVariant? @relation(fields: [variantId], references: [id])
+  supplier  Supplier?        @relation(fields: [supplierId], references: [id])
+  product   Product          @relation(fields: [productId], references: [id])
+
+  @@index([variantId])
+  @@index([supplierId])
+  @@index([productId])
+  @@map("supplier_products")
+}
+
+//A=============================================
+// 18. REVIEWS & RATINGS
+// =============================================
+
+model ProductReview {
+  id           Int       @id @default(autoincrement())
+  productId   Int
+  userId      Int
+  rating       Int
+  comment      String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
+  isDeleted   Boolean   @default(false)
+  deletedAt   DateTime?
+
+
+  reviewImages ReviewImage[]
+  product       Product? @relation(fields: [productId], references: [id])
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([productId])
+  @@map("product_reviews")
+}
+
+// =============================================
+// 19. VERIFICATION SYSTEM
+// =============================================
+
+model VerificationStatus {
+  id          Int                 @id
+  name        VerificationStatusType
+  description String?
+  
+  authentications UserAuthentication[]
+  products        Product[]
+
+  @@map("verification_statuses")
+}
+
+enum VerificationStatusType {
+  APPROVED
+  PENDING_REVIEW
+  UNDER_REVIEW
+  REJECTED
+  SUSPENDED
+  ARCHIVED
+  DRAFT
+}
+
+model StatusChangeHistory {
+  id                     Int                @id @default(autoincrement())
+  productId             Int
+  previousStatus        VerificationStatusType?
+  newStatus             VerificationStatusType
+  changedAt             DateTime           @default(now())
+  authUserId           Int
+
+  authUser UserAuthentication @relation(fields: [authUserId], references: [id])
+
+  @@map("status_change_history")
+}
+
+// =============================================
+// 20. NOTIFICATIONS
+// =============================================
+
+model UserNotification {
+  id          Int       @id @default(autoincrement())
+  userId     Int
+  title       String
+  message     String
+  isRead     Boolean   @default(false)
+  sentAt     DateTime  @default(now())
+  readAt     DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_notifications")
+}
+
+// =============================================
+// 21. STATISTICS & ANALYTICS
+// =============================================
+
+model ProductStatistics {
+  productId        Int      @id
+  views             Int      @default(0)
+  sales             Int      @default(0)
+  lastViewedAt    DateTime @default(now())
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_statistics")
+}
+
+model AnalyticsEvent {
+  id           Int      @id @default(autoincrement())
+  eventType   String   // 'page_view', 'purchase', 'add_to_cart'
+  sessionId   String
+  userId      Int?
+  entityType  String?
+  entityId    Int?
+  properties   Json?
+  url          String?
+  ipAddress   String?
+  userAgent   String?
+
+  createdAt   DateTime @default(now())
+   processedAt  DateTime? @updatedAt
+
+  @@index([eventType, createdAt])
+  @@index([userId, createdAt])
+  @@index([sessionId])
+  @@map("analytics_events")
+}
+
+model DailySalesSummary {
+  id                  Int @id @default(autoincrement())
+  currencyId           Int @default(1)
+  date                DateTime @unique                        // Clave única de negocio  totalSales         Decimal  @db.Decimal(12,2)
+  totalOrders        Int
+  averageOrderValue Decimal  @db.Decimal(10,2)
+  uniqueCustomers    Int
+
+  totalProductsSold Int
+  totalDiscounts     Decimal  @db.Decimal(10,2) @default(0)
+  totalTaxes         Decimal  @db.Decimal(10,2) @default(0)
+  totalShipping      Decimal  @db.Decimal(10,2) @default(0)
+
+// Métricas de conversión
+  conversionRate     Decimal  @db.Decimal(5,4)  // 0.1500 = 15%
+  averageItemsPerOrder Decimal @db.Decimal(5,2)
+
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  calculatedAt       DateTime @default(now())  // Cuándo se calculó este resumen
+
+
+
+  currency Currency @relation(fields: [currencyId], references: [id])
+
+  @@map("daily_sales_summary")
+}
+
+
+// =============================================
+// 22. MARKETING & PROMOTIONS
+// =============================================
+
+model Promotion {
+  id               Int             @id @default(autoincrement())
+  code             String?         @unique
+  name             String
+  description      String?
+  status           PromotionStatusType
+  discountType    DiscountType
+  discountValue   Float
+  maxUses         Int?
+  usedCount       Int?            @default(0)
+  startDate       DateTime
+  endDate         DateTime?
+  isActive        Boolean         @default(true)
+  supplierId      Int?
+  productId       Int?
+  categoryId      Int?
+  createdAt       DateTime?       @default(now())
+  updatedAt       DateTime?       @updatedAt
+
+  createdBy String
+  createdById Int
+  updatedBy String?
+  updatedById Int?
+
+  creator UserAuthentication? @relation(fields: [createdById], references: [id],name: "PromotionCreatedBy")
+  updater UserAuthentication? @relation(fields: [updatedById], references: [id],name: "PromotionUpdatedBy")
+
+
+  promotionUses   PromotionUse[]
+  promotionRules  PromotionRule[]
+
+  supplier Supplier? @relation(fields: [supplierId], references: [id])
+  product  Product?  @relation(fields: [productId], references: [id])
+  category Category? @relation(fields: [categoryId], references: [id])
+
+  @@index([code])
+  @@index([supplierId])
+  @@index([productId])
+  @@index([categoryId])
+  @@map("promotions")
+}
+
+enum PromotionStatusType {
+  DRAFT
+  SCHEDULED
+  ACTIVE
+  PAUSED
+  EXPIRED
+  USED_UP
+  CANCELLED
+  COMPLETED
+}
+
+model PromotionUse {
+  id               Int       @id @default(autoincrement())
+  promotionId     Int
+  userId          Int?
+  orderId         Int?
+  usedAt          DateTime  @default(now())
+  discountApplied Float?
+  clientIp        String?
+  status           String?   // used | cancelled | refunded
+  notes            String?
+
+  promotion Promotion    @relation(fields: [promotionId], references: [id])
+  user      User?        @relation(fields: [userId], references: [id])
+  order     Order?       @relation(fields: [orderId], references: [id])
+
+  @@index([promotionId])
+  @@index([userId])
+  @@index([orderId])
+  @@map("promotion_uses")
+}
+
+model PromotionRule {
+  id               Int     @id @default(autoincrement())
+  promotionId     Int
+  conditionType   String  @db.VarChar(50)
+  operator         String? @db.VarChar(10)
+  value            String? @db.VarChar(255)
+  description      String? @db.VarChar(255)
+  priority         Int?    @default(1)
+  isActive        Boolean @default(true)
+
+  promotion Promotion @relation(fields: [promotionId], references: [id])
+
+  @@index([promotionId])
+  @@index([conditionType])
+  @@map("promotion_rules")
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED_AMOUNT
+  FREE_SHIPPING
+  COMBO
+}
+
+// =============================================
+// 23. ADVERTISING & FEATURED CONTENT
+// =============================================
+
+model featuredAd {
+  id          Int               @id @default(autoincrement())
+  description String?
+  imageUrl   String?
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+
+   createdBy String
+  createdById Int
+  updatedBy String?
+  updatedById Int?
+
+  creator UserAuthentication? @relation(fields: [createdById], references: [id],name: "FeaturedAddCreatedBy")
+  updater UserAuthentication? @relation(fields: [updatedById], references: [id],name: "FeaturedAddUpdatedBy")
+
+
+
+  featuredAdItems FeaturedAdItem[]
+
+  @@map("featured_ads")
+}
+
+model FeaturedAdItem {
+  adId      Int
+  productId Int
+  
+  featuredAd featuredAd @relation(fields: [adId], references: [id])
+  product     Product     @relation(fields: [productId], references: [id])
+
+  @@id([adId, productId])
+  @@index([productId])
+  @@map("featured_Ad_items")
+}
+
+// =============================================
+// 24. SEARCH & INDEXING
+// =============================================
+
+model ProductSearchIndex {
+  productId    Int     @unique
+  searchData   String  @db.Text
+  searchVector Unsupported("tsvector")?
+
+  product Product @relation(fields: [productId], references: [id])
+
+  @@index([searchVector], type: Gin)
+  @@map("product_search_index")
+}
+
+// =============================================
+// 25. BACKGROUND JOBS & QUEUES
+// =============================================
+
+model BackgroundJob {
+  id            Int       @id @default(autoincrement())
+  queue         String
+  payload       Json
+  attempts      Int       @default(0)
+  maxAttempts  Int       @default(3)
+  status        JobStatusType
+  errorMessage String?
+  runAt        DateTime?
+  createdAt    DateTime  @default(now())
+  startedAt    DateTime?
+  finishedAt   DateTime?
+
+
+  @@index([queue, status, runAt])
+  @@index([createdAt])
+  @@map("background_jobs")
+}
+
+enum JobStatusType {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+// =============================================
+// 26. RATE LIMITING & SECURITY
+// =============================================
+
+model RateLimit {
+  id             Int       @id @default(autoincrement())
+  identifier     String    // IP, UserId, etc.
+  action         String    // 'login', 'api_call', 'checkout'
+  attempts       Int
+  maxAttempts   Int
+  windowStart   DateTime
+  windowEnd     DateTime
+  isBlocked     Boolean   @default(false)
+  blockedUntil  DateTime?
+
+  @@index([identifier, action])
+  @@index([windowEnd])
+  @@map("rate_limits")
+}
+
+// =============================================
+// 27. DATA VERSIONING & BACKUP
+// =============================================
+
+model dataVersion {
+  id             Int      @id @default(autoincrement())
+  entityType    String
+  entityId      Int
+  versionNumber Int
+  data           Json
+  changeType    String   // CREATE, UPDATE, DELETE
+  changedBy     Int?
+  changedAt     DateTime @default(now())
+  reason         String?
+
+  @@unique([entityType, entityId, versionNumber])
+  @@index([entityType, entityId])
+  @@index([changedAt])
+  @@map("data_versions")
+}
+
+// =============================================
+// FULL-TEXT SEARCH INDICES
+// =============================================
+
+//  Adding full-text search capabilities to existing models
+
+// @@index([name, shortDescription], type: Fulltext, map: "idx_product_search")
+// @@index([name], type: Fulltext, map: "idx_category_search")
+// @@index([firstName, lastName, email], type: Fulltext, map: "idx_user_search")
+
+// =============================================
+// ADDITIONAL VALIDATIONS
+// =============================================
+
+// Email validation (conceptual - would be implemented at application level)
+// @@validate(regex(email, '^[^@]+@[^@]+\.[^@]+$'))
+
+// Price validations
+// @@validate(price >= 0, "Price cannot be negative")
+// @@validate(stockQuantity >= 0, "Stock cannot be negative")

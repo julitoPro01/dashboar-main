@@ -1,0 +1,62 @@
+/* Animación para modal redux dialog - abrir y cerrer */
+
+ /* Para content  */
+@keyframes contentShowOpen {
+	from {
+		opacity: 0;
+		transform: scale(0.5);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+@keyframes contentShowClose {
+	from {
+		opacity: 1;
+		transform:scale(1);
+	}
+	to {
+		opacity: 0;
+		transform: scale(0.8);
+	}
+}
+
+.DialogContentOpen {
+	animation: contentShowOpen 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.DialogContentClose {
+	animation: contentShowClose 400ms  cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+ /* para Dialog Overlay */
+
+@keyframes overlayShowOpen {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes overlayShowClose {
+	from {
+    opacity: 1;
+	}
+	to {
+    opacity: 0;
+	}
+}
+
+.DialogOverlayOpen {
+	animation: overlayShowOpen 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.DialogOverlayClose {
+	animation: overlayShowClose 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+

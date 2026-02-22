@@ -1,0 +1,10 @@
+import { SUPPLIER_CAPABILITY_TYPE, SUPPLIER_CAPABILITY_TYPE_LABEL } from "@/src/interfaces/supplier"
+
+
+export const SUPPLIER_CAPABILITIES_LABELS: Record<SUPPLIER_CAPABILITY_TYPE, SUPPLIER_CAPABILITY_TYPE_LABEL> = {
+    PRODUCT_DISTRIBUTION: "Distribuidor",
+    PRODUCT_MANUFACTURING: "Fabricante",
+    WHOLESALE: "Mayorista",
+    SERVICE_PROVISION: "Servicio",
+    RETAIL: "Minorista"
+};

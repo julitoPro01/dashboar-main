@@ -1,0 +1,164 @@
+import { useFieldArray, useForm } from "react-hook-form"
+import { ImageSortableItem, ImageUpdateCard, ImageUploadCard } from "../../shared"
+import { useSortableFieldArray } from "@/src/hooks";
+import { useStore } from "@/src/store/useStore";
+import { IsPrimaryField } from "../../shared/field/IsPrimaryField";
+import { BtnSubmitLoading, Sorteable } from "@/src/components/ui";
+
+export const ImageEditForm = () => {
+
+  const setModal = useStore(v => v.setModalTypeProductDetails);
+
+  const { register, control, getValues, setValue } = useForm<InitForm>();
+  const { fields, move, update, remove, append } = useFieldArray({ control, name: "images", keyName: "customId" });
+
+  const { dragEnd } = useSortableFieldArray({ fields, move })
+
+  const onUpdate = (target: HTMLInputElement, index: number) => {
+    const files = target.files;
+    if (!files || files.length < 1) return;
+
+    const file = files[0]
+    const previewUrl = URL.createObjectURL(file);
+
+    const image = getValues("images")[index];
+
+    const newStateFile = {
+      fileName: file.name,
+      filePath: previewUrl,
+      fileSize: file.size,
+      mimeType: file.type,
+      //TODO: ID del usuario logeado
+      // uploadedBy:0
+    }
+
+    update(index, { ...image, previewUrl, mediaFile: newStateFile })
+  }
+
+  const onRemove = (index: number) => {
+
+    remove(index);
+    const images = getValues("images")
+    const existsPrimary = images.some(img => img.isPrimary);
+
+    images.forEach((img, i) => {
+      update(i, {
+        ...img,
+        displayOrder: i + 1,
+        isPrimary: existsPrimary ? img.isPrimary : i === 0 ? true : false,
+      });
+    });
+  }
+
+  // Agregamos la imagen
+  const onAddImg = (target: HTMLInputElement) => {
+    const files = target.files;
+    if (!files || files.length < 1) return;
+
+    const file = files[0]
+    const previewUrl = URL.createObjectURL(file);
+
+    // Si hay valores, ya existe un "isPrimary"
+    const images = getValues("images");
+    const hasValues = images.length > 0
+
+    const initStateImg = {
+      previewUrl: previewUrl,
+      isPrimary: hasValues ? false : true,
+      displayOrder: hasValues ? images.at(-1)!.displayOrder + 1 : 1,
+      mediaFile: {
+        id: 0,
+        fileName: file.name,
+        filePath: previewUrl,
+        fileSize: file.size,
+        mimeType: file.type,
+        //TODO: ID del usuario logeado
+        // uploadedBy:0
+      }
+    }
+
+    append(initStateImg)
+  }
+
+  const onSelectIsPrimary = (index: number) => {
+    const images = getValues("images")
+    setValue("images", images.map((img, i) => ({
+      ...img,
+      isPrimary: i === index
+    })), { shouldDirty: true })
+  }
+
+  // Ordenamiento de la matriz y actualización del campo "displayOrder"
+  const handleDragEnd = (event: any) => {
+
+    dragEnd(event, ({ maxIndex, minIndex }) => {
+
+      const reorderedFields = getValues("images");
+
+      for (let i = minIndex; i <= maxIndex; i++) {
+        update(i, { ...reorderedFields[i], displayOrder: i + 1 });
+      }
+
+    })
+
+  }
+
+  return (
+    <div className="px-4 pb-4 ">
+
+      <div className="p-6 border border-gray-300 flex max-w-full justify-start items-start overflow-y-hidden overflow-x-auto scrollbar-thin gap-4  rounded-lg">
+        <Sorteable handleDragEnd={handleDragEnd} items={fields.map(v => v.customId)} >
+          {
+            fields.map((v, i) => (
+              <ImageSortableItem key={v.customId} id={v.customId} order={i + 1} >
+                <ImageUpdateCard
+                  onRemove={() => onRemove(i)}
+                  onUpdate={(target) => onUpdate(target, i)}
+                  imageUrl={v.previewUrl}
+                />
+
+                <IsPrimaryField register={register(`images.${i}.isPrimary`,{onChange:()=>onSelectIsPrimary(i)})}  className=" px-4 pt-4" />
+              </ImageSortableItem>
+            ))
+          }
+        </Sorteable>
+
+        {fields.length < 5 &&
+          <ImageUploadCard onChange={(target) => onAddImg(target)} />
+        }
+      </div>
+
+      <div className="flex gap-5 justify-end mt-4">
+
+        <button className="hover:text-black" type="button"
+          onClick={() => setModal({ open: false })}
+        > Cancelar
+        </button>
+
+        <BtnSubmitLoading
+          // disabled={isSubmitting}
+          title="Guardar cambios"
+          loadingTitle="Guardando..."
+        // onClick={() => setSelectedCatgTree([])}
+        />
+      </div>
+    </div>
+  )
+}
+
+
+interface InitForm {
+  images: {
+    previewUrl: string;
+    isPrimary: boolean;
+    displayOrder: number;
+    id?: number | undefined;
+    fileId?: number | undefined;
+    mediaFile?: {
+      fileName: string;
+      filePath: string;
+      fileSize: number;
+      mimeType: string;
+    } | undefined;
+  }[]
+}
