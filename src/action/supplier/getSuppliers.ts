@@ -2,13 +2,12 @@
 
 import { Prisma } from "@/src/generated/prisma/client";
 import prisma from "@/lib/prisma";
-import { ApiResponse, PromiseReturn } from "@/src/utils"
-import { SuppliersResponse, SupplierTableFilter } from "@/src/interfaces/supplier";
-import { RECORD_STATUS_TYPE } from "@/src/interfaces/record-status";
 import { createDateRangeFilter } from "../utils/dateRanger.filter";
-import { PaginationBasic } from "@/src/domains/pagination";
+import { SuppliersResponse, SupplierTableFilter } from "@/src/features/suppliers/types";
+import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
+import {type PaginationBasic } from "@/src/shared/table";
 
-type QueryProps = PaginationBasic<RECORD_STATUS_TYPE>;
+type QueryProps = PaginationBasic;
 type FilterProps = SupplierTableFilter;
 
 export async function getSuppliers(query: QueryProps, filter: FilterProps) {
@@ -48,13 +47,11 @@ export async function getSuppliers(query: QueryProps, filter: FilterProps) {
             skip: (page - 1) * pageSize,
             take: pageSize,
             orderBy,
-            where: {
-                ...(filters.length && { AND: filters })
-            },
+            where: filters.length ? { AND: filters } : {},
             select:
             {
                 id: true,
-                publicId:true,
+                publicId: true,
                 name: true,
                 address: true,
                 logoUrl: true,

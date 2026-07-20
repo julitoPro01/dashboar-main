@@ -1,17 +1,21 @@
-import { AuthRole } from "@/src/auth";
-import { VerificationStatus } from "@/src/interfaces/verification-status/verificationStatus.type";
+import { AuthRole } from "@/src/shared/domains/accessControl";
+import { RecordStatusDb } from "@/src/shared/domains/status";
 
 type DataLoaded = "loading" | "loaded" | "loadingError"
+type User = {id?:number,name?:string}
 
 export interface StateBootData {
-    bootVerificationStatuses:VerificationStatus[];
-    bootAuthRoles:AuthRole[];
+    // bootVerificationStatuses:VerificationStatus[];
+    bootVerificationStatuses: any[];
+    bootAuthRoles: AuthRole[];
+    bootRecordStatuses: { name: RecordStatusDb, id: number }[];
     //....
-    isBootDataLoaded:DataLoaded;
+    isBootDataLoaded: DataLoaded;
+    user: User
 }
 
-export interface ActionBootData{
-    setBootData:()=>Promise<void>;
+export interface ActionBootData {
+    setBootData: (_:Required<User>) => Promise<void>;
 }
 
-export type BootDataSlice  = StateBootData  & ActionBootData; 
+export type BootDataSlice = StateBootData & ActionBootData; 

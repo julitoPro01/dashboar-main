@@ -1,8 +1,8 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { ProductVariantsDetailsResponse } from "@/src/interfaces/products";
-import { ApiResponse, PromiseReturn } from "@/src/utils";
+import { ProductVariantsDetailsResponse } from "@/src/features/products/types";
+import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
 
 interface Prosp {
     productPublicId: string;

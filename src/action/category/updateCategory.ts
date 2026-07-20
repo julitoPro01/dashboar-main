@@ -1,32 +1,22 @@
 "use server"
 
 import prisma from "@/lib/prisma"
-import { ApiResponse, PromiseReturn } from "@/src/utils"
 import { CategoryUpdateSchema } from "./schema/UpsertCategorySchema"
-import { CategoryAttributeCreateManyInput, CategoryAttributeUpdateManyMutationInput } from "@/src/generated/prisma/models"
+import { ApiResponse, PromiseReturn } from "@/src/shared/utils"
+import { RECORD_STATUS_ID } from "@/src/shared/domains/status";
 
 
-type CategoryAttr = {
-    id?: number;
-    categoryId?: number;
-    attributeDefinitionId?: number;
-    isRequired?: boolean;
-    isFilter?: boolean;
-    displayOrder?: number;
+export interface UpdateCategory {
+    name?: string;
+    slug?: string;
+    description?: string;
+    recordStatusId?: number;
+    imageUrl?: string;
 }
 
-interface Props {
-    data: any,
-    id: number,
-    childrenStatusId?: number,
-    categoryAttrs?: CategoryAttr[],
-    audi: { updateBy: string, updateById: number }
-}
-
-export const updateCategory = async ({ data, id, childrenStatusId, audi, categoryAttrs }: Props) => {
+export const updateCategory = async (id: number, data: UpdateCategory, audi: { updateBy: string, updateById: number }) => {
 
     return PromiseReturn(async () => {
-
         const parse = CategoryUpdateSchema.parse(data);
 
         const res = await prisma.category.update({
@@ -36,76 +26,20 @@ export const updateCategory = async ({ data, id, childrenStatusId, audi, categor
                 id: true,
                 name: true,
                 description: true,
-                recordStatusId: true,
+                recordStatus: { select: { name: true } },
                 slug: true,
                 imageUrl: true,
                 parentId: true,
-                isProductCategory: true
+                path: true
             }
         });
 
-        if (childrenStatusId) {
-            // 2) Obtener TODAS las categorías hijas (nivel infinito)
-            const allChildIds = await getAllChildrenIds(res.id);
+        if (RECORD_STATUS_ID.DELETED === parse.recordStatusId || RECORD_STATUS_ID.ARCHIVED === parse.recordStatusId)
+            await prisma.category.updateMany({
+                where: { path: { startsWith: res.path } },
+                data: { recordStatusId: parse.recordStatusId, updatedBy: audi.updateBy, updatedById: audi.updateById }
+            })
 
-            // 3) Si hay hijos → actualizarlos en 1 sola operación
-            if (allChildIds.length > 0) {
-                await prisma.category.updateMany({
-                    where: {
-                        id: { in: allChildIds }
-                    },
-                    data: {
-                        recordStatusId: childrenStatusId
-                    }
-                });
-            }
-        }
-
-        if (categoryAttrs && categoryAttrs.length > 0) {
-
-            const updateDate = categoryAttrs.filter(v => v.id);
-
-            const newData = categoryAttrs.filter(v => !v.id).map(v => ({
-                categoryId: v.categoryId,
-                attributeDefinitionId: v.attributeDefinitionId,
-                isRequired: v.isRequired,
-                isFilter: v.isFilter
-            })) as CategoryAttributeCreateManyInput[];
-
-            if (newData.length > 0) {
-
-                await prisma.categoryAttribute.createMany({
-                    data: newData
-                })
-
-            }
-            else if (updateDate.length > 0) {
-                await prisma.categoryAttribute.updateMany({
-                    data:updateDate.map<CategoryAttributeUpdateManyMutationInput>(v=>({
-                        isFilter:v.isFilter,
-                        isRequired:v.isRequired
-                     }))
-                })
-            }
-        }
         return ApiResponse.success("Categoría actualizado correctamente.", res)
     })
-}
-
-// Consultamos a los hijos con estados publicos
-async function getAllChildrenIds(parentId: number, acc: number[] = []) {
-
-    const children = await prisma.category.findMany({
-        where: { parentId: parentId, recordStatus: { name: { in: ["ACTIVE"] } } },
-        select: { id: true }
-    });
-
-    if (children.length === 0) return acc;
-
-    for (const c of children) {
-        acc.push(c.id);
-        await getAllChildrenIds(c.id, acc); // recursión
-    }
-
-    return acc;
 }

@@ -1,12 +1,12 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
-
 @plugin "tailwind-scrollbar-hide";
 @plugin "tailwind-scrollbar";
 
 @import "./style/Animation-Modal.css";
 @import "./style/left-menu.style.css";
+/* @import "tw-animate-css"; */
 
 /* Variables globales y tema claro por defecto */
 :root {
@@ -14,10 +14,12 @@
   --color-background: #f5f7f8;
   --color-surface: #ffffff;
   --color-surface-light: #ffffff;
-  --color-surface-elevated: #ffffff;
+  --color-surface-elevated: #f8fafc;
   --color-surface-overlay: #ffffff;
+  --color-surface-black:#ffffff;
   --color-primary: #0d7ff2;
   --color-primary-light: #59a7f5;
+   --color-bg-soft-blue: #EFF4FF;
 
   /* default cards */
   --color-border: #e2e8f0;
@@ -89,6 +91,7 @@
   --color-border-select: #60A5FA;
   --color-bg-select: #eff6ff;
   --color-text-select: #1e3a8a;
+
 }
 
 :root.light {
@@ -96,10 +99,12 @@
   --color-background: #f5f7f8;
   --color-surface: #ffffff;
   --color-surface-light: #ffffff;
-  --color-surface-elevated: #ffffff;
+  --color-surface-elevated: #f8fafc;
   --color-surface-overlay: #ffffff;
+  --color-surface-black:#ffffff;
   --color-primary: #0d7ff2;
   --color-primary-light: #59a7f5;
+  --color-bg-soft-blue: #EFF4FF;
 
   --color-border: #e2e8f0;
   --color-border-subtle: #edf2f7;
@@ -133,7 +138,6 @@
 
 }
 
-
 @media (prefers-color-scheme: dark) {
   :root {
     /* optimizado para dark */
@@ -142,16 +146,15 @@
     --color-surface-light: #1e2939;
     --color-surface-elevated: #22303c;
     --color-surface-overlay: #263645;
+  --color-surface-black:#0F172A;
     --color-primary: #63b3ed;
   --color-primary-light: #63b3ed;
-
+  --color-bg-soft-blue: #60a5fa25; /* azul translúcido */
 
     --color-border: #2d3947;
     --color-border-subtle: #24303d;
     --color-border-strong: #45556c;
   --color-border-input:#364153;
-
-
 
     --color-text-strong: #ffffff;
     --color-text: #e5e7eb;
@@ -187,14 +190,15 @@
   --color-surface-light: #1e2939;
   --color-surface-elevated: #22303c;
   --color-surface-overlay: #263645;
+  --color-surface-black:#0F172A;
   --color-primary: #63b3ed;
   --color-primary-light: #63b3ed;
+  --color-bg-soft-blue: #60a5fa25; /* azul translúcido */
 
   --color-border: #2d3947;
   --color-border-subtle: #24303d;
   --color-border-strong: #45556c;
   --color-border-input:#364153;
-
 
   --color-text-strong: #ffffff;
   --color-text: #e5e7eb;
@@ -222,11 +226,9 @@
   --color-text-select: #ffffff;        /* blanco */
 }
 
-
 /* @utility container { } */
 
 /* @utility card {} */
-
 
 @theme {
   /* Mapeas tus variables CSS a tokens de Tailwind */
@@ -235,14 +237,15 @@
   --color-surface-light: var(--color-surface-light);
   --color-surface-elevated: var(--color-surface-elevated);
   --color-surface-overlay: var(--color-surface-overlay);
+  --color-surface-black:var(--color-surface-black);
   --color-primary: var(--color-primary);
   --color-primary-light: var(--color-primary-light);
+  --color-bg-soft-blue:var(--color-bg-soft-blue);
 
   --color-border: var(--color-border);
   --color-border-subtle: var(--color-border-subtle);
   --color-border-strong: var(--color-border-strong);
   --color-border-input: var(--color-border-input);
-
 
   --color-text-strong: var(--color-text-strong);
   --color-text: var(--color-text);
@@ -275,8 +278,8 @@
 
 /* ------------------------- */
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--color-background);
+  color: var(--color-text);
   font-family: Arial, Helvetica, sans-serif;
 }
 

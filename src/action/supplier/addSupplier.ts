@@ -1,9 +1,9 @@
 "use server"
 
 import prisma from "@/lib/prisma";
-import { ApiResponse, PromiseReturn } from "@/src/utils"
 import { SupplierCreateSchema } from "./schema/upsertSupplierSchema";
-import { RECORD_STATUS_ID } from "@/src/domains/record-status";
+import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
+import { RECORD_STATUS_ID } from "@/src/shared/domains/status";
 
 type Data = {
     name: string;

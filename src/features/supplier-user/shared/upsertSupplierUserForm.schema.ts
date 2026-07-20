@@ -1,4 +1,4 @@
-import { UserRole } from "@/src/domains/auth";
+import { UserRole } from "@/src/shared/domains/accessControl";
 import { z } from "zod";
 
 export const UpsertSupplierUserFormSchema = z.object({

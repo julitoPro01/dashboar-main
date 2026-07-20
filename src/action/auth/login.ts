@@ -1,8 +1,8 @@
 "use server"
 
 import prisma from "@/lib/prisma";
-import { getPermissionsForRole, getRoleGroup } from "@/src/domains/auth";
-import { ApiResponse, PromiseReturn } from "@/src/utils";
+import { getPermissionsForRole, getRoleGroup } from "@/src/shared/domains/accessControl";
+import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
 import bcrypt from 'bcrypt';
 
 interface Props {
@@ -62,7 +62,8 @@ export const Login = async ({ email, password }: Props) => {
             const uniquePermissions = [...new Set(allPermissions)];
             
             return ApiResponse.success("Inicio de sesión exitoso",{
-                id: id.toString(),
+                
+                id: id,
                 email: userAuth!.email,
                 name: firstName + " " + lastName,
                 roles,

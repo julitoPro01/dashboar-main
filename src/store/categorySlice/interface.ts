@@ -1,30 +1,50 @@
+import { RecordStatusDb } from "@/src/shared/domains/status";
 
-export type Category = {
+type Category = {
     id: number,
+    publicId: string;
     name: string,
-    recordStatusId: number,
-    parentId?:number
+    hasChildren: boolean,
+    hasAttributes: boolean,
+    parentId?: number,
+    recordStatus: RecordStatusDb,
+    level: number,
+    path: string,
+    paths: { name: string, id: number, recordStatus: RecordStatusDb }[]
 }
 
+export type MainCategory = {
+    id: number,
+    path: string,
+    recordStatus: RecordStatusDb,
+    name: string,
+    hasChildren: boolean, publicId: string, level: number, hasAttributes: boolean
+};
+
+type Changes = { type: "update", values: Partial<MainCategory> } | { type: "delete", id: number };
+
 export interface StateCategory {
-    mainCategory?: Category;
+    selectedMainCategory?: MainCategory;
     selectedCategory?: Category;
-    childrenCategories: Category[];
-    historyCategory:{
-        lastMainUpdate?:Category;
-        lastSubUpdate?:Category;
-        lastSubDelete?:Category;
+
+    openModalEditCategory: boolean; // Para controlar la apertura del modal de edición de categoría
+
+    // Historial para manejar cambios de actualización o eliminados
+    mainCategoryChanges: {
+        lastUpdate?: Partial<MainCategory>;
+        lastDeleteId?: number;
     }
 }
 
-type History = "deleteSub" | "updateSub" | "updateMain";
-
 export interface ActionCategory {
-    setMainCategory: (_: Category) => void;
+    setSelectMainCategory: (_?: MainCategory) => void;
     setSelectCategory: (_?: Category) => void;
-    setChildrenCategory: (_: Category[]) => void;
-    setHistoryCategory:(type:History , _:Category)=>void;
-    setCleanStateCategory:()=>void;
+
+    setOpenModalEditCategory: (_: boolean) => void;
+
+    setMainCategoryChanges: (_: Changes) => void;
+
+    setCleanStateCategory: () => void;
 }
 
 export type CategorySlice = StateCategory & ActionCategory; 

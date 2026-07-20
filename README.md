@@ -46,3 +46,39 @@ Hubo un error al cargar los datos. Vuelve a intentarlo.
 2. Lapiz dentro de un cuatro ``FaRegEdit`` 
 3. Signo mayor ``MdKeyboardArrowRight`` = ```>``
 4. Check simple ``<FaCheck />``
+5. Tres puntos en vertical ``<MdMoreVert  />``
+6. Refresh ``GrRefresh ``
+7. volver atras "<" ``IoIosArrowBack``
+8. volver atras "<-" ``IoMdArrowRoundBack``              
+9. Mas "+" `` <BiPlus />``
+10. Info ``MdOutlineInfo``
+
+## CREAR COMPONENT PAGE "FUNCTION"
+-- prc
+## CREAR COMPONENTS "CONTS"
+-- raf, raf...
+
+
+## 💡 Reglas de oro para nombrar funciones
+- Sustantivo: Es el nombre (la etiqueta) que elegimos.
+# Vervo + Sustantivo 
+Estándar. Ideal para funciones que ejecutan la acción de cambiar el valor.
+set...: Para asignar un valor directamente (ej. setName).
+update...: Para modificar un registro existente (ej. updateName).
+handle...: Para funciones que reaccionan a una acción del usuario (ej. handleNameChange).
+is... / has...: Para funciones que devuelven un booleano (ej. isNameValid).
+# Sustantivo + Vervo
+Eventos. Se usa más para describir qué sucedió (ej. en un manejador de eventos como onNameChange).
+# (Verbo + Objeto/Contexto).
+los nombres yendo de la acción general a la entidad específica - useRefreshSelectedMain
+
+
+## NOMBRE DE COMPONENTES O FUNCIONES
+# Acciones flotantes
+1. Seleccionar una fila de la tabla ``RowFloatingActions.tsx``
+2. Varias items seleccionados incluir ``selection`` ej: selectionRows (Seleccionar filas)
+
+
+## EXPORTACION DE ARCHIVOS DE UNA CARPETA
+1. Si existe un archivo con el mismo nombre de  la carpeta, sera el unico que sera exportado.
+2. Si los archivos contienen nombres distintos a la carpeta, todos seran exportados.

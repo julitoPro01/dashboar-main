@@ -1,7 +1,8 @@
 import { auth } from "@/auth.config";
 import { getSupplier } from "@/src/action";
-import { ErrorServer } from "@/src/components/ui";
-import { SupplierEdit } from "@/src/features/supplier";
+import { SupplierEdit } from "@/src/features/suppliers";
+import { BackTo } from "@/src/shared/components/BackTo";
+import { ErrorServer } from "@/src/shared/components/error";
 
 interface Props {
     params: { publicId: string }
@@ -22,7 +23,8 @@ export default async function EditPage({ params }: Props) {
 
     return (
         // <div className="flex flex-col items-center gap-6 py-10 px-10 min-w-md ">
-        <div className="flex flex-1 justify-center py-10 ">
+        <div className="flex flex-col flex-1 justify-center pt-5 pb-10 ">
+            <BackTo label="Volver a la lista de proveedores"/>
             <div className="w-full max-w-200 flex flex-col bg-surface rounded-xl shadow-sm border border-border-subtle overflow-hidden">
                 {/* header */}
                 <div className="px-8 py-6 border-b border-border-subtle flex justify-between items-center">

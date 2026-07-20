@@ -1,13 +1,20 @@
-import { combine } from "zustand/middleware";
-import { ActionUi, StateUi } from "./interface";
+import { StateCreator } from "zustand";
+import type { ControlsFloating, UiSlice } from './interface';
+import type {Store} from "../Store.type"
 
-export const uiSlice = combine<StateUi, ActionUi>(
-    {
-        leftNavBarOpen:true,
-        floatingPanel:{cx:0,cy:0, open:false}
+const initFP: ControlsFloating = { cx: 0, cy: 0, open: false, type: null, status: "success" };
+
+export const uiSlice: StateCreator<Store, [], [], UiSlice> = (set) => ({
+
+    leftNavBarOpen: true,
+    floatingPanel: initFP,
+    fetchStatus: { status: "idle", titleMsg: undefined, descMsg: undefined },
+
+    setLeftNavBarOpen: (open) => (set({ leftNavBarOpen: open })),
+    setFloatingPanel: (state) => (set(s => ({ floatingPanel: { ...s.floatingPanel, ...state } }))),
+    setCloseFloatingPanel() {
+        set({ floatingPanel: initFP })
     },
-    (set,_)=>({
-        setLeftNavBarOpen:(open)=>(set({leftNavBarOpen:open})),
-        setFloatingPanel:(state)=>(set({floatingPanel:state}))
-    })
-)
+
+    setFetchStatus: (status) => set({ fetchStatus: status })
+})

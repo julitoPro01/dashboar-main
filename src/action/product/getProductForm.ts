@@ -1,8 +1,8 @@
 "use server";
 import prisma from "@/lib/prisma";
 import { sortCategoriesByParent } from "@/src/features/category/utils";
-import { ProductFormDataResponse } from "@/src/interfaces/products";
-import { ApiResponse, PromiseReturn } from "@/src/utils"
+import { ProductFormDataResponse } from "@/src/features/products/types";
+import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
 
 interface Props {
     publicId: string

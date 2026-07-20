@@ -1,8 +1,8 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { SupplierOptionsResponse } from "@/src/interfaces/supplier";
-import { ApiResponse, PromiseReturn } from "@/src/utils";
+import { SupplierOptionsResponse } from "@/src/features/suppliers/types";
+import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
 
 export const getSupplierOptions = async () => {
   return PromiseReturn<SupplierOptionsResponse>(async () => {

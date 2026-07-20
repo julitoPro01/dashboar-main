@@ -10,15 +10,7 @@ export const CreateProductSchema = z.object({
         message: "Estado inválido",
     }),
 
-    verificationStatusId: z.number().int().positive(),
-
-    mainCategoryId: z.number().int().positive({
-        message: "Seleccione una categoría principal",
-    }),
-
-    lastCategoryId: z.number().int().positive({
-        message: "Seleccione la última categoría",
-    }),    
+    verificationStatusId: z.number().int().positive(),   
 
     currencyId: z.number().int().positive().optional().default(1),
 

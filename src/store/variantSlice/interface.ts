@@ -1,4 +1,4 @@
-import { VariantDetailsResponse } from "@/src/interfaces/products";
+import { VariantDetailsResponse } from "@/src/features/products/types";
 
 type TYPE_MODAL = {modalOpen:boolean, id?:number, type:"edit"|"create"}
 

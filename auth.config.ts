@@ -3,9 +3,9 @@ import { NextAuthConfig } from "next-auth";
 import NextAuth from "next-auth";
 import { z } from "zod";
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { RoleType } from "@/src/generated/prisma/enums"; // Asegúrate de importar esto
-import { Login } from "./src/action";
-import { RoleGroup } from "./src/domains/auth";
+import { RoleType } from "@/src/generated/prisma/enums"; 
+import { RoleGroup } from "./src/shared/domains/accessControl";
+import { Login } from "./src/action/auth";
 
 
 
@@ -36,9 +36,9 @@ export const authConfig: NextAuthConfig = {
                 const { id, email, name, roles, primaryRole, permissions, roleGroup } = data!;
                 // Ejemplo con usuario hardcodeado
 
-                const concatId = +id + id.length;
+                const concatId = id + id.toString().length;
                 // valido el primer valor
-                const parseId = id + "-" + id.length + "-" + concatId + "-" + (concatId + concatId);
+                const parseId = id + "-" + id.toString().length + "-" + concatId + "-" + (concatId + concatId);
 
                 return {
                     id: parseId,

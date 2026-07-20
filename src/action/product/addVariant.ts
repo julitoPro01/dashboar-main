@@ -1,8 +1,8 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { ApiResponse, PromiseReturn } from "@/src/utils";
 import { CreateVariantSchema } from "./schema/upsertVariant";
+import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
 
 type Data = {
     productId: number;
@@ -19,7 +19,7 @@ type Data = {
 
 type AttributeValue = {
     attributeDefinitionId: number;
-    value: string;
+    attributeOptionId: number;
 }
 
 
@@ -65,8 +65,7 @@ export const addVariant = async (data: Data, attr: AttributeValue[], images: Ima
             await prisma.variantAttributeValue.createMany({
                 data: attr.map(v => ({
                     variantId: res.id,
-                    attributeDefinitionId: v.attributeDefinitionId,
-                    value: v.value
+                    attributeOptionId: v.attributeDefinitionId,
                 }))
             })
 

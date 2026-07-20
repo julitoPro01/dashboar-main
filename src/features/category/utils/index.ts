@@ -1,3 +1,4 @@
-export * from './categoryTreeUpdate';
-export * from './categoryStatusGroup';
-export * from './sortCategoriesByParent'
+export * from './categoryTreeUpdate.utils';
+export * from './sortCategoriesByParent.utils';
+
+export * from './buildCategoryTrees.utils';

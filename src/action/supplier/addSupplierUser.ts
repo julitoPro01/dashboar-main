@@ -1,12 +1,11 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { ApiResponse, PromiseReturn } from "@/src/utils";
 import bcrypt from 'bcrypt';
 import { SupplierUserCreateSchema } from "./schema/upsertSupplierUserShema";
 import { RoleType } from "@/src/generated/prisma/enums";
-import { RECORD_STATUS_ID } from "@/src/domains/record-status";
-import { VERIFICATION_STATUS_ID } from "@/src/domains/verification-status";
+import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
+import { RECORD_STATUS_ID, VERIFICATION_STATUS_ID } from "@/src/shared/domains/status";
 
 type Data = {
     supplierId: number;
@@ -39,7 +38,7 @@ export const addSupplierUser = async (data: Data, auth: Auth) => {
                 authentication: {
                     create: {
                         recordStatusId: RECORD_STATUS_ID.INACTIVE,//TODO:
-                        verificationStatusId: VERIFICATION_STATUS_ID.PENDING_REVIEW,
+                        verificationStatusId: VERIFICATION_STATUS_ID.IN_REVIEW,//TODO:
                         email: parse.email,
                         phone:parse.phone,
                         passwordHash: bcrypt.hashSync("123456", 10),// passwordHash: auth.password,

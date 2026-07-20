@@ -1,10 +1,10 @@
 "use server";
 
-import { ApiResponse, PromiseReturn } from "@/src/utils";
 import { z } from "zod";
 import { UpdateProductSchema } from './schema/upsertProduct';
 import prisma from "@/lib/prisma";
 import { ProductCategoryCreateManyInput } from "@/src/generated/prisma/models";
+import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
 
 interface Audi {
     updatedBy: string;

@@ -1,16 +1,12 @@
 "use server"
 
 import prisma from "@/lib/prisma";
-import { ApiResponse, PromiseReturn } from "@/src/utils"
 import { CreateProductSchema } from "./schema/upsertProduct";
-import { ProductCategoryCreateManyInput } from "@/src/generated/prisma/models";
-import { CreateMediaFileSchema } from "../media-file/schema/upsertMediaFile";
-import { CreateProductImageSchema } from "./schema/upsertImage";
-import { UpsertProductImage } from "@/src/interfaces/image";
-import { RECORD_STATUS_ID } from "@/src/domains/record-status";
-import { VERIFICATION_STATUS_ID } from "@/src/domains/verification-status";
-import { INVENTORY_STATUS_ID } from '../../domains/inventory-status';
-import { SALES_STATUS_ID } from "@/src/domains/sale-status";
+import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
+
+import { INVENTORY_STATUS_ID, SALES_STATUS_ID } from "@/src/shared/domains/catalog";
+import { RECORD_STATUS_ID, VERIFICATION_STATUS_ID } from "@/src/shared/domains/status";
+
 
 interface Audi {
     createdBy: string;
@@ -55,13 +51,12 @@ export const addProduct = async (dataProduct: DataProduct, dataImages: DataImage
                     inventoryStatusId:INVENTORY_STATUS_ID.OUT_OF_STOCK, //TODO: "OUT_OF_STOCK"  valor que debe existir en la tabla
                     saleStatusId:SALES_STATUS_ID.COMING_SOON,// TODO: "COMING_SOON" valor que debe existir en la tabla
                     verificationStatusId: VERIFICATION_STATUS_ID.DRAFT, // TODO: "DRAFT" ...
-                    mainCategoryId: parse.mainCategoryId,
-                    lastCategoryId: parse.lastCategoryId,
 
                     name: parse.name,
                     shortDescription: parse.shortDescription,
                     longDescription: parse.longDescription,
                     slug: parse.slug,
+                    parentSku:"",
 
                     createdBy: createdBy,
                     createdById: createdById

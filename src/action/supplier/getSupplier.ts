@@ -1,11 +1,10 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { SUPPLIER_CAPABILITIES_LABELS } from "@/src/features/supplier/shared/capability.constans";
-import { SUPPLIER_RELATION_MODE_LABEL } from "@/src/features/supplier/shared/relationMode.constants";
-import { SupplierDetailsResponse, SupplierFormDataResponse } from "@/src/interfaces/supplier";
-import { ApiResponse, PromiseReturn, Result } from "@/src/utils";
-
+import { SUPPLIER_CAPABILITIES_LABELS } from "@/src/features/suppliers/shared/capability.constans";
+import { SUPPLIER_RELATION_MODE_LABEL } from "@/src/features/suppliers/shared/relationMode.constants";
+import { SupplierDetailsResponse, SupplierFormDataResponse } from "@/src/features/suppliers/types";
+import { ApiResponse, PromiseReturn, Result } from "@/src/shared/utils";
 
 export async function getSupplier(p: { to: "details", id: number }): Promise<Result<SupplierDetailsResponse>>;
 export async function getSupplier(p: { to: "form", publicId: string }): Promise<Result<SupplierFormDataResponse>>;

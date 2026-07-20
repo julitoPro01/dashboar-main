@@ -9,7 +9,7 @@ export default function DashboarPage() {
     <div className=" w-full h-full overflow-auto text-black">
       <h1>Hello Page, dashboard</h1>
       <Suspense fallback={<h1>Cargando...</h1>} >
-        <Test publicId=""/>
+        {/* <Test publicId=""/> */}
       </Suspense>
     </div>
   );

@@ -1,9 +1,9 @@
 // app/auth/login/page.tsx
 "use client";
 
+import { authenticate } from "@/src/action/auth";
 import { ChangeEvent, FocusEvent, useActionState, useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import { authenticate } from "@/src/action";
 
 // export const LoginForm=()=> {
 //   const router = useRouter();

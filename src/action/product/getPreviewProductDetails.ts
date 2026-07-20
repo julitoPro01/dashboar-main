@@ -1,8 +1,8 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { PreviewProductDetailsResponse } from "@/src/interfaces/products";
-import { ApiResponse, PromiseReturn } from "@/src/utils";
+import { PreviewProductDetailsResponse } from "@/src/features/products/types";
+import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
 
 interface Props {
     id: number;
@@ -19,7 +19,6 @@ export const getPreviewProductDetails = async ({ id }: Props) => {
                 supplier: { select: { name: true } },
                 recordStatus: { select: { name: true } },
                 verificationStatus: { select: { name: true } },
-                mainCategory: { select: { name: true } },
                 name: true,
                 shortDescription: true,
                 longDescription: true,
@@ -46,7 +45,6 @@ export const getPreviewProductDetails = async ({ id }: Props) => {
             supplier: res.supplier!.name,
             status: res.recordStatus.name,
             verificationStatus: res.verificationStatus.name,
-            mainCategory: res.mainCategory.name,
             name: res.name,
             shortDescription: res.shortDescription,
             longDescription: res.longDescription,

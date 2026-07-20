@@ -1,8 +1,6 @@
 
-import { BootData } from "@/src/components/bootData";
-import { LeftMenu, LayoutLeftMenu, TopMenu } from "@/src/components/layout";
-import { NextAuthProvider, QueryProvider } from "@/src/components/providers";
-import { DynamicToaster } from "@/src/components/ui";
+import { AppInitializer, FetchingStatus, LeftMenu, NextAuthProvider, QueryProvider, TopMenu } from "@/src/features/layout";
+import { DynamicToaster } from "@/src/shared/components/toaster";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode; }) {
 
@@ -10,42 +8,53 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <>
             <NextAuthProvider>
                 <QueryProvider>
+                    <div className="flex flex-col h-screen bg-background-light">
 
-                    <div className=" flex flex-col h-screen bg-background">
                         {/* TOP MENU */}
-                        <div className="p-2   border-b border-border ">
-                            
-                            <TopMenu/>
+                        <div className="p-2 border-b border-border">
+                            <TopMenu />
                         </div>
-                        <div className="flex flex-row flex-1 overflow-hidden">
-                            <LayoutLeftMenu >
+
+                        <div className="flex flex-1 overflow-hidden">
+
+                            {/* LEFT MENU */}
+                            <LeftMenu.Wrapper>
                                 <LeftMenu />
-                            </LayoutLeftMenu>
-                            <div className="flex flex-1 flex-col h-full overflow-hidden">
-                                <div className=" flex-1 px-2 md:px-8 relative overflow-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-bg-select ">
-                                    <BootData>
-                                        {children}
-                                    </BootData>
+                            </LeftMenu.Wrapper>
+
+                            {/* CONTENIDO + PANEL DERECHO */}
+                            <div className="flex flex-1 overflow-hidden">
+
+                                {/* MAIN CONTENT */}
+                                <div className="flex flex-col flex-1 overflow-hidden">
+
+                                    <FetchingStatus />
+
+                                    <AppInitializer>
+                                        <div className="flex flex-1 overflow-hidden">
+
+                                            {/* TABLA (scroll independiente) */}
+                                            <main className="flex-1 overflow-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-bg-select px-4 md:px-8">
+                                                {children}
+                                            </main>
+
+                                            {/* PANEL DERECHO */}
+                                            {/* <div className="w-80 border-l overflow-auto"> */}
+                                            {/* RightPanel dinámico */}
+                                            {/* </div> */}
+
+                                        </div>
+                                    </AppInitializer>
+
                                 </div>
+
                             </div>
-                            <div className=" ">
-                                {/* <LeftMenu /> */}
-                            </div>
+
                         </div>
-                        {/* BOTTOM MENU */}
-                        {/* <div className=" w-full  dark:bg-slate-800 px-2 py-1">
-                            <BottomMenu />
-                        </div> */}
 
-                        {/* <SeeDetailsInModal /> */}
                     </div>
-
-                    {/* <InitStateZusband */}
-                    {/* verificationStatus={resVS.ok ? resVS.data! : []} */}
-                    {/* /> */}
                     <DynamicToaster />
 
-                    {/* Inicializar datas al inicial la aplicación */}
                 </QueryProvider>
             </NextAuthProvider >
         </>

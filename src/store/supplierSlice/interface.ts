@@ -1,24 +1,17 @@
-import { PaginationBasic } from "@/src/domains/pagination";
-import { RECORD_STATUS_TYPE } from "@/src/interfaces/record-status";
-import { SupplierTableFilter } from "@/src/interfaces/supplier";
+import { SupplierTableFilter } from "@/src/features/suppliers/types";
 
-export type LOADING_SUPPLIER_STATE = "loaded" | "loading" | "error";
 
-type Options = Partial<Record<keyof SupplierTableFilter, true>>;
+type Delete = Partial<Record<keyof SupplierTableFilter, true>>;
 
 export type SupplierState = {
+    // PAGE: INDEX
     supplierFilter: SupplierTableFilter;
-    loadingSupplierState: LOADING_SUPPLIER_STATE;
-    supplierPagination: { pagination: PaginationBasic<RECORD_STATUS_TYPE>, isActive: boolean };
     viewSupplierDetails:{modalOpen:boolean,id?:number};
     selectedSupplier:{id?:number,publicId?:string}
 }
 
 export type SupplierAction = {
-    setSupplierFilter: (_: Partial<SupplierTableFilter>) => void;
-    setLoadingSupplierState: (_: LOADING_SUPPLIER_STATE) => void;
-    setSupplierPagination: (_: PaginationBasic<RECORD_STATUS_TYPE>) => void;
-    setSupplierFilterAndPagination:(_: Partial<SupplierTableFilter>, q_: Partial<PaginationBasic<RECORD_STATUS_TYPE>>,options?:Options) => void;
+    setSupplierFilter: (_: Partial<SupplierTableFilter>,del?:Delete) => void;
     setViewSupplierDetails:(_:boolean,id?:number)=>void;
     setSelectSupplier:(id?:number,publicId?:string)=>void;
 }

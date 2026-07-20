@@ -1,20 +1,28 @@
 import { combine } from "zustand/middleware";
-import { ActionProduct, StateProduct } from "./interface";
-import { DEFAULT_PAGINATION } from "@/src/domains/pagination";
+import { ActionProduct, StateProduct } from "./type";
+import { deleteProperties } from "@/src/shared/utils";
+import { ProductTableFilters } from "@/src/features/products";
 
 export const productSlice = combine<StateProduct, ActionProduct>(
     {
         productFilters: {},
-        productPagination: { pagination: { ...DEFAULT_PAGINATION }, isActive: false },
         loadingProductState: "loaded",
-        selectedProduct: undefined,
+        selectedProduct: {id:undefined, publicId:undefined, lastCategoryId:undefined, to:undefined , index:undefined},
         modalTypeProductDetails: { type: undefined, open: false },
         productDetailsData: undefined
     },
     (set, get) => ({
-        setProductFilters: (filter) => set((state) => ({ productFilters: { ...state.productFilters, ...filter } })),
-        setProductPagination: (pag) => set(state => ({ productPagination: { pagination: { ...state.productPagination.pagination, ...pag }, isActive: true } })),
-        setProductFiltersAndPagination: (filter, pag) => { },
+        setProductFilters:(fil,del)=>{
+
+            set(state => {
+                        let currentFilters = state.productFilters ?? {};
+                        if (del && typeof del === "object") {
+                            const entries = Object.entries(del).filter(([_, v]) => v).map(([key]) => key as keyof ProductTableFilters);
+                            currentFilters = deleteProperties(currentFilters, entries)
+                        }
+                        return { productFilters: { ...currentFilters, ...fil } }
+                    })
+        },
         setLoadingProductState: (state) => set({ loadingProductState: state }),
         setSelectedProduct: (state) => set({ selectedProduct: state }),
 

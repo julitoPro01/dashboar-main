@@ -1,16 +1,17 @@
 import { create } from "zustand";
-import { categorySlice, CategorySlice } from "./categorySlice";
-import { VariantSlice, variantSlice } from "./variantSlice";
-import { UiSlice, uiSlice } from "./uiSlice";
-import { BootDataSlice, bootDataSlice } from "./bootDataSlice";
-import { ProductSlice, productSlice } from "./productSlice";
-import { supplierSlice, SupplierSlice } from "./supplierSlice";
+import { categorySlice } from "./categorySlice";
+import { variantSlice } from "./variantSlice";
+import { uiSlice } from "./uiSlice";
+import { productSlice } from "./productSlice";
+import { supplierSlice } from "./supplierSlice";
+import { attributeSlice } from './attributeSlice/attributeSlice';
+import type { Store } from "./Store.type";
 
-export const useStore = create<UiSlice & CategorySlice & VariantSlice & BootDataSlice & ProductSlice & SupplierSlice>((...a) => ({
+export const useStore = create<Store>((...a) => ({
     ...uiSlice(...a),
     ...categorySlice(...a),
     ...variantSlice(...a),
-    ...bootDataSlice(...a),
     ...productSlice(...a),
-    ...supplierSlice(...a)
+    ...supplierSlice(...a),
+    ...attributeSlice(...a)
 }));    

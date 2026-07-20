@@ -2,31 +2,33 @@ import { combine } from "zustand/middleware";
 import { ActionCategory, StateCategory } from "./interface";
 
 const init: StateCategory = {
-    historyCategory: {
-        lastMainUpdate: undefined,
-        lastSubDelete: undefined,
-        lastSubUpdate: undefined
+    mainCategoryChanges: {
+        lastUpdate: undefined,
+        lastDeleteId: undefined
     },
-    mainCategory: undefined,
+
+    selectedMainCategory: undefined,
     selectedCategory: undefined,
-    childrenCategories: []
+    openModalEditCategory: false,
 }
 
 
 export const categorySlice = combine<StateCategory, ActionCategory>(
     init,
-    (set, get) => ({
-        setMainCategory: (state) => (set({ mainCategory: state })),
-        setSelectCategory: (state) => (set({ selectedCategory: state })),
-        setChildrenCategory: (states) => (set({ childrenCategories: states })),
-        setHistoryCategory: (type, state) => {
-            if (type === "deleteSub")
-                set({ historyCategory: { ...get().historyCategory, lastSubDelete: state } });
-            if (type === "updateMain")
-                set({ historyCategory: { ...get().historyCategory, lastMainUpdate: state } });
-            if (type === "updateSub")
-                set({ historyCategory: { ...get().historyCategory, lastSubUpdate: state } });
+    (set) => ({
+        setSelectMainCategory: state => (set({ selectedMainCategory: state })),
+        setSelectCategory: state => set({ selectedCategory: state }),
+        setOpenModalEditCategory: (open) => set({ openModalEditCategory: open }),
+
+        setMainCategoryChanges: (state) => {
+
+            if (state.type === "update")
+                set(s => ({ mainCategoryChanges: { ...s.mainCategoryChanges, lastUpdate: state.values } }));
+            if (state.type === "delete")
+                set(s => ({ mainCategoryChanges: { ...s.mainCategoryChanges, lastDeleteId: state.id } }));
+
         },
+
         setCleanStateCategory: () => (set(init))
     })
-)
+)   

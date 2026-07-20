@@ -1,45 +1,68 @@
 "use server"
 
 import prisma from "@/lib/prisma"
-import { CategoryBase, UpsertCategory } from "@/src/interfaces/category"
-import { ApiResponse, PromiseReturn } from "@/src/utils"
 import { CategoryCreateSchema } from "./schema/UpsertCategorySchema"
+import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
+import { RECORD_STATUS_ID } from "@/src/shared/domains/status";
 
-interface Audi {
-    createdBy:string;
-    createdById:number;
+interface Data {
+    name: string;
+    description?: string | null;
+    recordStatusId?: number;
+    slug: string;
+    imageUrl?: string | null;
+    parentId?: number | null;
+    path?: string;
+    level: number;
+    createdBy: string;
+    createdById: number;
 }
 
-export const addCategory = async (data: UpsertCategory,{createdBy,createdById}:Audi) => {
+export const addCategory = async (data: Data) => {
 
-    return PromiseReturn<CategoryBase>(async () => {
+    return PromiseReturn(async () => {
 
         const parse = CategoryCreateSchema.parse(data);
 
-        const res = await prisma.category.create({
+        const exist = await prisma.category.findFirst({
+            where: { name: { contains: parse.name, mode: "insensitive" } }
+        })
+
+        if(exist)
+            return ApiResponse.badRequest("La categoría ya existe")
+
+        const create = await prisma.category.create({
             data: {
                 name: parse.name,
                 description: parse.description ?? null,
-                recordStatudId: parse.recordStatudId,
+                recordStatusId: parse.recordStatudId ?? RECORD_STATUS_ID.DRAFT,
                 slug: parse.slug,
                 imageUrl: parse.imageUrl ?? null,
                 parentId: parse.parentId ?? null,
-                isProductCategory: parse.isProductCategory,
-                createdBy:createdBy,
-                createdById:createdById
+                path: "",
+                level: parse.level,
+                createdBy: parse.createdBy,
+                createdById: parse.createdById
             },
+            select: { id: true }
+        });
+
+
+        const res = await prisma.category.update({
+            where: { id: create.id },
+            data: { path: !parse.path ? `/${create.id}/` : `${parse.path}${create.id}/` },
             select: {
                 id: true,
+                publicId: true,
+                recordStatus: { select: { name: true } },
                 name: true,
-                description: true,
-                recordStatudId: true,
-                slug: true,
-                imageUrl: true,
                 parentId: true,
-                isProductCategory: true,
+                level: true,
+                path: true
             }
         })
 
-        return ApiResponse.success("Categoría creado correctamente.", res)
+        return ApiResponse.success("Categoría creado correctamente.", res);
+
     })
 }
