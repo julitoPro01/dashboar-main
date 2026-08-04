@@ -7,21 +7,25 @@ import { RECORD_STATUS_ID } from "@/src/shared/domains/status";
 
 
 export interface UpdateCategory {
+    id: number;
+
     name?: string;
     slug?: string;
-    description?: string;
+    description?: string | null;
     recordStatusId?: number;
-    imageUrl?: string;
+    imageUrl?: string | null;
+
+    updatedBy: string, updatedById: number
 }
 
-export const updateCategory = async (id: number, data: UpdateCategory, audi: { updateBy: string, updateById: number }) => {
+export const updateCategory = async (data: UpdateCategory,) => {
 
     return PromiseReturn(async () => {
-        const parse = CategoryUpdateSchema.parse(data);
+        const { id, ...parse } = CategoryUpdateSchema.parse(data);
 
         const res = await prisma.category.update({
             where: { id },
-            data: { ...parse, updatedBy: audi.updateBy, updatedById: audi.updateById },
+            data: { ...parse },
             select: {
                 id: true,
                 name: true,
@@ -37,7 +41,7 @@ export const updateCategory = async (id: number, data: UpdateCategory, audi: { u
         if (RECORD_STATUS_ID.DELETED === parse.recordStatusId || RECORD_STATUS_ID.ARCHIVED === parse.recordStatusId)
             await prisma.category.updateMany({
                 where: { path: { startsWith: res.path } },
-                data: { recordStatusId: parse.recordStatusId, updatedBy: audi.updateBy, updatedById: audi.updateById }
+                data: { recordStatusId: parse.recordStatusId, updatedBy: parse.updatedBy, updatedById: parse.updatedById }
             })
 
         return ApiResponse.success("Categoría actualizado correctamente.", res)

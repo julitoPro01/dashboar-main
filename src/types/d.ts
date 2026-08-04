@@ -2,7 +2,7 @@
 
 import '@tanstack/react-table'
 import { RowData } from '@tanstack/react-table'
-import { OptionMeta } from '../shared/table'
+import { MetaOptions } from '../shared/table/core'
 
 // 1. Declaración para archivos CSS (Mantenlo separado)
 
@@ -14,5 +14,5 @@ declare module '@tanstack/react-table' {
         styleHover?: string
         fill?: boolean
     }
-    interface TableMeta<TData extends RowData> extends OptionMeta { }
+    interface TableMeta<TData extends RowData> extends MetaOptions { }
 }

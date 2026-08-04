@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { Test } from "./Test";
 
 
 export default function DashboarPage() {

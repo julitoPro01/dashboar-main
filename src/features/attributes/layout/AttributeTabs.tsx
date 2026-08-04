@@ -4,8 +4,8 @@ import { APP_ROUTES } from "@/src/shared/routes";
 import { usePathname } from "next/navigation";
 import { useStore } from "@/src/store/useStore";
 import { FaPlus } from "react-icons/fa";
-import { CategorySelectorBar } from "../category-attributes/components/CategorySelectorBar";
-import { createURLPaginationParams } from "@/src/shared/table";
+import { CategorySelectorBar } from "../category-attributes/list/CategorySelectorBar";
+import { createURLPaginationParams } from "@/src/shared/table/pagination";
 
 export const AttributeTabs = () => {
 

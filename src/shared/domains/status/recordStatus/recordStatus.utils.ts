@@ -1,4 +1,4 @@
-import { RECORD_STATUS, RECORD_STATUS_LABEL } from "./recordStatus.constans";
+import { PARENT_RESTRICTED_STATUS, RECORD_STATUS, RECORD_STATUS_LABEL, RECORD_STATUS_TRANSITIONS } from "./recordStatus.constans";
 import { RecordStatusDb, RecordStatusLabel, RecordStatusValue } from "./type";
 
 /**
@@ -15,9 +15,9 @@ export const parseRecordStatus = (statusValue?: RecordStatusValue): RecordStatus
     return (a ? a[0] : undefined) as RecordStatusDb | undefined;
 }
 
-export const normalizeRecordStatusFromURL = (status?: string | null):RecordStatusValue | undefined => {
+export const normalizeRecordStatusFromURL = (status?: string | null): RecordStatusValue | undefined => {
     if (!status) return undefined;
-    const a = Object.values(RECORD_STATUS).find(v => v===status);
+    const a = Object.values(RECORD_STATUS).find(v => v === status);
     return a ? a : undefined;
 }
 
@@ -44,3 +44,12 @@ export const serializeRecordStatusLabel = (status?: RecordStatusDb): RecordStatu
     if (!status) return undefined;
     return RECORD_STATUS_LABEL[status];
 };
+
+
+export const getAvailableStatuses = (current: RecordStatusDb, parent?: RecordStatusDb):RecordStatusDb[] => {
+
+    const statuses = parent && PARENT_RESTRICTED_STATUS[parent];
+
+    return statuses || RECORD_STATUS_TRANSITIONS[current];
+
+}

@@ -16,17 +16,26 @@ import {
     verticalListSortingStrategy,
     horizontalListSortingStrategy,
     rectSortingStrategy,
-    rectSwappingStrategy
+    rectSwappingStrategy,
+    SortingStrategy
 } from '@dnd-kit/sortable';
 
+type Strategy = "vertical" | "horizontal" | "rectSorting" | "rectSwapping";
 interface Props {
     children: React.ReactNode;
     itemIds: string[] | number[]; // [id,id,id]
     onDragEnd: (even: DragEndEvent) => void;
-    strategy?: "vertical" | "horizontal" | "rectSorting" | "rectSwapping";
+    strategy?: Strategy;
 }
 
-export const Sorteable = ({ children, itemIds, onDragEnd, strategy }: Props) => {
+const direction: Record<Strategy, SortingStrategy> = {
+    vertical: verticalListSortingStrategy,
+    horizontal: horizontalListSortingStrategy,
+    rectSorting: rectSortingStrategy,
+    rectSwapping: rectSwappingStrategy
+}
+
+export const Sorteable = ({ children, itemIds, onDragEnd, strategy = "vertical" }: Props) => {
 
 
     const sensors = useSensors(
@@ -45,13 +54,7 @@ export const Sorteable = ({ children, itemIds, onDragEnd, strategy }: Props) => 
         >
             <SortableContext
                 items={itemIds}
-                strategy={strategy === "horizontal"
-                    ? horizontalListSortingStrategy
-                    : strategy === "vertical"
-                        ? verticalListSortingStrategy
-                        : strategy === "rectSorting"
-                            ? rectSortingStrategy
-                            : strategy === "rectSwapping" ? rectSwappingStrategy : rectSortingStrategy}
+                strategy={direction[strategy]}
             >
                 {children}
             </SortableContext>

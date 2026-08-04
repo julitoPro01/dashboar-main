@@ -1,11 +1,11 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { SupplierOptionsResponse } from "@/src/features/suppliers/types";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
 
+//TODO: No se esta usando
 export const getSupplierOptions = async () => {
-  return PromiseReturn<SupplierOptionsResponse>(async () => {
+  return PromiseReturn(async () => {
 
     const res = await prisma.supplier.findMany({
       where: {

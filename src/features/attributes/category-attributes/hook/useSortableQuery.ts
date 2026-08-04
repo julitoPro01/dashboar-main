@@ -1,22 +1,22 @@
 import { QUERY_KEYS } from "@/src/shared/react-query";
 import { DragEndEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
-import { parsePaginationParams } from "@/src/shared/table";
 import { useStore } from "@/src/store/useStore";
 import { useQueryClient } from "@tanstack/react-query";
 import { ApiSuccessReturn } from "@/src/shared/utils";
-import { CATEGORY_ATTR_SORTBY_ACCEPT_ONLY } from "../constants/filters";
+import { CATEGORY_ATTR_NORMALIZE_PAGINATION, CATEGORY_ATTR_SORTBY_ACCEPT_ONLY } from "../constants/filters";
 import { CategoryAttrResponse, CategoryAttrsResponse } from "../types";
+import { getPaginationParams, parsePaginationParams } from "@/src/shared/table/pagination";
 
 export const useSortableQuery = () => {
 
     const clientQuery = useQueryClient();
 
     const handleDragEnd = (event: DragEndEvent) => {
-        const search = window.location.search;
-        const parse = parsePaginationParams(search, { sortByAcceptOnly: CATEGORY_ATTR_SORTBY_ACCEPT_ONLY, default_sortBy: "order" })
-        const filter = useStore.getState().categoryAttrFilter;
+        const filter = useStore.getState().categoryAttrFilters;
         const { active, over } = event;
+
+        const parse = getPaginationParams(CATEGORY_ATTR_NORMALIZE_PAGINATION);
 
         clientQuery.setQueryData(
             QUERY_KEYS.attributes.listCatg(parse, filter),
@@ -44,7 +44,7 @@ export const useSortableQuery = () => {
     const undoSortable = (data: CategoryAttrResponse[]) => {
          const search = window.location.search;
         const parse = parsePaginationParams(search, { sortByAcceptOnly: CATEGORY_ATTR_SORTBY_ACCEPT_ONLY, default_sortBy: "order" })
-        const filter = useStore.getState().categoryAttrFilter;
+        const filter = useStore.getState().categoryAttrFilters;
 
         clientQuery.setQueryData(
             QUERY_KEYS.attributes.listCatg(parse, filter),

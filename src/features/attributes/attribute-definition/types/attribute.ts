@@ -6,13 +6,12 @@ export type AttributeDataTypeDb = AttributeDataType;
 export type UpsertAttributeForm = {
     name: string;
     dataType?: AttributeDataTypeDb;
-    // isOptionValues?:boolean;
+
     isSupportValues?: boolean;
     description?: string;
     isActive: boolean;
 
-    //AttributeValueOption
-    // isSystemDefault: boolean;
+
     value: string;
-    values: { value: string, displayOrder: number, id: number, isSystemDefault: true }[];
+    values: { value: string, displayOrder: number, id: number }[];
 }

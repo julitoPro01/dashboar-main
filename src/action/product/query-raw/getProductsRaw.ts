@@ -1,8 +1,8 @@
 import { ProductTableFilters } from "@/src/features/products";
 import { Prisma } from "@/src/generated/prisma/client";
-import { PaginationBasic } from "@/src/shared/table";
+import { PaginationState } from "@/src/shared/table";
 
-export const getProductsRaw = (pag: PaginationBasic, filters: ProductTableFilters) => {
+export const getProductsRaw = (pag: PaginationState, filters: ProductTableFilters) => {
 
     const { order, sortBy } = pag;
     // 1. Inicializar condiciones con la base de soft-delete

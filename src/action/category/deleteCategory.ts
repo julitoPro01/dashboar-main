@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
+import { ApiEntityInUseData, ApiResponse, PromiseReturn } from "@/src/shared/utils";
 
 interface Props {
     id: number;
@@ -16,9 +16,9 @@ export const deleteCategory = async ({ id, parentId }: Props) => {
         parentIsRootCategory: false // Si es subcategoría, si su padre es categoría raíz (no tiene padre)
     }
 
-    return PromiseReturn(async () => {
+ const res = await PromiseReturn(async () => {
         
-        await prisma.category.delete({ where: { id } });
+       await prisma.category.delete({ where: { id } });
 
         // Es subcategoría, verificamos si tiene hijos.
         if (parentId) {
@@ -36,9 +36,26 @@ export const deleteCategory = async ({ id, parentId }: Props) => {
             resp.isRootCategory = true;
         }
 
-
-
         return ApiResponse.success("Categoría eliminada correctamente", resp);
 
     });
+
+
+    if(!res.ok && res.errorCode==="ENTITY_IN_USE"){
+
+        return await PromiseReturn(async()=>{
+
+            const products = prisma.productCategory.count({where:{categoryId:id}});
+            const promotions = prisma.promotion.count({where:{categoryId:id}});
+
+            const [one,two] = await prisma.$transaction([products,promotions]);
+
+            return ApiResponse.badRequest("","ENTITY_IN_USE",undefined,[
+                {entity:"Producto / Categoría",count:one},
+                {entity:"Promoción",count:two}
+            ])
+        })
+    }
+
+    return res;
 }

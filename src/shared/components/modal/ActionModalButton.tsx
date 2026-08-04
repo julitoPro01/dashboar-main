@@ -6,6 +6,7 @@ interface Props {
     typeBtnAccept?: "button" | "submit"
 }
 
+//TODO: No se esta usando
 export const ActionModalButton = ({ onCancel, onAccept, disabledAccept = false, typeBtnAccept = "button" }: Props) => {
     return (
         <div className="flex gap-5 justify-end">

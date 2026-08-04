@@ -5,7 +5,7 @@ import { uiSlice } from "./uiSlice";
 import { productSlice } from "./productSlice";
 import { supplierSlice } from "./supplierSlice";
 import { attributeSlice } from './attributeSlice/attributeSlice';
-import type { Store } from "./Store.type";
+import type { Store } from "./store.type";
 
 export const useStore = create<Store>((...a) => ({
     ...uiSlice(...a),

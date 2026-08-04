@@ -9,7 +9,6 @@ export const createAttrDefinitionSchema = z.object({
     isActive: z.boolean(),
 
     values: z.array(z.object({
-        isSystemDefault: z.boolean(),
         value: z.string(),
         displayOrder: z.number().int().positive(),
     })).optional(),
@@ -26,7 +25,6 @@ export const editAttrDefinitionSchema = z.object({
 
     values: z.array(z.object({
         id: z.number().int().optional(),
-        isSystemDefault: z.boolean(),
         value: z.string(),
         displayOrder: z.number().int().positive(),
     })).optional(),

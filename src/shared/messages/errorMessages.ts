@@ -1,4 +1,4 @@
-import { ApiErrorReturn, ApiErrorType } from "../utils";
+import {  ApiErrorType } from "../utils";
 
 export interface ErrorMessage {
   title: string;
@@ -90,7 +90,8 @@ export const errorMessages = {
     description: "Ocurrió un error inesperado.",
     action: "Reintentar",
     icon: "⚠️",
-  },
+  }
+
 } satisfies Record<string, ErrorMessage>;
 
 export const getErrorMessage = (errorType: ApiErrorType): ErrorMessage => {

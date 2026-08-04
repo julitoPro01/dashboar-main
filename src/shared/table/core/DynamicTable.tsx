@@ -1,15 +1,19 @@
 
 interface Props {
   HeaderRows: React.ReactNode,
-  children: React.ReactNode
+  children: React.ReactNode,
+  className?:string;
 }
 
-export const DynamicTable = ({ HeaderRows, children }: Props) => {
+export const DynamicTable = ({ HeaderRows, children,className }: Props) => {
   return (
 
-    <div className=" flex flex-col w-full h-full overflow-auto scrollbar-thin scrollbar-thumb-bg-select ">
+    // <div className=" flex flex-col w-full h-full overflow-auto scrollbar-thin max-h-full">
+      <div className={`relative flex flex-col flex-1 overflow-auto scrollbar-thin scrollbar-thumb-bg-select px-6 ${className}`}>
+      
+      <div className="sticky right-0 top-0 h-full bg-amber-500 w-50" />
 
-      <table className="w-full h-full relative text-left table-auto min-w-max">
+      <table className="relative left table-auto ">
         <thead className=" sticky top-0 z-10"  >
           {HeaderRows}
         </thead>
@@ -33,18 +37,18 @@ interface PropsR {
 export const DynamicReactTable = ({ HeaderRows, children, totalSize, roundedTop = true, h = "full" }: PropsR) => {
 
   return (
-    <div className={`bg-surface border border-border ${roundedTop ? "rounded-t-xl" : ""} shadow-card overflow-hidden flex flex-col flex-1 max-h-[${HEIGHT[h]}]`}>
+    <div className={`bg-surface border text-text-subtle border-border ${roundedTop ? "rounded-t-xl" : ""} shadow-card overflow-hidden flex flex-col flex-1 max-h-[${HEIGHT[h]}]`}>
 
-      <div className=" flex flex-col w-full h-full scrollbar-thin scrollbar-thumb-transparent  overflow-auto hover:scrollbar-thumb-active ">
+      {/* <div className=" flex flex-col w-full h-full overflow-auto scrollbar-thin scrollbar-thumb-transparent   hover:scrollbar-thumb-active "> */}
+      <div className=" flex flex-col w-full h-full overflow-auto scrollbar-thin ">
 
         <table className={"relative left table-auto w-full h-full min-w-full"}
           style={{ width: totalSize, tableLayout: "fixed" }}
         >
-          <thead className=" sticky top-0 z-10"  >
+          <thead className=" sticky top-0 z-10 "  >
             {HeaderRows}
-
           </thead>
-          <tbody className=" overflow-auto">
+          <tbody className=" overflow-hidden">
             {children}
             <tr>
               <td

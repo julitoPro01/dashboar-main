@@ -1,7 +1,7 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { sortCategoriesByParent } from "@/src/features/category/utils";
-import { ProductFormDataResponse } from "@/src/features/products/types";
+import { sortCategoriesByParent } from "@/src/features/category/shared/utils";
+// import { ProductFormDataResponse } from "@/src/features/products/shared/types";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
 
 interface Props {
@@ -9,22 +9,20 @@ interface Props {
 }
 
 export const getProductForm = async ({ publicId }: Props) => {
-    return PromiseReturn<ProductFormDataResponse>(async () => {
+    return PromiseReturn(async () => {
 
         const res = await prisma.product.findUnique({
             where: { publicId },
             select: {
                 id: true,
                 name: true,
-                supplierId: true,
+                supplier: { select: { id: true, name: true } },
                 recordStatusId: true,
                 shortDescription: true,
                 longDescription: true,
                 productCategories: {
-                    where: { category: { isProductCategory: true } },
                     select: {
                         category: {
-
                             select: {
                                 id: true,
                                 name: true,

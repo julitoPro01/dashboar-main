@@ -1,8 +1,7 @@
 import { combine } from "zustand/middleware";
 import { ActionProduct, StateProduct } from "./type";
 import { deleteProperties } from "@/src/shared/utils";
-import { ProductTableFilters } from "@/src/features/products";
-
+import { ProductFilters } from "@/src/features/products/types";
 export const productSlice = combine<StateProduct, ActionProduct>(
     {
         productFilters: {},
@@ -17,7 +16,7 @@ export const productSlice = combine<StateProduct, ActionProduct>(
             set(state => {
                         let currentFilters = state.productFilters ?? {};
                         if (del && typeof del === "object") {
-                            const entries = Object.entries(del).filter(([_, v]) => v).map(([key]) => key as keyof ProductTableFilters);
+                            const entries = Object.entries(del).filter(([_, v]) => v).map(([key]) => key as keyof ProductFilters);
                             currentFilters = deleteProperties(currentFilters, entries)
                         }
                         return { productFilters: { ...currentFilters, ...fil } }

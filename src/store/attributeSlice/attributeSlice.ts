@@ -1,33 +1,34 @@
 import { AttributeSlice } from "./type";
 import { deleteProperties } from "@/src/shared/utils";
 import { StateCreator } from "zustand";
-import { Store } from "../Store.type";
-import { AttributeTableFilter } from "@/src/features/attributes/attribute-definition/types";
-import { CategoryAttrTableFilter } from "@/src/features/attributes/category-attributes/types";
+import { AttributeFilters } from "@/src/features/attributes/attribute-definition/types";
+import { CategoryAttrFilters } from "@/src/features/attributes/category-attributes/types";
+import { Store } from "../store.type";
 
 
 export const attributeSlice: StateCreator<Store, [], [], AttributeSlice> = (set) => ({
 
-    attributeFilter: {},
+    attributeFilters: {},
     selectedAttribute: undefined,
     deleteAttributeModal: undefined,
     editAttributeModal: undefined,
 
-    categoryAttrFilter: { selection: { type: "all" }, actionType: "view" },
+    categoryAttrFilters: { selection: { type: "all" }, actionType: "view" },
     categoryAttrSelectedIds: [],
     categoryAttrStoreHistory: { prevActionType: undefined },
     selectCategoryModal: { isOpen: false, paths: undefined, isParent: false },
 
     createAttributeModal: false,
 
-    setAttributeFilter: (fil, del) => {
+    setAttributeFilters: (fil, del) => {
         set(state => {
-            let currentFilters = state.attributeFilter ?? {};
+
+            let currentFilters = state.attributeFilters ?? {};
             if (del && typeof del === "object") {
-                const entries = Object.entries(del).filter(([_, v]) => v).map(([key]) => key as keyof AttributeTableFilter);
+                const entries = Object.entries(del).filter(([_, v]) => v).map(([key]) => key as keyof AttributeFilters);
                 currentFilters = deleteProperties(currentFilters, entries)
             }
-            return { attributeFilter: { ...currentFilters, ...fil } }
+            return { attributeFilters: { ...currentFilters, ...fil } }
         })
     },
     setSelectAttribute: (value) => set({ selectedAttribute: value }),
@@ -48,23 +49,23 @@ export const attributeSlice: StateCreator<Store, [], [], AttributeSlice> = (set)
     resetCategoryAttrSelectedIds: () => {
         set({ categoryAttrSelectedIds: [] })
     },
-    setCategoryAttrFilter: (obj) => {
+    setCategoryAttrFilters: (obj) => {
         set(state => {
 
-            const rest = typeof obj === "function" ? obj(state.categoryAttrFilter) : obj
+            const rest = typeof obj === "function" ? obj(state.categoryAttrFilters) : obj
 
-            let currentFilters = state.categoryAttrFilter ?? { actionType: "view" };
+            let currentFilters = state.categoryAttrFilters ?? { actionType: "view" };
             if (rest.del && typeof rest.del === "object") {
 
-                const entries = Object.entries(rest.del).filter(([_, v]) => v).map(([key]) => key as keyof CategoryAttrTableFilter);
+                const entries = Object.entries(rest.del).filter(([_, v]) => v).map(([key]) => key as keyof CategoryAttrFilters);
                 currentFilters = { ...deleteProperties(currentFilters, entries), actionType: currentFilters.actionType ?? "view" }
             }
             let prevActionType = state.categoryAttrStoreHistory.prevActionType;
-            if (state.categoryAttrFilter.actionType !== rest.fil?.actionType)
-                prevActionType = state.categoryAttrFilter.actionType
+            if (state.categoryAttrFilters.actionType !== rest.fil?.actionType)
+                prevActionType = state.categoryAttrFilters.actionType
 
             return {
-                categoryAttrFilter: { ...currentFilters, ...rest.fil },
+                categoryAttrFilters: { ...currentFilters, ...rest.fil },
                 categoryAttrStoreHistory: { ...state.categoryAttrStoreHistory, prevActionType }
             }
         })

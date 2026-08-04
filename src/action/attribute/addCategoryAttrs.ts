@@ -2,7 +2,7 @@
 import prisma from "@/lib/prisma";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
 import { revalidateCategories } from "../category";
-import { CategoryAttrDisplayGroupDb } from "@/src/features/attributes/shared";
+import { CategoryAttrDisplayGroupDb } from "@/src/features/attributes/category-attributes/types";
 
 export type AddCategoryAttrs = {
     attributeDefinitionId: number;
@@ -33,7 +33,7 @@ export const addCategoryAttrs = async ({ categoryId, data }: Props) => {
         })
 
         await prisma.categoryAttribute.createMany({
-            data: data.map((v, i) => ({ ...v, categoryId, displayOrder: order + i }))
+            data: data.map((v, i) => ({ ...v, categoryId, displayOrder: order + (i+1) }))
         });
 
         return ApiResponse.created("creado correctamente")

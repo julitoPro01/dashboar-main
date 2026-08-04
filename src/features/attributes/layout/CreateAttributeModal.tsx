@@ -1,13 +1,13 @@
 "use client";
 import { DynamicModal } from "@/src/shared/components/modal";
 import { useStore } from "@/src/store/useStore"
-import { AttributeForm } from "../attribute-definition/components/shared";
-import { useBasicForm } from "@/src/shared/hooks";
-import { ErrorMessage, getErrorMessage, successMessage } from "@/src/shared/messages";
-import { TOAST_STYLE, ToastError, ToastSuccess } from "@/src/shared/components/toaster";
+import { getErrorMessage, successMessage } from "@/src/shared/messages";
+import { TOAST_STYLE, ToastError } from "@/src/shared/components/toaster";
 import type { UpsertAttributeForm } from "../attribute-definition/types";
-import { useCreateAttribute } from "../attribute-definition/hook/useCreateAttribute";
 import { toast } from "sonner";
+import { useCreateAttribute } from "../attribute-definition/shared/hook";
+import { useBasicForm } from "@/src/shared/form";
+import { AttributeForm } from "../attribute-definition/shared/components";
 
 interface Props { createdBy: string; createdById: number }
 export const CreateAttributeModal = ({ createdBy, createdById }: Props) => {
@@ -33,21 +33,18 @@ export const CreateAttributeModal = ({ createdBy, createdById }: Props) => {
 
 const RenderContent = ({ createdBy, createdById, closeModal }: Props & { closeModal: () => void }) => {
 
-    const createAttribute = useCreateAttribute();
+    const { mutate: createAttribute, isPending } = useCreateAttribute();
 
     const form = useBasicForm(init, {
         name: (val) => val.trim().length >= 3,
         dataType: (val) => val.trim().length > 2,
     }, {
         onCancel() { closeModal() },
-        async onSubmit() {
-            if (!form.isValidate()) return;
-
-            await form.isSubmit();
+        onSubmit() {
 
             const { values } = form.state
 
-            createAttribute.mutate({
+            createAttribute({
                 name: form.state.name,
                 dataType: form.state.dataType!,
                 description: form.state.description,
@@ -66,12 +63,16 @@ const RenderContent = ({ createdBy, createdById, closeModal }: Props & { closeMo
                     }
                 }
             });
+        },
+        onUndo() {
+            form.handleChange("values", init.values)
         }
     });
 
 
     return (
         <AttributeForm
+            isSubmitting={isPending}
             form={form}
         />
     )

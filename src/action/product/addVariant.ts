@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { CreateVariantSchema } from "./schema/upsertVariant";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
+import { VariantAttributeValueCreateManyInput } from "@/src/generated/prisma/models";
 
 type Data = {
     productId: number;
@@ -63,9 +64,9 @@ export const addVariant = async (data: Data, attr: AttributeValue[], images: Ima
             });
             // #2
             await prisma.variantAttributeValue.createMany({
-                data: attr.map(v => ({
+                data: attr.map<VariantAttributeValueCreateManyInput>(v => ({
                     variantId: res.id,
-                    attributeOptionId: v.attributeDefinitionId,
+                    attributeDefinitionId: v.attributeDefinitionId,
                 }))
             })
 

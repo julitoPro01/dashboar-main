@@ -1,4 +1,4 @@
-import { ProductDetailsResponse, ProductTableFilters } from "@/src/features/products";
+import { ProductDetailsResponse, ProductFilters } from "@/src/features/products/details/types";
 
 // page -> Product Details
 export type TYPE_PRODUCT_DETAILS =
@@ -19,11 +19,11 @@ export type STATE_LOADING_PRODUCT = "loaded" | "loading";
 type TYPE_SELECTED = { id?: number, publicId?: string, lastCategoryId?: number, to?: "modal" | "dropDrow", index?: number }
 
 // PAGE - INDEX 
-type Delete = Partial<Record<keyof ProductTableFilters, true>>;
+type Delete = Partial<Record<keyof ProductFilters, true>>;
 
 export interface StateProduct {
     // PAGE - INDEX
-    productFilters: ProductTableFilters;
+    productFilters: ProductFilters;
 
     loadingProductState: STATE_LOADING_PRODUCT;
     selectedProduct: TYPE_SELECTED;
@@ -33,7 +33,7 @@ export interface StateProduct {
 }
 
 export interface ActionProduct {
-    setProductFilters: (_: Partial<ProductTableFilters>, del?: Delete) => void;
+    setProductFilters: (_: Partial<ProductFilters>, del?: Delete) => void;
 
     setLoadingProductState: (_: STATE_LOADING_PRODUCT) => void;
     setSelectedProduct: (_?: TYPE_SELECTED) => void;

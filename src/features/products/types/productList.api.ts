@@ -1,8 +1,7 @@
 
 //----------------------------------
-// para tabla
 
-import { MetaPagination } from "@/src/shared/table";
+import { MetaPagination } from "@/src/shared/table/pagination";
 
 export type ProductItemResponse = {
     // ------ VISUAL / TABLE --------

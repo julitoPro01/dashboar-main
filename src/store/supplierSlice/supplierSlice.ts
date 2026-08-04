@@ -1,7 +1,7 @@
 import { combine } from "zustand/middleware";
 import { SupplierAction, SupplierState } from "./interface";
 import { deleteProperties } from "@/src/shared/utils";
-import { SupplierTableFilter } from "@/src/features/suppliers/types/supplierTableFilter.type";
+import { SupplierFilters } from "@/src/features/suppliers/types";
 
 export const supplierSlice = combine<SupplierState, SupplierAction>({
     supplierFilter: {},
@@ -15,7 +15,7 @@ export const supplierSlice = combine<SupplierState, SupplierAction>({
         set(state => {
             let currentFilters = state.supplierFilter ?? {};
             if (del && typeof del === "object") {
-                const entries = Object.entries(del).filter(([_, v]) => v).map(([key]) => key as keyof SupplierTableFilter);
+                const entries = Object.entries(del).filter(([_, v]) => v).map(([key]) => key as keyof SupplierFilters);
                 currentFilters = deleteProperties(currentFilters, entries)
             }
             return { supplierFilter: { ...currentFilters, ...fil } }

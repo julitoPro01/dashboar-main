@@ -1,4 +1,4 @@
-import { type MetaPagination } from "@/src/shared/table";
+import { MetaPagination } from "@/src/shared/table/pagination";
 import { AttributeDataTypeDb } from "./attribute";
 //---FOR LIST DEFINITIONS---
 export type AttributeDefinitionResponse = {

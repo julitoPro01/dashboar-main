@@ -1,11 +1,13 @@
 type SuccessCode = 200 | 201;
 
-export type ApiSuccessReturn<T> = {
+export type ApiSuccessReturn<T=never> = {
   ok: true;
   code: SuccessCode;
   msg: string;
-  data: T | null
+  data: T
 }
+
+export type ApiEntityInUseData = { entity: string, count: number }
 
 //-----------------------
 
@@ -26,40 +28,40 @@ export type ApiErrorCode =
   | "NOT_FOUND"
   | "UNKNOWN";
 
-export type ApiErrorReturn<T> = {
+export type ApiErrorReturn<T=never> = {
   ok: false;
   code: ErrorCode;
   errorType: ApiErrorType;
   errorCode: ApiErrorCode;
   msg: string;
-  data: T | null,
+  data?: T ,
   error?: unknown
 }
 
 export type ApiMsgErrorReturn = Partial<Record<ApiErrorType, string>>;
 
 export const ApiResponse = {
-  success: <T>(msg = "Solicitud exitosa", data?: T, code: SuccessCode = 200): ApiSuccessReturn<T> => ({
+  success: <T>(msg = "Solicitud exitosa", data: T = {} as T, code: SuccessCode = 200): ApiSuccessReturn<T> => ({
     ok: true,
     code,
     msg,
-    data: data ?? null
+    data
   }),
 
-  created: <T>(msg = "Solicitud exitosa", data?: T): ApiSuccessReturn<T> => ({
+  created: <T>(msg = "Solicitud exitosa", data: T={} as T): ApiSuccessReturn<T> => ({
     ok: true,
     code: 201,
     msg,
-    data: data ?? null
+    data
   }),
 
-  notFound: <T>(msg = "Recurso no encontrado", errorCode: ApiErrorCode = "UNKNOWN", data?: T): ApiErrorReturn<T> => ({
+  notFound: <T>(msg = "Recurso no encontrado", errorCode: ApiErrorCode = "UNKNOWN", data: T = null as T): ApiErrorReturn<T> => ({
     ok: false,
     code: 404,
     errorType: "NOT_FOUND",
     errorCode,
     msg,
-    data: data ?? null
+    data
   }),
 
   badRequest: <T>(msg = "Solicitud inválida", errorCode: ApiErrorCode = "UNKNOWN", error?: unknown, data?: T): ApiErrorReturn<T> => ({
@@ -69,7 +71,7 @@ export const ApiResponse = {
     errorCode: errorCode,
     msg,
     error,
-    data: data ?? null
+    data
   }),
 
   serverError: <T>(msg = "Error interno del servidor", error?: unknown, data?: T): ApiErrorReturn<T> => ({
@@ -79,7 +81,7 @@ export const ApiResponse = {
     errorCode: "UNKNOWN",
     msg,
     error: error instanceof Error ? error.message : String(error),
-    data: data ?? null
+    data
   }),
 
   conflict: <T>(msg = "El recurso ya existe", errorCode: ApiErrorCode = "UNKNOWN", error?: unknown, data?: T): ApiErrorReturn<T> => ({
@@ -89,6 +91,6 @@ export const ApiResponse = {
     errorCode: errorCode,
     msg,
     error,
-    data: data ?? null,
+    data,
   }),
 };

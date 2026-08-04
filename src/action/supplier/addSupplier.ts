@@ -22,7 +22,7 @@ export const addSupplier = async (data: Data) => {
     return PromiseReturn(async () => {
 
         const parse = SupplierCreateSchema.parse({ ...data });
-        if (parse.relationMode === "OWNED")
+        if (parse.relationMode === "OWNER")
             return ApiResponse.badRequest();
 
         const res = await prisma.supplier.create({

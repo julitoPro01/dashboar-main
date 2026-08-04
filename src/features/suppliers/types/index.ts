@@ -1,4 +1,10 @@
-export * from './supplier.api';
-export * from './supplierCapability.type';
-export * from './supplierRelationMode.type';
-export * from './supplierTableFilter.type';
+
+export type * from './supplierForm.api';
+export type * from './supplierForm';
+export * from './supplierForm.schema';
+
+export type * from './supplierFilters';
+export type * from './supplierList.api';
+
+export type * from './supplierCapability';
+export type * from './supplierRelationMode';

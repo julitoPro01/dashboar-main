@@ -1,17 +1,17 @@
-import { SupplierTableFilter } from "@/src/features/suppliers/types";
+import { SupplierFilters } from "@/src/features/suppliers/types";
 
 
-type Delete = Partial<Record<keyof SupplierTableFilter, true>>;
+type Delete = Partial<Record<keyof SupplierFilters, true>>;
 
 export type SupplierState = {
     // PAGE: INDEX
-    supplierFilter: SupplierTableFilter;
+    supplierFilter: SupplierFilters;
     viewSupplierDetails:{modalOpen:boolean,id?:number};
     selectedSupplier:{id?:number,publicId?:string}
 }
 
 export type SupplierAction = {
-    setSupplierFilter: (_: Partial<SupplierTableFilter>,del?:Delete) => void;
+    setSupplierFilter: (_: Partial<SupplierFilters>,del?:Delete) => void;
     setViewSupplierDetails:(_:boolean,id?:number)=>void;
     setSelectSupplier:(id?:number,publicId?:string)=>void;
 }

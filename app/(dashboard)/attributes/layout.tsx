@@ -1,5 +1,5 @@
 import { auth } from "@/auth.config";
-import { AttributeTabs, CreateAttributeModal } from "@/src/features/attributes";
+import { AttributeTabs, CreateAttributeModal } from "@/src/features/attributes/layout";
 
 export default async function LayoutPage({ children }: { children: React.ReactNode }) {
 

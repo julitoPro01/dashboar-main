@@ -1,3 +1,3 @@
-export * from './attribute.api';
-export * from './attribute';
-export * from './attributeTableFilter';
+export type * from './attribute.api';
+export type * from './attribute';
+export type * from './attributeFilters';

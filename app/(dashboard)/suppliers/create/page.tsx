@@ -1,5 +1,5 @@
 import { auth } from "@/auth.config";
-import { SupplierRegister } from "@/src/features/suppliers";
+import { SupplierRegister } from "@/src/features/suppliers/create";
 
 export default async function RegisterSupplierPage() {
 

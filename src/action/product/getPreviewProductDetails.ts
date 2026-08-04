@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { PreviewProductDetailsResponse } from "@/src/features/products/types";
+import { PreviewProductDetailsResponse } from "@/src/features/products/details/types";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
 
 interface Props {

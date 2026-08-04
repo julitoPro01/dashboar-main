@@ -1,26 +1,20 @@
-import { getSupplierOptions } from "@/src/action";
-// import { CreateSupplierUserForm } from "@/src/features/supplier-user/components/CreateSupplierUserForm";
 import { ErrorServer } from "@/src/shared/components/error";
 
 export default async function UserCreatePage() {
 
-    const [ suppliers] = await Promise.all([getSupplierOptions()]);
-
-    // const session = await auth()
-    // console.log(session?.user)
 
     return (
         <div className="flex flex-col items-center gap-6 py-10 px-4 h-full overflow-auto scrollbar-thin
                    min-w-md ">
             {
-                (!suppliers.ok) &&
+                
                 <div className="p-4">
                     <ErrorServer Title="No se pudieron cargar los datos requeridos. Intenta nuevamente más tarde." onAction={true} />
                 </div>
             }
 
             {
-                ( suppliers.ok) &&
+            
                 <>
                     <h1 className="text-3xl font-semibold my-5 px-4 text-gray-700 border-b pb-2">
                         Agrega un nuevo usuario al negocio

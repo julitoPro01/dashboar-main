@@ -1,13 +1,13 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { CategoryAttrsResponse, type CategoryAttrTableFilter } from "@/src/features/attributes/shared"
+import { CategoryAttrsResponse, CategoryAttrFilters } from "@/src/features/attributes/category-attributes/types";
 import { Prisma } from "@/src/generated/prisma/client";
-import { buildMeta, type PaginationBasic } from "@/src/shared/table"
+import { buildMeta, PaginationState } from "@/src/shared/table/pagination";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils"
 import { Sql } from "@prisma/client/runtime/client";
 
-export const getCategoryAttrs = async (pag: PaginationBasic, fls: CategoryAttrTableFilter) => {
+export const getCategoryAttrs = async (pag: PaginationState, fls: CategoryAttrFilters) => {
 
     const limit = pag.pageSize;
     const offset = (pag.page - 1) * pag.pageSize;
@@ -46,12 +46,12 @@ export const getCategoryAttrs = async (pag: PaginationBasic, fls: CategoryAttrTa
         ${where}
     `;
 
-    return PromiseReturn<CategoryAttrsResponse>(async () => {
+    return PromiseReturn(async () => {
         const [resData, resTotal] = await prisma.$transaction([data, count]);
 
         const totalItems = Number(resTotal[0].count);
 
-        return ApiResponse.success("Ok", {
+        return ApiResponse.success<CategoryAttrsResponse>("Ok", {
             categoryAttrs: resData,
             meta: buildMeta({
                 totalItems,
@@ -64,7 +64,7 @@ export const getCategoryAttrs = async (pag: PaginationBasic, fls: CategoryAttrTa
 
 }
 
-const allDataClause = (whereConditions: Sql[], fls: CategoryAttrTableFilter) => {
+const allDataClause = (whereConditions: Sql[], fls: CategoryAttrFilters) => {
 
     const { selection, categoryId } = fls;
 
@@ -115,7 +115,7 @@ const allDataClause = (whereConditions: Sql[], fls: CategoryAttrTableFilter) => 
 
 }
 
-const viewDataClause = (whereConditions: Sql[], fls: CategoryAttrTableFilter) => {
+const viewDataClause = (whereConditions: Sql[], fls: CategoryAttrFilters) => {
 
     const { categoryId } = fls;
 

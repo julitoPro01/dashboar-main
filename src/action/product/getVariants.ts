@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { ProductVariantsDetailsResponse } from "@/src/features/products/types";
+import { ProductVariantsDetailsResponse } from "@/src/features/products/details/types";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
 
 interface Prosp {
@@ -62,14 +62,13 @@ export const getVariants = async ({ productPublicId }: Prosp) => {
             if (!res) return null;
 
             const catgAttrs = await prisma.categoryAttribute.findMany({
-                where: { categoryId: res.lastCategoryId, attributeDefinition: { toProduct: false } },
+                where: { categoryId: res.lastCategoryId},
                 select: {
                     id: true,
                     isFilter: true,
                     isRequired: true,
                     displayOrder: true,
                     attributeDefinition: {
-
                         select: {
                             id: true,
                             name: true,

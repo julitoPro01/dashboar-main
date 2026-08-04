@@ -5,11 +5,10 @@ import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
 import { editAttrDefinitionSchema } from "./schema/upsert";
 import prisma from "@/lib/prisma";
 
-interface AttributeValueOptionDto {
+interface SystemAttributeValue {
     id?: number;
     value: string;
     displayOrder: number;
-    isSystemDefault: boolean;
 }
 
 interface Props {
@@ -18,7 +17,7 @@ interface Props {
     description?: string;
     dataType?: AttributeDataTypeDb;
     isActive?: boolean;
-    values?: AttributeValueOptionDto[];
+    values?: SystemAttributeValue[];
     updatedBy: string;
     updatedById: number;
 }
@@ -35,7 +34,7 @@ export const editAttrDefinition = async (params: Props) => {
             where: { id },
             data: {
                 ...parse,
-                AttributeValueOptions:
+                systemAttributeValue:
                     !values
                         ? undefined
                         : {
@@ -59,7 +58,6 @@ export const editAttrDefinition = async (params: Props) => {
                                 .map(v => ({
                                     value: v.value,
                                     displayOrder: v.displayOrder,
-                                    isSystemDefault: v.isSystemDefault,
                                 }))
                         }
             }

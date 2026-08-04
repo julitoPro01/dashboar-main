@@ -4,13 +4,13 @@ import prisma from "@/lib/prisma";
 import { CategoryResponse } from "@/src/features/category/types";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
 
-interface Props { mains?: true, typeProductCategory?: true }
+interface Props { mains?: true, typeProductCategory?: true, isDesc?: boolean }
 
-export const getCategories = async ({ mains, typeProductCategory }: Props) => {
+export const getCategories = async ({ mains, typeProductCategory, isDesc = false }: Props) => {
 
 
 
-    return PromiseReturn<CategoryResponse[]>(async () => {
+    return PromiseReturn(async () => {
 
 
         const res = await prisma.category.findMany({
@@ -21,7 +21,7 @@ export const getCategories = async ({ mains, typeProductCategory }: Props) => {
             },
             select: {
                 id: true,
-                publicId:true,
+                publicId: true,
                 name: true,
                 recordStatus: { select: { name: true } },
                 imageUrl: true,
@@ -31,7 +31,7 @@ export const getCategories = async ({ mains, typeProductCategory }: Props) => {
                 _count: {
                     select: {
                         children: true,
-                        categoryAttributes:true
+                        categoryAttributes: true
                     }
                 }
             }
@@ -44,8 +44,12 @@ export const getCategories = async ({ mains, typeProductCategory }: Props) => {
                 ...v,
                 recordStatus: v.recordStatus.name,
                 hasChildren: v._count.children > 0,
-                hasAttributes:v._count.categoryAttributes > 0
-            }))
+                hasAttributes: v._count.categoryAttributes > 0
+            })).sort((a, b) => {
+                return isDesc
+                    ? b.recordStatus.localeCompare(a.recordStatus, "es", { sensitivity: "base", numeric: true })
+                    : a.recordStatus.localeCompare(b.recordStatus, "es", { sensitivity: "base", numeric: true });
+            })
         );
 
     })

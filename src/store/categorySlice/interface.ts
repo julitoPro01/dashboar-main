@@ -10,7 +10,8 @@ type Category = {
     recordStatus: RecordStatusDb,
     level: number,
     path: string,
-    paths: { name: string, id: number, recordStatus: RecordStatusDb }[]
+    paths: { name: string, id: number, recordStatus: RecordStatusDb }[],
+
 }
 
 export type MainCategory = {
@@ -19,32 +20,35 @@ export type MainCategory = {
     recordStatus: RecordStatusDb,
     name: string,
     hasChildren: boolean, publicId: string, level: number, hasAttributes: boolean
+    sync?: "update" | "delete"
 };
 
 type Changes = { type: "update", values: Partial<MainCategory> } | { type: "delete", id: number };
 
+// delete category modal
+type DelCatgMd = { id: number, name: string, parentId?: number, open: boolean };
+// Edit modal
+type EditCtgMd = { id: number, name: string, open: boolean };
+
 export interface StateCategory {
     selectedMainCategory?: MainCategory;
     selectedCategory?: Category;
+    isCreateCategoryFormOpen: boolean;
+    deleteCategoryModal?: DelCatgMd;
+    editCategoryModal?: EditCtgMd; 
 
-    openModalEditCategory: boolean; // Para controlar la apertura del modal de edición de categoría
 
-    // Historial para manejar cambios de actualización o eliminados
-    mainCategoryChanges: {
-        lastUpdate?: Partial<MainCategory>;
-        lastDeleteId?: number;
-    }
 }
 
 export interface ActionCategory {
+
     setSelectMainCategory: (_?: MainCategory) => void;
     setSelectCategory: (_?: Category) => void;
+    setCreateCategoryFormOpen: (open: boolean) => void;
+    setDeleteCategoryModal: (val?: DelCatgMd) => void;
+    setEditCategoryModal: (val?: EditCtgMd) => void;
 
-    setOpenModalEditCategory: (_: boolean) => void;
-
-    setMainCategoryChanges: (_: Changes) => void;
-
-    setCleanStateCategory: () => void;
+    setCleanStateCategory: () => void;//TODO
 }
 
 export type CategorySlice = StateCategory & ActionCategory; 

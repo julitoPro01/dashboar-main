@@ -3,12 +3,12 @@
 import { Prisma } from "@/src/generated/prisma/client";
 import prisma from "@/lib/prisma";
 import { createDateRangeFilter } from "../utils/dateRanger.filter";
-import { SuppliersResponse, SupplierTableFilter } from "@/src/features/suppliers/types";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
-import {type PaginationBasic } from "@/src/shared/table";
+import { PaginationState } from "@/src/shared/table/pagination";
+import { SuppliersResponse, SupplierFilters } from "@/src/features/suppliers/types";
 
-type QueryProps = PaginationBasic;
-type FilterProps = SupplierTableFilter;
+type QueryProps = PaginationState;
+type FilterProps = SupplierFilters;
 
 export async function getSuppliers(query: QueryProps, filter: FilterProps) {
 
@@ -37,7 +37,7 @@ export async function getSuppliers(query: QueryProps, filter: FilterProps) {
     else if (sortBy === "name") orderBy = [{ name: order }, { id: order }];
     else orderBy = [{ id: order }]
 
-    return PromiseReturn<SuppliersResponse>(async () => {
+    return PromiseReturn(async () => {
 
         const supplierCount = prisma.supplier.count({
             where: filters.length ? { AND: filters } : {}
@@ -69,7 +69,7 @@ export async function getSuppliers(query: QueryProps, filter: FilterProps) {
         const totalPages = Math.ceil(totalSuppliers / pageSize);
 
 
-        return ApiResponse.success("OK", {
+        return ApiResponse.success<SuppliersResponse>("OK", {
             suppliers: suppliers,
             meta: {
                 totalItems: totalSuppliers,

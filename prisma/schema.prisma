@@ -744,9 +744,9 @@ model AttributeDefinition {
   updater UserAuthentication? @relation(fields: [updatedById], references: [id],name: "AttrDefinitionUpdatedBy")
 
   categoryAttributes CategoryAttribute[]
-  AttributeValueOptions AttributeValueOption[]
-  VariantAttributeValues VariantAttributeValue[]
-  ProductAttributeValues ProductAttributeValue[] 
+  systemAttributeValue SystemAttributeValue[]
+  variantAttributeValues VariantAttributeValue[]
+  productAttributeValues ProductAttributeValue[] 
 
   @@map("attribute_definitions")
 }
@@ -762,7 +762,7 @@ model CategoryAttribute {
   displayOrder      Int?
   displayGroup           DisplayGroup @default(GENERAL)
 
-  category           Category           @relation(fields: [categoryId], references: [id])
+  category           Category           @relation(fields: [categoryId], references: [id], onDelete:Cascade)
   attributeDefinition AttributeDefinition @relation(fields: [attributeDefinitionId], references: [id])
 
   @@unique([categoryId, attributeDefinitionId])
@@ -785,13 +785,9 @@ model ProductAttributeValue {
   productId             Int
   product            Product            @relation(fields: [productId], references: [id])
 
-  attributeValueOptionId Int?
-  attributeValueOption AttributeValueOption? @relation(fields: [attributeValueOptionId], references: [id])
-
 
   attributeDefinitionId Int
   attributeDefinition AttributeDefinition @relation(fields: [attributeDefinitionId], references: [id])
-  @@unique([productId, attributeDefinitionId])
 
  // Para valores libres
   valueText     String?
@@ -799,45 +795,46 @@ model ProductAttributeValue {
   valueBoolean  Boolean?
   valueDate     DateTime?
   valueJson     Json?
-  // @@id([productId,attributeOptionId])
+
+  @@unique([productId, attributeDefinitionId])
   @@map("product_attribute_values")
 }
 
-model AttributeValueOption{
+model SystemAttributeValue{
   id Int @id @default(autoincrement())
   attributeDefinitionId Int
   value String
   displayOrder Int?
 
-  isSystemDefault Boolean @default(false)
-  supplierId Int?
-  supplier Supplier? @relation(fields: [supplierId],references: [id])
 
   attributeDefinition AttributeDefinition @relation(fields: [attributeDefinitionId], references: [id], onDelete:Cascade)
   variantAttributeValues VariantAttributeValue[]
-  productAttributeValues ProductAttributeValue[]
 
   @@unique([attributeDefinitionId,value])
-  @@index([attributeDefinitionId])
-  @@index([value])
-  @@map("attribute_option")
+
+  @@map("system_attribute_values")
 }
 model VariantAttributeValue {
   id Int @id @default(autoincrement())
   variantId             Int
 
-  attributeValueOptionId Int
+  systemAttributeValueId Int?
 
   productVariant            ProductVariant    @relation(fields: [variantId], references: [id])
-  attributeValueOption AttributeValueOption @relation(fields: [attributeValueOptionId], references: [id])
+  systemAttributeValue SystemAttributeValue? @relation(fields: [systemAttributeValueId], references: [id])
 
   attributeDefinitionId Int
   attributeDefinition AttributeDefinition @relation(fields: [attributeDefinitionId], references: [id])
   @@unique([variantId, attributeDefinitionId])
+  @@index([attributeDefinitionId, systemAttributeValueId])
+  @@index([attributeDefinitionId, valueText])
+  // Para valores libres
+  valueText     String?
+  valueNumber   Float?
+  valueBoolean  Boolean?
+  valueDate     DateTime?
+  valueJson     Json?
 
- 
-  // @@id([variantId,attributeValueOptionId])
-  @@index([variantId])
   @@map("variant_attribute_values")
 }
 
@@ -1505,7 +1502,6 @@ model Supplier {
   shippingTimes   ProductShippingTime[]
   providerUsers   SupplierUser[]
   contacts SupplierContact[]
-  attributeValueOption AttributeValueOption[]
 
   @@index([name])
   @@index([recordStatusId])
@@ -1513,7 +1509,7 @@ model Supplier {
 }
 
 enum SupplierRelationMode {
-  OWNED      // Operación propia / Dueño
+  OWNER      // Operación propia / Dueño
   PARTNER    // Proveedor externo con acceso al sistema
   CATALOG    // Solo catálogo (proveedor pasivo/pasante)
 }

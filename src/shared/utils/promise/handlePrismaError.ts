@@ -1,8 +1,8 @@
 
-import { ApiMsgErrorReturn, ApiResponse } from "./apiResponse";
+import { ApiErrorReturn, ApiMsgErrorReturn, ApiResponse } from "./apiResponse";
 
 
-export function handlePrismaError(error: unknown, msg?: ApiMsgErrorReturn) {
+export function handlePrismaError<T>(error: unknown, msg?: ApiMsgErrorReturn):ApiErrorReturn<T> {
 
     if (!(isPrismaKnownError(error)))
         throw error;

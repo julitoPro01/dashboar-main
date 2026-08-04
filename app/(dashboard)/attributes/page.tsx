@@ -1,13 +1,14 @@
 import { auth } from "@/auth.config";
-import { ATTRIBUTE_SORTBY_ACCEPT_ONLY, AttributeList, DeleteAttributeModal, EditAttributeModal, RowFloatingActions } from "@/src/features/attributes";
-import { type PaginationQuery, normalizePaginationParams } from "@/src/shared/table";
+import { ListAttribute, DeleteAttributeModal, EditAttributeModal, RowFloatingActions } from "@/src/features/attributes/attribute-definition/list";
+import { ATTRIBUTE_NORMALIZE_PAGINATION } from "@/src/features/attributes/attribute-definition/constants/filters";
+import { normalizePaginationParams, PaginationQuery } from "@/src/shared/table/pagination";
 
 
 export default async function AttributesPage({ searchParams }: { searchParams: PaginationQuery }) {
 
     const query = await searchParams;
 
-    const norPage = normalizePaginationParams(query, { includeState: true, parseState: true, sortBy_acceptOnly: ATTRIBUTE_SORTBY_ACCEPT_ONLY });
+    const norPage = normalizePaginationParams(query,ATTRIBUTE_NORMALIZE_PAGINATION);
 
     const session = await auth()
     const user = session!.user;
@@ -15,7 +16,7 @@ export default async function AttributesPage({ searchParams }: { searchParams: P
     return (
         <div className="flex flex-col h-full">
 
-            <AttributeList pagination={norPage} />
+            <ListAttribute pagination={norPage} />
 
             <RowFloatingActions />
 

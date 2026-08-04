@@ -1,13 +1,13 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { SUPPLIER_CAPABILITIES_LABELS } from "@/src/features/suppliers/shared/capability.constans";
-import { SUPPLIER_RELATION_MODE_LABEL } from "@/src/features/suppliers/shared/relationMode.constants";
-import { SupplierDetailsResponse, SupplierFormDataResponse } from "@/src/features/suppliers/types";
-import { ApiResponse, PromiseReturn, Result } from "@/src/shared/utils";
+import { SUPPLIER_CAPABILITIES_LABELS, SUPPLIER_RELATION_MODE_LABEL } from "@/src/features/suppliers/constants";
+import { ApiErrorReturn, ApiResponse, ApiSuccessReturn, PromiseReturn } from "@/src/shared/utils";
 
-export async function getSupplier(p: { to: "details", id: number }): Promise<Result<SupplierDetailsResponse>>;
-export async function getSupplier(p: { to: "form", publicId: string }): Promise<Result<SupplierFormDataResponse>>;
+import { SupplierDetailsResponse, SupplierFormDataResponse } from "@/src/features/suppliers/types";
+
+export async function getSupplier(p: { to: "details", id: number }): Promise<ApiSuccessReturn<SupplierDetailsResponse> | ApiErrorReturn<null>>;
+export async function getSupplier(p: { to: "form", publicId: string }): Promise<ApiErrorReturn<SupplierFormDataResponse> | ApiErrorReturn<null>>;
 
 export async function getSupplier(p: any) {
 
@@ -19,7 +19,7 @@ export async function getSupplier(p: any) {
         const res = await prisma.supplier.findUnique({
             where: p.to === "details" ? { id: p.id } : { publicId: p.publicId },
             select: {
-                id:true,
+                id: true,
                 logoUrl: true,
                 name: true,
                 description: true,

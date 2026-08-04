@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 import { z } from "zod";
 
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
-import { type CategoryDetailsResponse } from "@/src/features/category/types";
+import type { CategoryDetailsResponse } from "@/src/features/category/details/types/category.api";
 
 
 export const getCategoryDetails = async (publicId: string) => {
@@ -36,6 +36,7 @@ export const getCategoryDetails = async (publicId: string) => {
                         isFilter: true,
                         displayOrder: true,
                         isVariant: true,
+                        displayGroup:true,
                         attributeDefinition: { select: { name: true } }
                     }
                 },

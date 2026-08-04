@@ -1,7 +1,7 @@
 
 export * from './categoryHasReferences';
 
-export * from './addCategory';
+export * from './createCategory';
 export * from './deleteCategory';
 export * from './getCategories';
 export * from './getCategoryDetails';

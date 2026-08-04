@@ -1,8 +1,9 @@
-import { SORTBY_ACCEPT_ONLY, SupplierList } from "@/src/features/suppliers";
-import { type PaginationQuery, normalizePaginationParams } from "@/src/shared/table";
+import { SORTBY_ACCEPT_ONLY } from "@/src/features/suppliers/constants";
+import { ListSuppliers } from "@/src/features/suppliers/list";
+
+import { normalizePaginationParams, PaginationQuery } from "@/src/shared/table/pagination";
 
 interface Props { searchParams: PaginationQuery }
-
 
 export default async function SuppliersPage({ searchParams }: Props) {
 
@@ -11,7 +12,7 @@ export default async function SuppliersPage({ searchParams }: Props) {
         sortBy_acceptOnly: SORTBY_ACCEPT_ONLY, includeState: true, parseState: true,
     });
     return (
-        <SupplierList pagination={norPage} />
+        <ListSuppliers pagination={norPage} />
     );
 }
 

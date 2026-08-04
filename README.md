@@ -14,6 +14,7 @@
 
 00. Para resetear datos ``npx prisma migrate reset``
 01. Para enviar cambios de codigo ``npx prisma migrate dev --name "name"``
+02. para guardar los cambios ```npx prisma generate``
 
 ## STYLES
 1. Stilos en scrollbar ``pnpm install tailwind-scrollbar``
@@ -44,13 +45,14 @@ Hubo un error al cargar los datos. Vuelve a intentarlo.
 
 1. Lapiz encima de una linea ``CiEdit``
 2. Lapiz dentro de un cuatro ``FaRegEdit`` 
-3. Signo mayor ``MdKeyboardArrowRight`` = ```>``
-4. Check simple ``<FaCheck />``
+3. Signo mayor ``MdKeyboardArrowRight | MdArrowForwardIos MdArrowBackIosNew`` = ```>``
+4. Check simple /fa6 ``<FaCheck />``
 5. Tres puntos en vertical ``<MdMoreVert  />``
 6. Refresh ``GrRefresh ``
 7. volver atras "<" ``IoIosArrowBack``
 8. volver atras "<-" ``IoMdArrowRoundBack``              
 9. Mas "+" `` <BiPlus />``
+10. activar un formulario para una lista ``MdPostAdd``
 10. Info ``MdOutlineInfo``
 
 ## CREAR COMPONENT PAGE "FUNCTION"
@@ -82,3 +84,25 @@ los nombres yendo de la acción general a la entidad específica - useRefreshSel
 ## EXPORTACION DE ARCHIVOS DE UNA CARPETA
 1. Si existe un archivo con el mismo nombre de  la carpeta, sera el unico que sera exportado.
 2. Si los archivos contienen nombres distintos a la carpeta, todos seran exportados.
+
+<!-- -----------CRUD---------------------- -->
+## DIFERENCIA ENTRE UPDATE Y EDIT
+# Edit -> cambio visual en pantalla editField, editName.
+# Update -> cambio persistente en la DB.
+
+## DIFERENCIA ENTRE SET, ADD, CREATE
+# Set -> reemplaza por completo un valor.
+# Add -> Añade un valor existente a otro objeto.
+# Create -> Crea un valor nuevo y lo agrega al objeto.
+
+## DIFERENCIA ENTRE DELETE, REMOVE
+# Delete -> Elimina por completo de la DB.
+# Remove -> Saca de una lista local (UI)
+<!-- ---------------------------------------- -->
+
+## ESTADO DE CONSULTAS https
+# GET
+- isLoading: primera carga.
+- isFetching: cualquier petición en curso (incluye refetch).
+# POST, PUT, PATCH, DELETE
+- isPending: esta realizando una operación

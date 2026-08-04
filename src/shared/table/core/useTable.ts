@@ -1,43 +1,52 @@
 "use client"
 import { ColumnDef, ColumnSizingState, getCoreRowModel, Row, RowSelectionState, useReactTable, VisibilityState } from "@tanstack/react-table";
-import { useState } from "react";
-import { MetaPagination, type PaginationBasic } from "../pagination/shared/pagination.type";
+import { Dispatch, SetStateAction } from "react";
+import { type PaginationState } from "../pagination/types/pagination";
+import { MetaPagination } from "../pagination";
 
 
-export interface OptionMeta extends Record<any,any> {
+export interface MetaOptions {
     onSelect?: (params: any) => void
     selectedId?: number
     updateData?: (rowIndex: number | string, columnId: string, value: string | boolean | number) => void
-    metaPagination?: MetaPagination
     filters?: Object
     actionType?: string
-    pagination?: PaginationBasic
+    metaPagination?: MetaPagination
+    pagination?: PaginationState
 }
 
-interface Options {
+interface StateOptions {
     enableColumnResizing?: boolean,
     enableRowSelection?: ((row: Row<any>) => boolean) | boolean,
     columnResizeMode?: "onChange" | "onEnd",
+    enableMultiRowSelection?:boolean
 }
 
-export interface UseTableProps<T extends any[]> {
-    meta?: OptionMeta;
+interface stateAction {
+    setColumnSizing?: Dispatch<SetStateAction<ColumnSizingState>>;
+    setRowSelection?: Dispatch<SetStateAction<RowSelectionState>>;
+    setColumnVisibility?: Dispatch<SetStateAction<VisibilityState>>
+}
+interface State {
+    columnSizing?: ColumnSizingState;
+    rowSelection?: RowSelectionState
+    columnVisibility?: VisibilityState
+}
+
+export interface UseTableProps<T> {
+    meta?: MetaOptions;
     data: T;
     columns: ColumnDef<any, any>[];
-    initColumnVisibility?: VisibilityState;
-    initColumnSizing?: ColumnSizingState,
-    initRowSelection?: RowSelectionState,
-    options?: Options
+
+    stateOptions?: StateOptions;
+    stateAction?: stateAction;
+    state?: State;
 }
 
 export const useTable = <T extends any[]>({
-    data, meta, columns, options,
-    initColumnVisibility, initColumnSizing, initRowSelection
+    data, meta, columns, stateOptions, stateAction, state
 }: UseTableProps<T>) => {
 
-    const [columnSizing, setColumnSizing] = useState<ColumnSizingState>({ ...initColumnSizing });
-    const [rowSelection, setRowSelection] = useState<RowSelectionState>({ ...initRowSelection });
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ ...initColumnVisibility });
 
     const pag = meta?.pagination;
 
@@ -45,28 +54,24 @@ export const useTable = <T extends any[]>({
         data: data, columns,
         getCoreRowModel: getCoreRowModel(),
 
-        // onColumnFiltersChange: setColumnFilters,
-        // getFilteredRowModel: getFilteredRowModel(),
+        onColumnVisibilityChange: stateAction?.setColumnVisibility,
+        onColumnSizingChange: stateAction?.setColumnSizing,
+        onRowSelectionChange: stateAction?.setRowSelection,
 
-        onColumnVisibilityChange: setColumnVisibility,
-        enableColumnResizing: true,
-        onColumnSizingChange: setColumnSizing,
-        columnResizeMode: "onChange",
-
-        enableRowSelection: options?.enableRowSelection,
-        onRowSelectionChange: setRowSelection,
         getRowId: (row) => String(row.id),
+        
+        ...stateOptions,
 
         state: {
-            rowSelection,
-            columnSizing,
-            pagination: { pageIndex: pag?.page ?? 0, pageSize: pag?.pageSize ?? 0 },
-            columnVisibility,
-            // columnFilters
+            ...state,
+            pagination: {
+                pageIndex: pag?.page ?? 0,
+                pageSize: pag?.pageSize ?? 0
+            },
         },
         meta
     });
 
 
-    return { table, columnSizing, columnVisibility, rowSelection }
+    return table
 }

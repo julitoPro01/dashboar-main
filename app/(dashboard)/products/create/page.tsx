@@ -1,7 +1,6 @@
 import { auth } from '@/auth.config';
-import { getSupplierOptions } from '@/src/action';
 import { getCategories } from '@/src/action/category';
-import { CreateProduct } from '@/src/features/products';
+import { CreateProduct } from '@/src/features/products/create';
 import { BackTo } from '@/src/shared/components/BackTo';
 import { ErrorServer } from '@/src/shared/components/error';
 

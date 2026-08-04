@@ -24,8 +24,8 @@ export function buildRoute<T extends Record<string, string | number>>(
 export function withQueryParams(
     path: string,
     params: Record<string, any>,
-    searchParams?:any,
-    del?:string
+    searchParams?: any,
+    del?: string[],
 ): string {
 
     const queryString = new URLSearchParams(searchParams ?? "");
@@ -35,11 +35,22 @@ export function withQueryParams(
             queryString.set(key, String(value));
     });
 
-    if(del)
-        queryString.delete(del)
-    
+    if (del && del.length > 0) {
+        del.forEach(val => {
+            queryString.delete(val)
+        });
+    }
+
     const query = queryString.toString();
     return query ? `${path}?${query}` : path;
+}
+
+export const setQueryParams = (queryPath: string, options: { reagent?: boolean } = { reagent: true }) => {
+
+    if (options.reagent)
+        window.history.replaceState(null, "", queryPath);
+    else
+        window.history.replaceState({ ...window.history.state, as: queryPath, queryPath }, "", queryPath);
 }
 
 // Verificar si una ruta es pública

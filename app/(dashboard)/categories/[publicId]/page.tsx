@@ -1,5 +1,5 @@
 import { getCategoryDetails } from "@/src/action/category";
-import { AttributeConfig, Header, Metrics, Summary, } from "@/src/features/category";
+import { AttributeConfig, Header, Metrics, Summary } from "@/src/features/category/details";
 import { ErrorServer } from "@/src/shared/components/error";
 
 interface Props { params: { publicId: string } };

@@ -4,10 +4,9 @@ import { createAttrDefinitionSchema } from "./schema/upsert";
 import prisma from "@/lib/prisma";
 import type { AttributeDataTypeDb } from "@/src/features/attributes/attribute-definition/types";
 
-interface AttributeValueOptionDto {
+interface SystemAttributeValue {
     value: string;
     displayOrder: number;
-    isSystemDefault: boolean;
 }
 
 interface Props {
@@ -16,8 +15,7 @@ interface Props {
     description?: string;
     isActive: boolean;
 
-    // AttributeValueOption
-    values?: AttributeValueOptionDto[]
+    values?: SystemAttributeValue[]
 
     createdBy: string;
     createdById: number;
@@ -36,7 +34,7 @@ export const addAttrDefinition = async (props: Props) => {
                 isActive: parse.isActive,
                 createdBy: parse.createdBy,
                 createdById: parse.createdById,
-                AttributeValueOptions: parse.values ? {
+                systemAttributeValue:parse.values ? {
                     create: parse.values
                 } : undefined
             }

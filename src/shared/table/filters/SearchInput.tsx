@@ -1,26 +1,27 @@
 import clsx from "clsx";
 import { INPUT_FIELD_FILTER_STYLE } from "../../theme/inputField";
-import { CiSearch } from "react-icons/ci";
-import { IoIosClose } from "react-icons/io";
+import { FiSearch } from "react-icons/fi";
+import { Button } from "../../components/btn";
+import { IoClose } from "react-icons/io5";
 
 interface Props {
   value: string;
   onChange: (value: string) => void;
   onClear: () => void;
-  ninSearchChars?:number,
+  minSearchChars?:number,
   placeholder?: string;
   className?:string
 }
-export const SearchInput = ({onClear,onChange,value,ninSearchChars=3,placeholder, className=""}:Props) => {
+export const SearchInput = ({onClear,onChange,value,minSearchChars=3,placeholder, className=""}:Props) => {
 
-    const valid = value.trim().length === 0 || value.trim().length >= ninSearchChars
+    const valid = value.trim().length === 0 || value.trim().length >= minSearchChars
 
     return (
-        <div className={`relative flex-1  rounded-lg bg-white flex items-center ${className}`}>
+        <div className={`relative flex-1 flex items-center ${className}`}>
 
             {value.trim().length > 0
-                ? <label className={"absolute right-2 p-0.5 rounded-md border bg-red-50 border-red-200 text-red-500"} onClick={onClear} ><IoIosClose size={20} /></label>
-                : <label htmlFor="f-company" className={"absolute right-2"} ><CiSearch size={18} /></label>
+                ? <Button className="absolute right-1.5" variant="ghostDanger" padding="p-0.5" onClick={onClear} ><IoClose size={22} /></Button>
+                : <label htmlFor="f-company" className={"absolute right-2 text-text-muted"} ><FiSearch size={20} /></label>
             }
 
             <input

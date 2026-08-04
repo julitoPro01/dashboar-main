@@ -47,14 +47,13 @@ const hover = {
   basic: `hover:text-text ${active}`
 }
 
-const sizes = {
-  fxs: "text-xs",
-  fsm: "text-sm",
-  flg: "text-base",
-  xs: "px-3 py-1.5 text-xs",
-  sm: "px-4 py-2 text-sm",
-  lg: "px-5 py-2.5 text-base"
-}
+
+const sizes = (padding?: string) => ({
+
+  xs: `${padding || "px-3 py-1.5"} text-xs`,
+  sm: `${padding || "px-4 py-2"} text-sm`,
+  lg: `${padding || "px-5 py-2.5"} text-base`
+})
 
 const selected = {
   default: "focus:outline-none focus:ring-2 focus:ring-primary/40 bg-bg-select text-text-select border border-border-select/30 dark:border-border-strong/60",
@@ -67,12 +66,13 @@ const selected = {
 
 
 export interface ButtonProps {
+  padding?: string;
   variant?: keyof typeof variants
   select?: keyof typeof selected
   position?: keyof typeof positions
   active?: boolean
   loading?: boolean
-  size?: keyof typeof sizes,
+  size?: keyof ReturnType<typeof sizes>,
   children: React.ReactNode
   className?: string
   href?: string
@@ -97,7 +97,7 @@ export const Button = ({
   disabled, active, select = "default", rounded = "md",
   loading, type = "button", formId,
   title, ariaLabel,
-  onClick, id, onAnimationEnd
+  onClick, id, onAnimationEnd, padding
 }: ButtonProps) => {
 
 
@@ -107,7 +107,7 @@ export const Button = ({
     positions[position],
     variants[variant],
     hover[select === "underline" ? "underline" : variant],
-    sizes[size],
+    variant !== "basic" && sizes(padding)[size],
     active && selected[select],
     `rounded-${rounded}`,
     className

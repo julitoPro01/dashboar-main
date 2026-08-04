@@ -1,7 +1,7 @@
 "use client"
 import { Table } from "@tanstack/react-table"
 import { createContext, useContext, useMemo } from "react";
-import { useTable, UseTableProps } from "@/src/shared/table";
+import { useTable, UseTableProps } from "./useTable";
 
 type Context = {
   table: Table<any> | null;
@@ -15,12 +15,9 @@ interface Props extends UseTableProps<any[]> {
 
 export const TableProvider = <T extends any>({ children, ...res }: Props) => {
 
-  const { table, columnSizing, columnVisibility, rowSelection } = useTable<T[]>(res);
+  const table = useTable<T[]>(res);
 
-  const value = useMemo(() => ({ table }),
-    [
-      table, columnSizing, columnVisibility, rowSelection
-    ]);
+  const value = useMemo(() => ({table}), [table]);
 
   return (
     <TableContext.Provider value={value} >

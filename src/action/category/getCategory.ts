@@ -5,7 +5,7 @@ import { ApiResponse, PromiseReturn } from "@/src/shared/utils"
 
 export const getCategory = async({id}:{id:number}) => {
 
-    return PromiseReturn<CategoryEditResponse>(async()=>{
+    return PromiseReturn(async()=>{
 
         const res = await prisma.category.findUnique({
             where:{id},
@@ -25,6 +25,6 @@ export const getCategory = async({id}:{id:number}) => {
         if(!res)
             return ApiResponse.notFound();
 
-        return ApiResponse.success("Consulta exitosa",res);
+        return ApiResponse.success<CategoryEditResponse>("Consulta exitosa",res);
     })
 }

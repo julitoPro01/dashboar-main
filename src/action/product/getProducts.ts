@@ -1,16 +1,16 @@
 "use server"
 
 import prisma from "@/lib/prisma";
-import type { ProductListResponse, ProductTableFilters } from "@/src/features/products";
 
-import { buildMeta, type PaginationBasic } from "@/src/shared/table";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
 import { getProductsRaw } from "./query-raw/getProductsRaw";
+import { buildMeta, PaginationState } from "@/src/shared/table/pagination";
+import { ProductFilters, ProductListResponse } from "@/src/features/products/types";
 
 
-type Pagination = PaginationBasic;
+type Pagination = PaginationState;
 
-type Filters = ProductTableFilters;
+type Filters = ProductFilters;
 
 
 export const getProducts = async (Pagination: Pagination, filters: Filters) => {
@@ -43,14 +43,14 @@ export const getProducts = async (Pagination: Pagination, filters: Filters) => {
         WHERE ${whereSql}`;
 
 
-    return PromiseReturn<ProductListResponse>(async () => {
+    return PromiseReturn(async () => {
 
 
         const [resData, resCount] = await prisma.$transaction([data, count]);
 
         const totalItems = Number(resCount[0].count);
 
-        return ApiResponse.success("", {
+        return ApiResponse.success<ProductListResponse>("", {
             products: resData,
             meta: buildMeta({
                 totalItems,

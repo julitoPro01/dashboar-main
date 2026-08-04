@@ -1,18 +1,12 @@
 "use server"
 import prisma from "@/lib/prisma";
-import { buildCategoryTrees } from "@/src/features/category/utils";
+import { buildCategoryTrees } from "@/src/features/category/shared/utils";
+import { CategoryTreeFilters, CategoryTreeResponse } from "@/src/features/category/types";
 import { Prisma } from "@/src/generated/prisma/client";
-import { CategoryTreeResponse } from "@/src/shared/category";
-import { RecordStatusDb } from "@/src/shared/domains/status";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
 
-interface Props {
-    path?: string;
-    notInStatus?: RecordStatusDb[];
-    inStatus?: RecordStatusDb[];
-}
 
-export const getCategoryTrees = async (props?: Props) => {
+export const getCategoryTrees = async (props?: CategoryTreeFilters ) => {
 
     const filter: Prisma.CategoryWhereInput[] = [];
 
@@ -24,7 +18,7 @@ export const getCategoryTrees = async (props?: Props) => {
         filter.push({ recordStatus: { name: { notIn: props.notInStatus } } })
 
 
-    return PromiseReturn<CategoryTreeResponse[]>(async () => {
+    return PromiseReturn(async () => {
 
         const res = await prisma.category.findMany({
             where: { AND: filter },

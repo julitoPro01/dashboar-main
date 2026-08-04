@@ -1,8 +1,8 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { sortCategoriesByParent } from "@/src/features/category/utils";
-import {type ProductDetailsResponse } from "@/src/features/products/types";
+import { sortCategoriesByParent } from "@/src/features/category/shared/utils";
+import { ProductFullDetailsResponse } from "@/src/features/products/types";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const getProductDetails = async ({ publicId }: Props) => {
-    return PromiseReturn<ProductDetailsResponse>(async () => {
+    return PromiseReturn(async () => {
 
         const res = await prisma.product.findUnique({
             where: { publicId },
@@ -20,7 +20,6 @@ export const getProductDetails = async ({ publicId }: Props) => {
                 supplier: { select: { name: true } },
                 recordStatus: { select: { name: true } },
                 verificationStatus: { select: { name: true } },
-                mainCategory: { select: { name: true } },
                 name: true,
                 shortDescription: true,
                 longDescription: true,
@@ -100,7 +99,7 @@ export const getProductDetails = async ({ publicId }: Props) => {
         const categories = sortCategoriesByParent(res.productCategories.map(v => ({
             id: v.category.id,
             name: v.category.name,
-            parentId: v.category.parentId ?? undefined
+            parentId: v.category.parentId
         })));
 
         const catgAttrs = await prisma.categoryAttribute.findMany({
@@ -139,19 +138,20 @@ export const getProductDetails = async ({ publicId }: Props) => {
             })()
         }))
 
-        return ApiResponse.success("Consulta exitosa.", {
+        return ApiResponse.success<ProductFullDetailsResponse>("Consulta exitosa.", {
             productDetails: {
                 id: res.id,
                 publicId: res.publicId,
                 supplier: res.supplier!.name,
                 recordStatus: res.recordStatus.name,
                 verificationStatus: res.verificationStatus.name,
-                mainCategory: res.mainCategory.name,
                 name: res.name,
                 shortDescription: res.shortDescription,
                 longDescription: res.longDescription,
                 createdAt: res.createdAt!,
                 updatedAt: res.updatedAt,
+                
+                // mainCategory: res.mainCategory.name,
             },
 
             categoriesDetails: categories,

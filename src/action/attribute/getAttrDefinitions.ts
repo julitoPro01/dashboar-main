@@ -1,14 +1,14 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { AttributeDefinitionsResponse } from "@/src/features/attributes";
 import { Prisma } from "@/src/generated/prisma/client";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
 import { createDateRangeFilter } from "../utils/dateRanger.filter";
-import { buildMeta, buildOrderBy, type PaginationBasic } from "@/src/shared/table";
-import { AttributeTableFilter } from "@/src/features/attributes/attribute-definition/types";
+import { AttributeDefinitionsResponse, AttributeFilters } from "@/src/features/attributes/attribute-definition/types";
+import { buildMeta, PaginationState } from "@/src/shared/table/pagination";
+import { buildOrderBy } from "@/src/shared/table/filters";
 
-type Pag = PaginationBasic;
-type Filters = AttributeTableFilter;
+type Pag = PaginationState;
+type Filters = AttributeFilters;
 
 export const getAttrDefinitions = async (pag: Pag, fil: Filters) => {
 
@@ -38,7 +38,7 @@ export const getAttrDefinitions = async (pag: Pag, fil: Filters) => {
         data_type: "dataType",
     });
 
-    return PromiseReturn<AttributeDefinitionsResponse>(async () => {
+    return PromiseReturn(async () => {
 
         const attrs = prisma.attributeDefinition.findMany({
             skip: (page - 1) * pageSize,
@@ -49,7 +49,7 @@ export const getAttrDefinitions = async (pag: Pag, fil: Filters) => {
                 id: true,
                 name: true,
                 description: true,
-                AttributeValueOptions: {
+                systemAttributeValue: {
                     select: { id: true, value: true, displayOrder: true }
                 },
                 isActive: true,
@@ -63,8 +63,8 @@ export const getAttrDefinitions = async (pag: Pag, fil: Filters) => {
 
         const [res, totalItems] = await prisma.$transaction([attrs, totalAttrs]);
 
-        return ApiResponse.success("Lista de atributos consultados correctamente.", {
-            attributes: res.map(v => ({ ...v, values: v.AttributeValueOptions.sort((a, b) => a.displayOrder! - b.displayOrder!) })),
+        return ApiResponse.success<AttributeDefinitionsResponse>("Lista de atributos consultados correctamente.", {
+            attributes: res.map(v => ({ ...v, values: v.systemAttributeValue.sort((a, b) => a.displayOrder! - b.displayOrder!) })),
             meta: buildMeta({
                 totalItems,
                 pageSize,
