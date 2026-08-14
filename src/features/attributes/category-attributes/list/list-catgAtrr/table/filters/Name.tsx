@@ -14,10 +14,10 @@ export const Name = () => {
 }
 const NameSearch = () => {
 
-    const filterName = useStore(v => v.categoryAttrFilters) || "";
-    const actionType = useStore(v => v.categoryAttrFilters.actionType);
+    const filterName = useStore(v => v.categoryAttrsFilters) || "";
+    const actionType = useStore(v => v.categoryAttrsFilters.actionType);
 
-    const setFilter = useStore(v => v.setCategoryAttrFilters);
+    const setFilter = useStore(v => v.setCategoryAttrsFilters);
 
     const { name, isApplied, cleanValues, handleChange } = useSearch({
         initName: "",

@@ -14,7 +14,7 @@ export const AttributeTabs = () => {
     const isManage = pathName === APP_ROUTES.ATTRIBUTES.INDEX;
     const isByCatg = pathName === APP_ROUTES.ATTRIBUTES.CATEGORY;
 
-    const setOpenModalCreate = useStore(v => v.setCreateAttributeModal);
+    const setOpenModalCreate = useStore(v => v.setAttributeCreateModal);
 
     const urlAttr = () => {
         return createURLPaginationParams({

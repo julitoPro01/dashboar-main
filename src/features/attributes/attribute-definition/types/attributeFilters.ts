@@ -1,4 +1,4 @@
-import { AttributeDataTypeDb } from "./attribute";
+import { AttributeDataTypeDb } from "./attributeForm";
 
 export type AttributeFilters = {
     search?: string;

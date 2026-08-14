@@ -17,12 +17,14 @@ export function useScrollToIndexOnce({
     useEffect(() => {
         if (index == null) return;
 
-        requestAnimationFrame(() => {
+      const frame=  requestAnimationFrame(() => {
             const el = document.querySelector(
                 `[data-row-index="${index - offset}"]`
             );
 
             el?.scrollIntoView({ behavior, block });
         });
+
+        return()=>cancelAnimationFrame(frame)
     }, []);
 }

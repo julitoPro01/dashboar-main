@@ -1,40 +1,49 @@
 import { QUERY_KEYS } from "@/src/shared/react-query";
-import { DragEndEvent } from "@dnd-kit/core";
-import { arrayMove } from "@dnd-kit/sortable";
 import { useStore } from "@/src/store/useStore";
 import { useQueryClient } from "@tanstack/react-query";
 import { ApiSuccessReturn } from "@/src/shared/utils";
-import { CATEGORY_ATTR_NORMALIZE_PAGINATION, CATEGORY_ATTR_SORTBY_ACCEPT_ONLY } from "../constants/filters";
+import { CATEGORY_ATTR_PAGINATION_OPTIONS, CATEGORY_ATTR_SORTBY_ACCEPT_ONLY } from "../constants/filters";
 import { CategoryAttrResponse, CategoryAttrsResponse } from "../types";
 import { getPaginationParams, parsePaginationParams } from "@/src/shared/table/pagination";
+import { isSortable } from "@dnd-kit/react/sortable";
+import { DragEndEvent } from "@dnd-kit/react";
 
 export const useSortableQuery = () => {
 
     const clientQuery = useQueryClient();
 
     const handleDragEnd = (event: DragEndEvent) => {
-        const filter = useStore.getState().categoryAttrFilters;
-        const { active, over } = event;
+        if (event.canceled) return;
 
-        const parse = getPaginationParams(CATEGORY_ATTR_NORMALIZE_PAGINATION);
+        const { source } = event.operation;
+
+        if (!isSortable(source)) return;
+
+        const filter = useStore.getState().categoryAttrsFilters;
+        const parse = getPaginationParams(CATEGORY_ATTR_PAGINATION_OPTIONS);
 
         clientQuery.setQueryData(
             QUERY_KEYS.attributes.listCatg(parse, filter),
             (oldData: ApiSuccessReturn<CategoryAttrsResponse>) => {
 
                 if (!oldData) return oldData;
-                const items = oldData.data?.categoryAttrs ?? [];
-                if (!over || active.id === over.id) return oldData;
 
-                const oldIndex = items.findIndex((item) => item.id === active.id);
-                const newIndex = items.findIndex((item) => item.id === over.id);
+                const {
+                    initialIndex: oldIndex,
+                    index: newIndex
+                } = source;
 
-                if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) return oldData;
+                if (oldIndex === newIndex) return;
+
+                const newValues = [...oldData.data.categoryAttrs];
+                const [item] = newValues.splice(oldIndex, 1);
+                newValues.splice(newIndex, 0, item)
+
                 return {
                     ...oldData,
                     data: {
                         ...oldData.data,
-                        categoryAttrs: arrayMove(items, oldIndex, newIndex).map((v, i) => ({ ...v, displayOrder: i+1 }))
+                        categoryAttrs: newValues.map((v, i) => ({ ...v, displayOrder: i + 1 }))
                     }
                 }
             }
@@ -42,14 +51,14 @@ export const useSortableQuery = () => {
     }
 
     const undoSortable = (data: CategoryAttrResponse[]) => {
-         const search = window.location.search;
+        const search = window.location.search;
         const parse = parsePaginationParams(search, { sortByAcceptOnly: CATEGORY_ATTR_SORTBY_ACCEPT_ONLY, default_sortBy: "order" })
-        const filter = useStore.getState().categoryAttrFilters;
+        const filter = useStore.getState().categoryAttrsFilters;
 
         clientQuery.setQueryData(
             QUERY_KEYS.attributes.listCatg(parse, filter),
             (oldData: ApiSuccessReturn<CategoryAttrsResponse>) => {
-                 return {
+                return {
                     ...oldData,
                     data: {
                         ...oldData.data,

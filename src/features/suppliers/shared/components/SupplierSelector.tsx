@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSuppliers } from "../hooks/useSuppliers"
 import { SupplierFilters, SupplierRelationModeDb, SupplierResponse } from "../../types";
 import { BodyRow, DynamicTable, HeaderRow, useTable } from "@/src/shared/table/core";
@@ -7,6 +7,7 @@ import { Button } from "@/src/shared/components/btn";
 import { FloatingActionBar } from "@/src/shared/components/floating";
 import { DEFAULT_PAGINATION } from "@/src/shared/table/pagination/constants";
 import { TablePagination } from "@/src/shared/table/pagination";
+import { useScrollToIndexOnce } from "@/src/shared/hooks";
 
 interface Props {
   onConfirm: (par: { id: number, name: string, relationMode: SupplierRelationModeDb }) => void;
@@ -43,6 +44,7 @@ export const SupplierSelector = ({ onConfirm, filters = {}, id }: Props) => {
     onConfirm({ id, name, relationMode })
   }
 
+  useScrollToIndexOnce({index:id})
 
   return (
     <>
@@ -54,6 +56,7 @@ export const SupplierSelector = ({ onConfirm, filters = {}, id }: Props) => {
             isSelected={rowSelection[row.original.id]}
             row={row}
             canSelect={row.getCanSelect()}
+            rowIndexId
           />
           )
         }
@@ -69,8 +72,7 @@ export const SupplierSelector = ({ onConfirm, filters = {}, id }: Props) => {
       }
 
       <FloatingActionBar position={{ custom: "bottom-1/8 right-2.5" }} padding="0">
-        <Button variant="tabLight" size="sm" rounded="full" padding="py-2 px-3"
-          disabled={Object.keys(rowSelection).length < 1}
+        <Button variant="confirm" rounded="full" disabled={Object.keys(rowSelection).length < 1}
           onClick={handleConfirm}>
           Confirmar
         </Button>

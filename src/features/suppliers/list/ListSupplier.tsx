@@ -2,7 +2,7 @@
 import { useStore } from "@/src/store/useStore";
 import { useCallback, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { BodyRowMemo, DynamicReactTable, HeaderRow, OpenPanelPayload, TableProvider, useTableContext } from "@/src/shared/table/core";
+import { BodyRowMemo, DynamicReactTable, HeaderRow, OpenPanelParams, TableProvider, useTableContext } from "@/src/shared/table/core";
 import { FLOATING_PANEL_TYPE } from "@/src/store/uiSlice";
 import { APP_ROUTES } from "@/src/shared/routes";
 import { PaginationState, TablePaginationUrl, useStableUrlPagination } from "@/src/shared/table/pagination";
@@ -51,7 +51,7 @@ const Render = () => {
         setFloatMenu: v.setFloatingPanel
     })))
 
-    const onOpenMenu = useCallback(({ cx, cy, original: { id, publicId } }: OpenPanelPayload<SupplierResponse>) => {
+    const onOpenMenu = useCallback(({ cx, cy, original: { id, publicId } }: OpenPanelParams<SupplierResponse>) => {
         setFloatMenu({ cx, cy, open: true, type: FLOATING_PANEL_TYPE.SUPPLIER });
         setSelect(id, publicId);
     }, [setFloatMenu, setSelect])

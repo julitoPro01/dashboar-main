@@ -1,49 +1,58 @@
 import clsx from "clsx"
-import { INPUT_FIELD_STYLE } from "../theme/inputField"
-import { FormInputProps, InputStateType } from "./types";
+import { FieldStatusType, FormInputProps } from "./types";
+import { HTMLProps } from "react";
+import { FIELD_STYLE } from "./style";
+import { FieldLayout } from "./FieldLayout";
 
-interface Props extends FormInputProps {
-    rows?: number
+
+interface Props extends FormInputProps, HTMLProps<HTMLTextAreaElement> {
 }
 
-type State = keyof typeof INPUT_FIELD_STYLE.states
+/**
+ * defatult: 
+ * positonLabel = "top";
+ * textSize = "sm";
+ * fieldSize = "md";
+ * layout = "col";
+ * border=1,
+ * roundedSize="lg",
+ * @param param0 
+ * @returns 
+ */
 
+export const Textarea = (props: Props) => {
 
-export const Textarea = ({
-    error = false,
-    isDirty = false,
-    isRequired = false,
-    label,
-    value = "",
-    placeholder = "",
-    className = "",
-    rows,
-    onChange,
-}: Props) => {
+    const {
+        roundedSize,
+        border,
+        fieldSize,
+        textSize,
+        fieldIcon,
+        fieldClass,
+        error,
+        isDirty,
+        labelOption,
+        ...rest
+    } = props;
 
-    const state: InputStateType =
-        error ? "error"
-            : isDirty ? "dirty"
-                : "normal";
+    const status: FieldStatusType = error ? "error" : isDirty ? "dirty" : "normal";
+
+    const field = clsx(
+        FIELD_STYLE.base,
+        fieldIcon && "ps-10",
+        FIELD_STYLE.borderSize[border ?? 1],
+        FIELD_STYLE.roundedSize[roundedSize ?? "lg"],
+
+        FIELD_STYLE.textSize[textSize ?? "sm"],
+        FIELD_STYLE.size[fieldSize ?? "md"],
+        FIELD_STYLE.status[status],
+        fieldClass
+    )
 
     return (
-        <div className={className}>
-            {label
-                ? <label className={`${INPUT_FIELD_STYLE.label} ${isRequired ? INPUT_FIELD_STYLE.isRequired : ""}`}>{label}</label>
-                : ""}
-
-            <textarea className={clsx(INPUT_FIELD_STYLE.base, INPUT_FIELD_STYLE.states[state])}
-                rows={rows}
-                placeholder={placeholder}
-                value={value}
-                onChange={({ target: { value } }) => onChange?.(value)}
-            >
+        <FieldLayout {...props} >
+            <textarea className={field} {...rest} >
             </textarea>
-
-            {error
-                ? <span className={INPUT_FIELD_STYLE.labelError} >{error}</span>
-                : ""
-            }
-        </div>
+        </FieldLayout>
     )
 }

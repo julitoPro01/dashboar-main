@@ -8,11 +8,8 @@ import { MetaOptions } from '../shared/table/core'
 
 // 2. Aumento de módulos para TanStack
 declare module '@tanstack/react-table' {
-    interface ColumnMeta<TData extends RowData, TValue> {
-        styleHeader?: string
-        styleBody?: string
-        styleHover?: string
-        fill?: boolean
-    }
+    interface ColumnMeta<TData extends RowData, TValue> extends MetaOptions {
+     
+    } 
     interface TableMeta<TData extends RowData> extends MetaOptions { }
 }

@@ -1,22 +1,39 @@
-import { INPUT_FIELD_STYLE } from '../theme/inputField/inputFieldStyle';
 
-export type FormInputProps={
-    error?: string | boolean | undefined;
-    isDirty?: boolean;
-    isRequired?: boolean;
-    value: string;
-    label?: string;
-    placeholder?: string;
-    className?: string;
-    description?:string;
-    disabled?:boolean;
-    onChange?: (v: string) => void
+export type FieldType = "text" | "number" | "date" | "checkbox" | "select" | "multiselect"
+
+export type RoundedSize = "sm" | "md" | "lg" | "xl" | "full" | "none" | "left" | "right"
+
+export type TextSize = "sm" | "lg" | "xl" | "xs" | "2xl"
+export type FieldSize = "sm" | "md" | "lg" | "xl";
+
+type Label = {
+    required?: boolean,
 }
 
-export type InputStateType = keyof typeof INPUT_FIELD_STYLE.states;
+type LabelOption =
+    | { type: "left" } & Label
+    | { type: "left-join",border?:string, rounded?:string} & Label
+    | { type: "top", description?: string } & Label
+    | { type: "top-floating" } & Label
+
+export interface FormInputProps {
+
+    roundedSize?: RoundedSize;
+    border?: 0 | 1 | 2;
+    fieldSize?: FieldSize;
+    textSize?: TextSize;
+    fieldIcon?: React.ReactNode;
+    fieldClass?: string,
+    error?: string | boolean | undefined;
+    isDirty?: boolean;
+    labelOption?: LabelOption;
+    label?:string
+}
+
+export type FieldStatusType = "error" | "normal" | "dirty";
 
 export type FormSkeletonProps = {
+    node?: string;
     label?: boolean;
-    class0?: string;
-    class1?: string;
+    field?: string;
 }

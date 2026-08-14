@@ -12,46 +12,57 @@ type DelAttrModal = { id: number, name: string, open: boolean };
 // Edit attribute modal
 type EditAttrModal = { id: number, name: string, open: boolean };
 
+// del Catg attr
+type DelCtgAttrMd = { del: {id:number,name:string}[], updateIds: number[], open: boolean };
+//
+type InvalidationReason = { type: "create" | "update" | "add" | "delete" | "refresh", time: number };
+
+
 export type AttributeState = {
+    // Layout: para pagina 1 y pagina 2
+    attributeCreateModal: boolean;
+
     // pagina 1: /attributes
     attributeFilters: AttributeFilters;
-    selectedAttribute?: SelAttr;
-    deleteAttributeModal?: DelAttrModal;
-    editAttributeModal?: EditAttrModal;
+    attributeSelected?: SelAttr;
+    attributeDeleteModal?: DelAttrModal;
+    attributeEditModal?: EditAttrModal;
 
     // pagina 2: /attributes/category
-    categoryAttrFilters: CategoryAttrFilters;
-    categoryAttrSelectedIds: number[];
+    categoryAttrsFilters: CategoryAttrFilters;
+    categoryAttrsSelectedIds: number[];
     categoryAttrStoreHistory: { prevActionType?: ActionType }
+    aategorySelectModal: SelectCatgModal;
+    categoryAttrsDeleteModal?: DelCtgAttrMd;
+    categoryAttrsInvalidationReason?: InvalidationReason;
 
-    selectCategoryModal: SelectCatgModal;
 
-    // Layout: para pagina 1 y pagina 2
-    createAttributeModal: boolean;
 }
 
 export type AttributeAction = {
+    // 3
+    setAttributeCreateModal: (_: boolean) => void;
     // 1
     setAttributeFilters: (_: Partial<AttributeFilters>, del?: DeleteAttr) => void;
-    setSelectAttribute: (_?: SelAttr) => void;
-    setDeleteAttributeModal: (_?: DelAttrModal) => void;
-    setEditAttributeModal: (_?: EditAttrModal) => void;
-    resetStateAfterAttributeDelete: () => void;
+    setAttributeSelect: (_?: SelAttr) => void;
+    setAttributeDeleteModal: (_?: DelAttrModal) => void;
+    setAttributeEditModal: (_?: EditAttrModal) => void;
+    AttributeResetStateAfterDelete: () => void;
 
     // 2
-    setCategoryAttrSelectedIds: (id: number) => void;
-    resetCategoryAttrSelectedIds: () => void;
-    setCategoryAttrFilters: (call: ((filters: CategoryAttrFilters) => {
+    setCategoryAttrsSelectedIds: (call: ((selectedIds: number[]) => number[]) | number[]) => void;
+    setCategoryAttrsFilters: (call: ((filters: CategoryAttrFilters) => {
         fil?: Partial<CategoryAttrFilters>,
         del?: DeleteCatgAttr
     }) | {
         fil?: Partial<CategoryAttrFilters>,
         del?: DeleteCatgAttr
     }) => void;
-    setSelectCategoryModal: (_: Partial<SelectCatgModal>) => void;
+    setCategorySelectModal: (_: Partial<SelectCatgModal>) => void;
+    setCategoryAttrsDeleteModal: (val?: DelCtgAttrMd) => void;
+    setCategoryAttrsInvalidationReason: (val?: InvalidationReason) => void;
 
-    // 3
-    setCreateAttributeModal: (_: boolean) => void;
+
 }
 
 export type AttributeSlice = AttributeState & AttributeAction;

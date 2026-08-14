@@ -1,5 +1,5 @@
-export * from './categoryTreeUpdate.utils';
-export * from './sortCategoriesByParent.utils';
+export * from './categoryTreeUpdate';
+export * from './sortCategoriesByParent';
 
-export * from './buildCategoryTrees.utils';
+export * from './buildCategoryTrees';
 

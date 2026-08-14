@@ -19,7 +19,7 @@ export default async function ProductsPage({ searchParams }: Props) {
 
       {/* <LoadingSupplier /> */}
 
-      {/* <TopMenu /> */}
+
       {/* <div className="bg-surface border border-border rounded-t-xl shadow-card overflow-hidden flex flex-col flex-1  "> */}
       {/* <ProductList queryPag={{ page, pageSize, order, verificationStatus: verifStatus, sortBy }} /> */}
       {/* </div> */}

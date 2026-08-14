@@ -7,7 +7,7 @@ type Rounded = "sm" | "md" | "lg" | "xl"
 
 const Style: Record<Type, string> = {
   basic: "absolute inset-0",
-  default: "relative overflow-hidden bg-slate-200/80 dark:bg-slate-500/50"
+  default: "relative overflow-hidden bg-slate-300/80 dark:bg-slate-500/20"
 }
 
 interface Props {

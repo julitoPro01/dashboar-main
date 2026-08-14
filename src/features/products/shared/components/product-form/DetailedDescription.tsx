@@ -1,17 +1,23 @@
-import { INPUT_FIELD_STYLE } from "@/src/shared/theme/inputField";
-import clsx from "clsx";
-import { useFormContext } from "react-hook-form";
+import { Textarea } from "@/src/shared/form";
+import { useFormContext, useFormState } from "react-hook-form";
 
 export const DetailedDescription = () => {
-      const { register } = useFormContext<{ longDescription: string }>();
+    const { register, control } = useFormContext<{ longDescription: string }>();
+
+    const { errors, dirtyFields } = useFormState({ control, name: "longDescription" })
+
     return (
-        <div className="h-full">
-            <textarea className={clsx(INPUT_FIELD_STYLE.base, "min-h-full max-h-100", INPUT_FIELD_STYLE.states.normal)}
-                maxLength={3000}
-                placeholder="Describe las especificaciones, características y detalles a fondo de este producto (Máximo 3,000 caracteres)..."
-                {...register("longDescription")}
-            />
-        </div>
+        <Textarea
+            maxLength={3000}
+            labelOption={{
+                type: "top",
+                description: "Se mostrará en la página de detalle del producto"
+            }}
+            placeholder="Describe en detalle las características, especificaciones y aspectos importantes del producto... (máximo 3,000 caracteres)"
+            error={errors?.longDescription?.message}
+            isDirty={dirtyFields.longDescription}
+            {...register("longDescription")}
+        />
     )
 }
 

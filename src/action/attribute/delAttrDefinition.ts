@@ -36,9 +36,9 @@ export const delAttrDefinition = async (id: number) => {
 
             return ApiResponse.badRequest("No se puede eliminar el atributo porque está siendo utilizado.", "ENTITY_IN_USE", undefined,
                 [
-                    { entity: "Categoría / Attributo", count: category },
-                    { entity: "Producto / Valor", count: product },
-                    { entity: "Variante / Valor", count: variant },
+                    {id:1, entity: "Categoría / Attributo", count: category },
+                    {id:2, entity: "Producto / Valor", count: product },
+                    {id:3, entity: "Variante / Valor", count: variant },
                 ])
         })
 

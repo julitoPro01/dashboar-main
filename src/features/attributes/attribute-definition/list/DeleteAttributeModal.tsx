@@ -6,8 +6,8 @@ import { useDeleteAttribute } from "../shared/hook";
 
 export const DeleteAttributeModal = () => {
 
-    const modal = useStore(v => v.deleteAttributeModal);
-    const setModal = useStore(v => v.setDeleteAttributeModal);
+    const modal = useStore(v => v.attributeDeleteModal);
+    const setModal = useStore(v => v.setAttributeDeleteModal);
 
     const handleClose = () => setModal();
 
@@ -22,7 +22,7 @@ export const DeleteAttributeModal = () => {
 
 const RenderContent = ({ id, name, onCloseModal }: { id: number, name: string, onCloseModal: () => void }) => {
 
-    const resetState = useStore(v => v.resetStateAfterAttributeDelete);
+    const resetState = useStore(v => v.AttributeResetStateAfterDelete);
 
     const { mutate: deleteAttribute, isPending, entitiesInUse } = useDeleteAttribute();
 

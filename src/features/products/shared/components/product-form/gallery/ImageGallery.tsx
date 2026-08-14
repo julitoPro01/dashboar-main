@@ -1,10 +1,19 @@
-import { Button } from "@/src/shared/components/btn";
-import { BiImageAdd, BiMove, BiTrash, BiStar } from "react-icons/bi";
+import { useState } from "react";
+import { BiImageAdd } from "react-icons/bi";
 
-import { FiEdit2 } from "react-icons/fi";
 import { IoImagesOutline } from "react-icons/io5";
+import { SortableItem } from "./SortableItem";
+import { DragDropProvider } from "@dnd-kit/react";
+import { moveDragEnd } from "@/src/shared/sortable";
 
 export const ImageGallery = () => {
+
+    const [images, setImages] = useState(imgs);
+
+    const handleDragEnd = moveDragEnd(images, (imgs) => {
+        setImages(imgs)
+    })
+
 
     return (
         <section className="px-8 py-6 rounded-2xl border border-border bg-surface">
@@ -21,7 +30,7 @@ export const ImageGallery = () => {
                     <div>
 
                         <h3 className="text-lg font-semibold text-text-strong">
-                            Galería de imágenes*
+                            Galería de imágenes
                         </h3>
 
                         <p className="text-sm text-text-muted">
@@ -33,7 +42,7 @@ export const ImageGallery = () => {
                 </div>
 
                 <span className="rounded-full bg-bg-soft-blue px-3 py-1 text-xs font-medium text-primary">
-                    2 / 5 imágenes
+                    2 / 5
                 </span>
 
             </header>
@@ -41,87 +50,26 @@ export const ImageGallery = () => {
             {/* GRID */}
             <div className="grid grid-cols-2 gap-5 py-6 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
 
-                {/* IMAGE */}
-                <article className="group relative aspect-square overflow-hidden rounded-2xl border-2 border-primary bg-surface-light">
+                <DragDropProvider onDragEnd={handleDragEnd} >
 
-                    <img
-                        src="/demo.jpg"
-                        className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-                    />
+                    {images.map((v,i) => {
 
-                    {/* Ribbon */}
-                    <div className="absolute left-0 top-4">
+                        return (
+                            <SortableItem key={v.id}
+                                index={i}
+                                id={v.id}
+                                isMain={v.isMain} order={v.order}
+                            >
+                                <img
+                                    src="/assets/notfound.jpg"
+                                    className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                                />
 
-                        <div className="rounded-r-full bg-primary px-4 py-1 text-xs font-semibold text-text-inverse shadow-card">
+                            </SortableItem>
+                        )
+                    })}
 
-                            Principal
-
-                        </div>
-
-                    </div>
-
-                    {/* Drag */}
-                    <div className="absolute right-2 top-2 rounded-lg bg-black/40 p-1 text-white opacity-0 backdrop-blur transition group-hover:opacity-100">
-
-                        <BiMove size={18} />
-
-                    </div>
-
-                    {/* Overlay */}
-                    <div className="absolute inset-0 flex items-center justify-center gap-1 bg-black/40 opacity-0 transition group-hover:opacity-100">
-
-                        <Button variant="tabLight">
-                            <FiEdit2 size={18} />
-                        </Button>
-
-                        <Button variant="tabLight">
-                            <BiStar size={18} />
-                        </Button>
-
-                        <Button variant="danger">
-                            <BiTrash size={18} />
-                        </Button>
-
-                    </div>
-
-                </article>
-
-                {/* IMAGE */}
-                <article className="group relative aspect-square overflow-hidden rounded-2xl border border-border bg-surface-light">
-
-                    <img
-                        src="/demo.jpg"
-                        className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-                    />
-
-                    {/* Overlay */}
-                    <div className="absolute inset-0 w-full pb-4 flex items-end justify-center bg-black/40 opacity-0 transition group-hover:opacity-100">
-
-                        <Button variant="tabLight" select="tabLight" size="xs">
-                            <FiEdit2 size={18} className="text-white" />
-                        </Button>
-
-                        <Button variant="tabLight" size="xs" >
-                            <BiStar size={18} className="text-white" />
-                        </Button>
-
-                        <Button variant="tabLight" size="xs">
-                            <BiTrash size={18} className="text-white" />
-                        </Button>
-                    </div>
-                    {/* Order */}
-                    <span className="absolute left-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-surface font-semibold text-text shadow-card">
-
-                        2
-
-                    </span>
-                    {/* Drag */}
-                    <div className="absolute right-2 top-2 rounded-lg hover:bg-black/40 p-1 text-white opacity-0 backdrop-blur transition group-hover:opacity-100 cursor-pointer">
-
-                        <BiMove size={28} />
-
-                    </div>
-                </article>
+                </DragDropProvider>
 
                 {/* ADD */}
                 <button
@@ -167,3 +115,10 @@ export const ImageGallery = () => {
     )
 
 }
+
+const imgs = [
+    { id: 1, isMain: true, order: 1 },
+    { id: 2, isMain: false, order: 2 },
+    { id: 3, isMain: false, order: 3 },
+    { id: 4, isMain: false, order: 4 },
+]

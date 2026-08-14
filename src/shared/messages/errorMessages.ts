@@ -94,7 +94,7 @@ export const errorMessages = {
 
 } satisfies Record<string, ErrorMessage>;
 
-export const getErrorMessage = (errorType: ApiErrorType): ErrorMessage => {
+export const getErrorMessage = (errorType?: ApiErrorType): ErrorMessage => {
   switch (errorType) {
     case "BAD_REQUEST":
       return errorMessages.badRequest;

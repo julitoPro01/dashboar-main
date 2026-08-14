@@ -1,4 +1,4 @@
-import { addAttrDefinition } from "@/src/action/attribute";
+import { createAttrDefinition } from "@/src/action/attribute";
 import { QUERY_KEYS } from "@/src/shared/react-query";
 import { sleep } from "@/src/shared/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 export const useCreateAttribute = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: addAttrDefinition,
+        mutationFn: createAttrDefinition,
         async onSettled(){
             await sleep(1000)
         },

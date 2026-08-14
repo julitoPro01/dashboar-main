@@ -307,3 +307,13 @@ body {
     transform: translateX(100%);
   }
 }
+
+
+/* globals.css */
+.masonry-column {
+    background-clip: padding-box;
+}
+
+.masonry-column > div {
+    margin-bottom: 106px
+}

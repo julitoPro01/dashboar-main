@@ -34,8 +34,8 @@ export const useItemFloatingAction = (mainCategoryPath: string) => {
     // Establecemos la categoría a la pagina "CATEGORY ATTRIBUTES"
     const handleManageAttrs = (selectedId: number, paths: { name: string; id: number }[]) => {
 
-        useStore.getState().setCategoryAttrFilters({ fil: { categoryId: selectedId } });
-        useStore.getState().setSelectCategoryModal({ paths: paths });
+        useStore.getState().setCategoryAttrsFilters({ fil: { categoryId: selectedId } });
+        useStore.getState().setCategorySelectModal({ paths: paths });
         router.push(APP_ROUTES.ATTRIBUTES.CATEGORY)
     };
 

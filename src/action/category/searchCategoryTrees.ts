@@ -1,10 +1,12 @@
-interface SearchCategoryTreesProps {
-    search: string;
-    inStatus?: RecordStatusDb[];
-    notInStatus?: RecordStatusDb[];
-}
+"use server";
+import prisma from "@/lib/prisma";
+import { buildCategoryTrees } from "@/src/features/category/shared/utils";
+import { CategoryTreeResponse, SearchCategoryTreeFilters } from "@/src/features/category/types";
+import { Prisma } from "@/src/generated/prisma/client";
+import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
 
-export const searchCategoryTrees = async (props: SearchCategoryTreesProps) => {
+
+export const searchCategoryTrees = async (props: SearchCategoryTreeFilters) => {
 
     const statusFilter: Prisma.CategoryWhereInput = props.inStatus
         ? {
@@ -24,7 +26,7 @@ export const searchCategoryTrees = async (props: SearchCategoryTreesProps) => {
             }
             : {};
 
-    return PromiseReturn<CategoryTreeResponse[]>(async () => {
+    return PromiseReturn(async () => {
 
         // 1. Buscar coincidencias
         const matches = await prisma.category.findMany({
@@ -107,7 +109,7 @@ export const searchCategoryTrees = async (props: SearchCategoryTreesProps) => {
 
         const tree = buildCategoryTrees<CategoryTreeResponse>(categories);
 
-        return ApiResponse.success(
+        return ApiResponse.success<CategoryTreeResponse[]>(
             "Consulta exitosa.",
             tree
         );

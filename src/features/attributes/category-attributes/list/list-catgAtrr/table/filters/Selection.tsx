@@ -13,11 +13,11 @@ export const Selection = () => {
     const setPanel = useStore(v => v.setFloatingPanel);
     const openPanel = useStore(v => v.floatingPanel.open);
 
-    const selection = useStore(v => v.categoryAttrFilters.selection)?.type ?? "all";
-    const setSelection = useStore(v => v.setCategoryAttrFilters);
+    const selection = useStore(v => v.categoryAttrsFilters.selection)?.type ?? "all";
+    const setSelection = useStore(v => v.setCategoryAttrsFilters);
 
     const handleApply = (value: SelectionFilter) => {
-        const selectedIds = useStore.getState().categoryAttrSelectedIds;
+        const selectedIds = useStore.getState().categoryAttrsSelectedIds;
         const ids = (value === "selected-only" || value === "unselected" || value === "selected-first") ? { ids: selectedIds } : undefined;
         const currentPage = new URLSearchParams(window.location.search).get("page");
         const page = currentPage !== "1" ? { page: 1 } : {};

@@ -18,7 +18,7 @@ export default async function ProductPage() {
 
 
     return (
-        <div className='pt-6 pb-18 relative'>
+        <div className='pt-6 pb-20 relative'>
             <div className="pb-6 relative">
                 <BackTo />
 

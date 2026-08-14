@@ -1,13 +1,14 @@
-import { INPUT_FIELD_STYLE } from '@/src/shared/theme/inputField'
+import { Input } from '@/src/shared/form'
 
 export const Sku = () => {
+
     return (
-        <div>
-            <label className={INPUT_FIELD_STYLE.label} >SKU</label>
-            <input className={INPUT_FIELD_STYLE.baseDisabled + " " + INPUT_FIELD_STYLE.states.normal}
-                disabled
-                placeholder='PRD-2023-X1'
+        <Input
+              label="SKU"
+              labelOption={{type:"top"}}
+              placeholder="PRD-2023-X1"
+              disabled
             />
-        </div>
+
     )
 }

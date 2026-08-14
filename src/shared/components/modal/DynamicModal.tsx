@@ -6,6 +6,16 @@ import * as Dialog from "@radix-ui/react-dialog";
 import clsx from "clsx";
 import { IoClose } from "react-icons/io5";
 
+const MAX_SIZE = {
+  sm: "max-w-sm", md: "max-w-md", lg: "max-w-lg",
+  xl: "max-w-xl", "2xl": "max-w-2xl", "3xl": "max-w-3xl",
+  "4xl": "max-w-4xl", "5xl": "max-w-5xl"
+} as const;
+
+const TEXT_SIZE = {
+  sm: "text-sm", lg: "text-lg", xl: "text-xl",
+  "2xl": "text-2xl", "3xl": "text-3xl", "4xl": "text-4xl"
+} as const;
 
 interface Props {
   children: React.ReactNode,
@@ -17,14 +27,11 @@ interface Props {
   effectOnEndModal?: (_: boolean) => void,
   clickBgClose?: boolean,
   inactiveClose?: boolean,
-  size?: 'sm' | 'md' | 'lg' | 'xl' | "2xl" | "3xl" | "4xl",
-  sizeTitle?: 'sm' | 'lg' | 'xl' | '2xl' | "3xl" | "4xl",
+  size?: keyof typeof MAX_SIZE,
+  sizeTitle?: keyof typeof TEXT_SIZE,
   inactiveScroll?: boolean;
   fixedHeight?: boolean;
 }
-
-const SIZE = (size: string) => `max-w-${size}`;
-
 
 export const DynamicModal = ({
   children, title, description, open = false, Search,
@@ -68,7 +75,7 @@ export const DynamicModal = ({
           className={
             clsx(`fixed w-[90%] left-1/2 top-1/2 z-100 -translate-x-1/2 -translate-y-1/2 
                  bg-surface rounded-2xl overflow-hidden  focus:outline-none data-[state=closed]:animate-fadeOut`,
-              SIZE(size),
+              MAX_SIZE[size],
               {
                 "DialogContentOpen": okModal,
                 "DialogContentClose": !open
@@ -81,7 +88,7 @@ export const DynamicModal = ({
               <div className="flex-1 flex flex-col ">
 
                 <p className={`${inactiveClose ? "" : "pe-4"}`}>
-                  <span className={`block text-text text-${sizeTitle || "3xl"} leading-tight`}>{title}</span>
+                  <span className={`block text-text ${TEXT_SIZE[sizeTitle ?? "3xl"]} leading-tight`}>{title}</span>
                   {description &&
                     <span className="block font-normal text-text-muted text-sm mt-1">{description}</span>
                   }

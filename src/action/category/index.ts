@@ -10,3 +10,5 @@ export * from './getCategory';
 export * from './getCategoryTrees';
 
 export * from './revalidate-path/categoriesIndex';
+
+export * from './searchCategoryTrees';

@@ -8,6 +8,7 @@ import { IoInformationCircleOutline } from "react-icons/io5";
 import { MdOutlineStorefront } from "react-icons/md";
 import { SupplierForm as SupplierFormType } from "../../types";
 import { SUPPLIER_CAPABILITIES_LABELS } from "../../constants";
+import { FormCard, Input, Textarea } from "@/src/shared/form";
 
 interface Props {
     register: UseFormRegister<SupplierFormType>;
@@ -29,81 +30,54 @@ export const SupplierForm = ({ register, errors, dirty }: Props) => {
 
                 </div>
 
-                <div>
-                    <label className={clsx(INPUT_FIELD_STYLE.label, INPUT_FIELD_STYLE.isRequired)}>Nombre del proveedor</label>
-                    <input
-                        className={clsx(INPUT_FIELD_STYLE.base, {
-                            [INPUT_FIELD_STYLE.states.normal]: !errors.name && (!dirty || !dirty.name),
-                            [INPUT_FIELD_STYLE.states.dirty]: !errors.name && (dirty && dirty.name),
-                            [INPUT_FIELD_STYLE.states.error]: errors.name
-                        },)}
-                        placeholder="Ej: Industrias Globales S.A."
-                        type="text"
-                        {...register("name")}
-                    />
-                    {errors.name && <span className={INPUT_FIELD_STYLE.labelError} > {errors.name.message} </span>}
-                </div>
+                <Input
+                    label="Nombre del proveedor"
+                    isRequired
+                    isDirty={dirty?.name}
+                    error={errors.name?.message}
+                    placeholder="Ej: Industrias Globales S.A."
+                    {...register("name")}
+                />
 
-                <div>
+                <div className="space-y-2">
                     <label className={`${INPUT_FIELD_STYLE.label} ${INPUT_FIELD_STYLE.isRequired}`}>
                         Dirección Fiscal
                     </label>
                     <div className="relative flex items-center">
 
-                        <span className="absolute left-3 text-gray-400 pointer-events-none">
-                            <FaLocationDot />
-                        </span>
-                        <input
-                            className={clsx(INPUT_FIELD_STYLE.base, "ps-10", {
-                                [INPUT_FIELD_STYLE.states.normal]: !errors.address && (!dirty || !dirty.address),
-                                [INPUT_FIELD_STYLE.states.dirty]: !errors.address && (dirty && dirty.address),
-                                [INPUT_FIELD_STYLE.states.error]: errors.address
-                            })}
+                        <Input className="w-full" 
+                            isDirty={dirty?.address}
+                            error={errors.address?.message}
                             placeholder="Calle 123, Ciudad de Lima, CP 01000"
-                            type="text"
                             {...register("address")}
-                        />
+                            inputIcon={<FaLocationDot />}
+                        >
+                        </Input>
                     </div>
-                    {errors.address && <span className={INPUT_FIELD_STYLE.labelError} > {errors.address.message} </span>}
                 </div>
                 {/* Description Section */}
-                <div>
-                    <label className={`${INPUT_FIELD_STYLE.label} ${INPUT_FIELD_STYLE.isRequired}`}>
-                        Descripción
-                    </label>
-                    <textarea
-                        className={clsx(INPUT_FIELD_STYLE.base, "h-30 resize-none", {
-                            [INPUT_FIELD_STYLE.states.normal]: !errors.description && (!dirty || !dirty.description),
-                            [INPUT_FIELD_STYLE.states.dirty]: !errors.description && (dirty && dirty.description),
-                            [INPUT_FIELD_STYLE.states.error]: errors.description
-                        })}
-                        placeholder="Breve descripción de los productos o servicios ofrecidos por este proveedor..."
-                        {...register("description")}
-                    ></textarea>
-                    {errors.description && <span className={INPUT_FIELD_STYLE.labelError} > {errors.description.message} </span>}
-                </div>
+                <Textarea
+                    label="Descripción"
+                    placeholder="Breve descripción de los productos o servicios ofrecidos por este proveedor..."
+                    isRequired
+                    isDirty={dirty?.description}
+                    error={errors.description?.message}
+                    {...register("description")}
+                />
 
                 <LogoUpload />
 
-
             </div>
 
-            <div className=" px-8 py-6 bg-surface rounded-xl shadow-sm border border-border-subtle space-y-5">
-
-                <div className="flex items-center gap-3 pb-3 border-b border-border">
-                    <MdOutlineStorefront size={22} className="text-primary" />
-                    <h3 className="text-lg font-semibold text-text">
-                        Comercial
-                    </h3>
-                </div>
+            <FormCard title="Comercial" titleIcon={<MdOutlineStorefront size={22} className="text-primary" />}>
 
                 {/* TODO: PARA SUPER-ADMIN */}
                 <RelacionModeSelect register={register} errorMsg={errors.relationMode?.message} dirty={dirty?.relationMode} />
 
-                <div>
-                    <span className={`${INPUT_FIELD_STYLE.label} items-end`}>
+                <div className="space-y-2">
+                    <span className={`${INPUT_FIELD_STYLE.label} flex flex-col gap-1`}>
                         <span className={`${INPUT_FIELD_STYLE.isRequired} text-slate-600 dark:text-slate-300`}>Capacidades</span>
-                        <span className="text-xs text-text-muted px-2 font-normal" >Seleccione las opciones que apliquen.</span>
+                        <span className="text-xs text-text-muted font-normal" >Seleccione las opciones que apliquen.</span>
                     </span>
 
                     <div className="flex flex-wrap gap-3">
@@ -125,7 +99,8 @@ export const SupplierForm = ({ register, errors, dirty }: Props) => {
                     {errors.capabilities && <span className={INPUT_FIELD_STYLE.labelError} > {errors.capabilities.message} </span>}
 
                 </div>
-            </div>
+            </FormCard>
+
         </div>
     )
 }

@@ -3,3 +3,4 @@ export type * from './categoryEdit.api';
 export type * from './categoryList.api';
 export type * from './categoryTree.api';
 export type * from './categoryTreeFilters'
+export type * from './categoryTreeSelector'

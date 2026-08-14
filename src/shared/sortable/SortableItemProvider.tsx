@@ -1,26 +1,23 @@
 "use client";
-import { DraggableAttributes } from "@dnd-kit/core";
-import { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import { createContext, useContext } from "react"
 import { useSortableNode } from "./useSortableNode";
 
 type Context = {
-    style: {
-        transform: string | undefined;
-        transition: string | undefined;
-    };
-    setNodeRef: (node: HTMLElement | null) => void;
-    attributes: DraggableAttributes;
-    listeners: SyntheticListenerMap | undefined;
-    isDragging:boolean
+    ref: (element: Element | null) => void;
+    handleRef: (element: Element | null) => void;
+    isDragging: boolean;
+    isDropping: boolean;
+    isDragSource: boolean;
+    isDropTarget: boolean;
 };
 
 const SortableContextRow = createContext<Context | null>(null)
 
-    
-export const SortableItemProvider = ({ children, id }: { children: React.ReactNode, id: number | string }) => {
+type Props = { disabled?: boolean, index: number, children: React.ReactNode, id: number | string }
 
-    const sortable = useSortableNode(id);
+export const SortableItemProvider = ({ children, index, id, disabled=false }: Props) => {
+
+    const sortable = useSortableNode({ id, index,disabled });
 
     return (
         <SortableContextRow.Provider value={sortable} >

@@ -76,7 +76,7 @@ const RenderContent = ({ id, name, parentId, onClose }: R) => {
     return (
 
         <DeleteConfirmDialog
-            entity="La categoría"
+            entity="Categoría"
             name={name}
             loading={isPending}
             entitiesInUse={entitiesInUse}

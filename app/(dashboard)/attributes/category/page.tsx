@@ -1,5 +1,5 @@
-import { ListCatgAttr, SelectCategoryModal } from "@/src/features/attributes/category-attributes/list";
-import { CATEGORY_ATTR_NORMALIZE_PAGINATION } from "@/src/features/attributes/category-attributes/constants";
+import { DeleteCatgAttrModal, ListCatgAttr, SelectCategoryModal } from "@/src/features/attributes/category-attributes/list";
+import { CATEGORY_ATTR_PAGINATION_OPTIONS } from "@/src/features/attributes/category-attributes/constants";
 import { normalizePaginationParams, PaginationQuery } from "@/src/shared/table/pagination";
 
 
@@ -9,7 +9,7 @@ export default async function AttributesCategoryPage({ searchParams }: Props) {
 
     const query = await searchParams;
 
-    const { state, ...pag } = normalizePaginationParams(query,CATEGORY_ATTR_NORMALIZE_PAGINATION);
+    const { state, ...pag } = normalizePaginationParams(query,CATEGORY_ATTR_PAGINATION_OPTIONS);
 
     return (
         <div className="flex flex-col h-full">
@@ -21,6 +21,7 @@ export default async function AttributesCategoryPage({ searchParams }: Props) {
 
             <SelectCategoryModal />
 
+            <DeleteCatgAttrModal/>
         </div>
     )
 }

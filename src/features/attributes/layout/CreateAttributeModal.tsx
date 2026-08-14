@@ -12,8 +12,8 @@ import { AttributeForm } from "../attribute-definition/shared/components";
 interface Props { createdBy: string; createdById: number }
 export const CreateAttributeModal = ({ createdBy, createdById }: Props) => {
 
-    const isOpenModal = useStore(v => v.createAttributeModal);
-    const setOpenModal = useStore(v => v.setCreateAttributeModal);
+    const isOpenModal = useStore(v => v.attributeCreateModal);
+    const setOpenModal = useStore(v => v.setAttributeCreateModal);
 
     const handleCloseModal = () => {
         setOpenModal(false)

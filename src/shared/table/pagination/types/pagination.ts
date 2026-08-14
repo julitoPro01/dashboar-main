@@ -22,10 +22,11 @@ export type PaginationQuery = {
 }
 
 // normalizar paginacion OPCIONS
+// Ningun valor incluido por defecto
 export interface OptionNormalizePag {
   sortByAcceptOnly?: SortByType[];
   default_sortBy?: SortByType;
-  includeState?: true;
+  includeState?: true; 
   parseState?: true;
 }
 
@@ -33,7 +34,7 @@ export interface OptionNormalizePag {
 export type ParsePagination=Omit<OptionNormalizePag, "parseState">;
 
 export interface CreateUrlOptions extends Omit<OptionNormalizePag, "parseState"> {
-    deleteState?: boolean;
+    deleteState?: true;
 }
 
 export type PaginationParams = {

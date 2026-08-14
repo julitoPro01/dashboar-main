@@ -73,7 +73,7 @@ export const columnDef = [
     column.display({
         id: "orderEdit",
         header: () => <CellTitle title="Orden" position="center" />,
-        cell: ({ row }) => BodyCells.OrderEdit(row.original.displayOrder ?? 1, !row.getIsSelected()),
+        cell: ({ row }) => BodyCells.OrderEdit(row.original.displayOrder ?? 1),
         enableResizing: false,
         size: 100,
         meta: {

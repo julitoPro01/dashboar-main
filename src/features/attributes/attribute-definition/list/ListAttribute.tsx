@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { BodyRowMemo, DynamicReactTable, HeaderRow, OpenPanelPayload, TableProvider, useTableContext } from "@/src/shared/table/core";
+import { BodyRowMemo, DynamicReactTable, HeaderRow, OpenPanelParams, TableProvider, useTableContext } from "@/src/shared/table/core";
 import { useStore } from "@/src/store/useStore";
 import { APP_ROUTES } from "@/src/shared/routes";
 import { FLOATING_PANEL_TYPE } from "@/src/store/uiSlice";
@@ -43,11 +43,11 @@ const Table = () => {
   const table = useTableContext().table!;
 
   const setFloatingPanel = useStore(v => v.setFloatingPanel);
-  const setSelect = useStore(v => v.setSelectAttribute)
-  const selected = useStore(v => v.selectedAttribute);
+  const setSelect = useStore(v => v.setAttributeSelect)
+  const selected = useStore(v => v.attributeSelected);
 
 
-  const onOpenPanel = useCallback(({ cx, cy, original }: OpenPanelPayload<AttributeDefinitionResponse>) => {
+  const onOpenPanel = useCallback(({ cx, cy, original }: OpenPanelParams<AttributeDefinitionResponse>) => {
 
     setFloatingPanel({
       type: FLOATING_PANEL_TYPE.ATTRIBUTE, cx, cy, open: true

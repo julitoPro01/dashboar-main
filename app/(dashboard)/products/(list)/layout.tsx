@@ -1,19 +1,15 @@
-import { ProductListActions, ProductListHeader } from "@/src/features/products/list";
-import { FloatingActionBar } from "@/src/shared/components/floating";
+import {  FloatingActions, Header } from "@/src/features/products/list";
 
 export default function LayoutList({ children }: { children: React.ReactNode }) {
     return (
         <>
             <div className="flex flex-col w-full">
-                <ProductListHeader />
+                <Header />
             </div>
 
             {children}
 
-
-            <FloatingActionBar>
-                <ProductListActions />
-            </FloatingActionBar>
+            <FloatingActions/>
 
         </>
     );

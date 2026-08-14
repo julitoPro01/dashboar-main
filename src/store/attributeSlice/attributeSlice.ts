@@ -9,16 +9,16 @@ import { Store } from "../store.type";
 export const attributeSlice: StateCreator<Store, [], [], AttributeSlice> = (set) => ({
 
     attributeFilters: {},
-    selectedAttribute: undefined,
-    deleteAttributeModal: undefined,
-    editAttributeModal: undefined,
+    attributeSelected: undefined,
+    attributeDeleteModal: undefined,
+    attributeEditModal: undefined,
 
-    categoryAttrFilters: { selection: { type: "all" }, actionType: "view" },
-    categoryAttrSelectedIds: [],
+    categoryAttrsFilters: { selection: { type: "all" }, actionType: "view" },
+    categoryAttrsSelectedIds: [],
     categoryAttrStoreHistory: { prevActionType: undefined },
-    selectCategoryModal: { isOpen: false, paths: undefined, isParent: false },
+    aategorySelectModal: { isOpen: false, paths: undefined, isParent: false },
 
-    createAttributeModal: false,
+    attributeCreateModal: false,
 
     setAttributeFilters: (fil, del) => {
         set(state => {
@@ -31,46 +31,48 @@ export const attributeSlice: StateCreator<Store, [], [], AttributeSlice> = (set)
             return { attributeFilters: { ...currentFilters, ...fil } }
         })
     },
-    setSelectAttribute: (value) => set({ selectedAttribute: value }),
-    setDeleteAttributeModal: val => set({ deleteAttributeModal: val }),
-    setEditAttributeModal: val => set({ editAttributeModal: val }),
+    setAttributeSelect: (value) => set({ attributeSelected: value }),
+    setAttributeDeleteModal: val => set({ attributeDeleteModal: val }),
+    setAttributeEditModal: val => set({ attributeEditModal: val }),
     // Despues de eliminar un atributo
-    resetStateAfterAttributeDelete() {
+    AttributeResetStateAfterDelete() {
         set({
-            deleteAttributeModal: undefined,
-            selectedAttribute: undefined,
+            attributeDeleteModal: undefined,
+            attributeSelected: undefined,
             floatingPanel: { cx: 0, cy: 0, open: false, type: null, status: "success" }
         })
     },
 
-    setCategoryAttrSelectedIds: id => set((state) => ({
-        categoryAttrSelectedIds: state.categoryAttrSelectedIds.includes(id) ? state.categoryAttrSelectedIds.filter(v => v !== id) : [...state.categoryAttrSelectedIds, id]
-    })),
-    resetCategoryAttrSelectedIds: () => {
-        set({ categoryAttrSelectedIds: [] })
+    setCategoryAttrsSelectedIds: call => {
+        set((state) => {
+            const vals = typeof call === "function" ? call(state.categoryAttrsSelectedIds) : call
+            return { categoryAttrsSelectedIds: vals }
+        })
     },
-    setCategoryAttrFilters: (obj) => {
+    setCategoryAttrsFilters: (obj) => {
         set(state => {
 
-            const rest = typeof obj === "function" ? obj(state.categoryAttrFilters) : obj
+            const rest = typeof obj === "function" ? obj(state.categoryAttrsFilters) : obj
 
-            let currentFilters = state.categoryAttrFilters ?? { actionType: "view" };
+            let currentFilters = state.categoryAttrsFilters ?? { actionType: "view" };
             if (rest.del && typeof rest.del === "object") {
 
                 const entries = Object.entries(rest.del).filter(([_, v]) => v).map(([key]) => key as keyof CategoryAttrFilters);
                 currentFilters = { ...deleteProperties(currentFilters, entries), actionType: currentFilters.actionType ?? "view" }
             }
             let prevActionType = state.categoryAttrStoreHistory.prevActionType;
-            if (state.categoryAttrFilters.actionType !== rest.fil?.actionType)
-                prevActionType = state.categoryAttrFilters.actionType
+            if (state.categoryAttrsFilters.actionType !== rest.fil?.actionType)
+                prevActionType = state.categoryAttrsFilters.actionType
 
             return {
-                categoryAttrFilters: { ...currentFilters, ...rest.fil },
+                categoryAttrsFilters: { ...currentFilters, ...rest.fil },
                 categoryAttrStoreHistory: { ...state.categoryAttrStoreHistory, prevActionType }
             }
         })
     },
-    setSelectCategoryModal: (val) => set((state) => ({ selectCategoryModal: { ...state.selectCategoryModal, ...val } })),
+    setCategorySelectModal: (val) => set((state) => ({ aategorySelectModal: { ...state.aategorySelectModal, ...val } })),
+    setCategoryAttrsDeleteModal: val => set({ categoryAttrsDeleteModal: val }),
+    setCategoryAttrsInvalidationReason: val => set({ categoryAttrsInvalidationReason: val }),
 
-    setCreateAttributeModal: open => set({ createAttributeModal: open })
+    setAttributeCreateModal: open => set({ attributeCreateModal: open })
 });

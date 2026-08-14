@@ -1,3 +1,3 @@
-export * from './categoryAttr.api';
-export * from './categoryAttr';
-export * from './categoryAttrFilters';
+export type * from './categoryAttr.api';
+export type * from './categoryAttr';
+export type * from './categoryAttrFilters';

@@ -17,7 +17,7 @@ export const CreateCategory = ({ id }: { id: number }) => {
 
     const cacheRemove = useRemoveSubCategory(main?.path ?? "");
 
-    const { mutateAsync: createCategory, isPending } = useCreateCategoryTree(main?.path ?? "",id);
+    const { mutateAsync: createCategory, isPending } = useCreateCategoryTree(main?.path ?? "", id);
 
     const { state, onSubmit, onCancel, handleChange, hasError } = useBasicForm({ name: "" }, { name: v => v.trim().length > 2 }, {
         async onSubmit({ name }) {
@@ -34,7 +34,7 @@ export const CreateCategory = ({ id }: { id: number }) => {
             });
 
             if (res.ok) {
-                
+
                 // DESELECCIONAMOS
                 setDeselect();
 
@@ -50,7 +50,7 @@ export const CreateCategory = ({ id }: { id: number }) => {
             }
 
         },
-        
+
         onCancel() {
             cacheRemove(id);
             setDeselect()
@@ -69,16 +69,20 @@ export const CreateCategory = ({ id }: { id: number }) => {
 
     return (
 
-        <div className="py-1 px-2">
-            <CreateCategoryForm
-                value={state.name}
-                disabled={hasError}
-                isSubmitting={isPending}
-                onSubmit={onSubmit}
-                onChange={v => handleChange("name", v)}
-                onClose={onCancel}
-                onBlur={onCancel}
+        <div className="p-2">
+            <div className="absolute left-0 w-5.25 border-b border-border-strong top-1/2 -translate-y-1/2"
             />
+            <div className="ml-4">
+                <CreateCategoryForm
+                    value={state.name}
+                    disabled={hasError}
+                    isSubmitting={isPending}
+                    onSubmit={onSubmit}
+                    onChange={v => handleChange("name", v)}
+                    onClose={onCancel}
+                    onBlur={onCancel}
+                />
+            </div>
         </div>
 
     )

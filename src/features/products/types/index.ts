@@ -4,3 +4,6 @@ export  * from './productForm.schema';
 export type * from './productForm';
 export type * from './productList.api';
 export type * from './variantDetailst.api';
+
+export type * from './categoryAttribute.api'
+export type * from './attributeInput';

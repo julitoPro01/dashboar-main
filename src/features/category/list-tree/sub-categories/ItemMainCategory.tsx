@@ -45,7 +45,7 @@ export const ItemMainCategory = ({ mainCategory: main }: Props) => {
 
     return (
         <div className="select-none">
-            <div className={`mb-1 flex items-center justify-between gap-3 py-4 px-3 rounded-lg`}
+            <div className={` flex items-center justify-between gap-3 py-4 px-3 rounded-lg`}
             >
                 <div className="flex items-center gap-3">
                     {main.hasChildren

@@ -46,7 +46,6 @@ Hubo un error al cargar los datos. Vuelve a intentarlo.
 1. Lapiz encima de una linea ``CiEdit``
 2. Lapiz dentro de un cuatro ``FaRegEdit`` 
 3. Signo mayor ``MdKeyboardArrowRight | MdArrowForwardIos MdArrowBackIosNew`` = ```>``
-4. Check simple /fa6 ``<FaCheck />``
 5. Tres puntos en vertical ``<MdMoreVert  />``
 6. Refresh ``GrRefresh ``
 7. volver atras "<" ``IoIosArrowBack``
@@ -54,6 +53,10 @@ Hubo un error al cargar los datos. Vuelve a intentarlo.
 9. Mas "+" `` <BiPlus />``
 10. activar un formulario para una lista ``MdPostAdd``
 10. Info ``MdOutlineInfo``
+4. Confirmar,guardar cambios, Check simple /fa6 ``<FaCheck />``
+11. Eliminar lista ``<MdOutlineDeleteSweep />``
+12. Restaura todo a valor original ``MdRestartAlt ``
+13.Agregar, Asignar a una lista existente ``<MdOutlinePlaylistAdd  />``
 
 ## CREAR COMPONENT PAGE "FUNCTION"
 -- prc
@@ -62,6 +65,11 @@ Hubo un error al cargar los datos. Vuelve a intentarlo.
 
 
 ## 💡 Reglas de oro para nombrar funciones
+
+- ``Sustantivo`` - Es el concepto principal.
+- ``Adjetivo`` - Es la palabra que describe al sustantivo.
+- ``Adjetivo + Sustantivo``
+
 - Sustantivo: Es el nombre (la etiqueta) que elegimos.
 # Vervo + Sustantivo 
 Estándar. Ideal para funciones que ejecutan la acción de cambiar el valor.

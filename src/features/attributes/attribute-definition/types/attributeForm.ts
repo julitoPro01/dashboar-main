@@ -1,0 +1,18 @@
+import { AttributeDataType } from "@/src/generated/prisma/enums";
+
+export type AttributeDataTypeDb = AttributeDataType;
+
+// Tipo para crear/actualizar
+export type UpsertAttributeForm = {
+    name: string;
+    dataType?: AttributeDataTypeDb;
+
+    isSupportValues?: boolean;
+    description?: string;
+    isActive: boolean;
+
+
+    value: string;
+    values: { value: string, displayOrder: number, id: number }[];
+}
+

@@ -13,7 +13,7 @@ export const ConfirmDialog = ({
     confirmDisabled,
     onCancel,
     onConfirm,
-}: ConfirmActionProps) => {
+}: ConfirmDialogProps) => {
 
     const iconColor = {
         warning: "text-amber-500 bg-amber-500/10",
@@ -56,6 +56,7 @@ export const ConfirmDialog = ({
                 <Button
                     variant="basic"
                     onClick={onCancel}
+                    disabled={loading}
                 >
                     {cancelText}
                 </Button>
@@ -75,7 +76,7 @@ export const ConfirmDialog = ({
 };
 
 
-export interface ConfirmActionProps {
+export interface ConfirmDialogProps {
     title: string;
     description: React.ReactNode;
 

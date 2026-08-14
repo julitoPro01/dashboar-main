@@ -15,6 +15,7 @@ import { PhoneField } from "./dataType-fields/PhoneField";
 import { JsonField } from "./dataType-fields/JsonField";
 import { AttributeDataTypeDb } from "../../types";
 
+//TODO: NO SE ESTA USANDO
 export const DataTypeFields = {
     TEXT: TextField,
     LONG_TEXT: LongTextField,

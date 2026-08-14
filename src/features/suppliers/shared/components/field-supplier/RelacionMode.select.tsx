@@ -3,6 +3,7 @@ import { UseFormRegister } from 'react-hook-form';
 import { INPUT_FIELD_STYLE } from '@/src/shared/theme/inputField/inputFieldStyle';
 import { SupplierForm } from '../../../types';
 import { SUPPLIER_RELATION_MODE_LABEL } from '../../../constants';
+import { Select } from '@/src/shared/form';
 
 interface Props {
     errorMsg?: string;
@@ -13,23 +14,18 @@ interface Props {
 const { OWNER: _, ...rest } = SUPPLIER_RELATION_MODE_LABEL;
 export const RelacionModeSelect = ({ errorMsg, register, dirty }: Props) => {
     return (
-        <label className="block">
-            <span className={`${INPUT_FIELD_STYLE.label} ${INPUT_FIELD_STYLE.isRequired}`}>
-                Modo de Relación
-            </span>
-            <select className={clsx(INPUT_FIELD_STYLE.base, {
-                [INPUT_FIELD_STYLE.states.normal]: !errorMsg && !dirty,
-                [INPUT_FIELD_STYLE.states.dirty]: !errorMsg && dirty,
-                [INPUT_FIELD_STYLE.states.error]: errorMsg
-            })}
-                {...register("relationMode")}
-            >
-                <option value="">Seleccione una opción</option>
-                {Object.entries(rest).map(([value, label]) => (
-                    <option key={value} value={value}>{label}</option>
-                ))}
-            </select>
-            {errorMsg && <span className={INPUT_FIELD_STYLE.labelError} > {errorMsg} </span>}
 
-        </label>)
+        <Select
+            label='Modo de Relación'
+            isDirty={dirty}
+            error={errorMsg}
+            isRequired
+            {...register("relationMode")}
+        >
+            {Object.entries(rest).map(([value, label]) => (
+                <option key={value} value={value}>{label}</option>
+            ))}
+        </Select>
+
+    )
 }

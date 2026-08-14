@@ -1,5 +1,5 @@
 import { MetaPagination } from "@/src/shared/table/pagination";
-import { AttributeDataTypeDb } from "./attribute";
+import { AttributeDataTypeDb } from "./attributeForm";
 //---FOR LIST DEFINITIONS---
 export type AttributeDefinitionResponse = {
     id: number;

@@ -7,7 +7,7 @@ import { useStore } from "@/src/store/useStore";
 
 export const RowFloatingActions = () => {
 
-    const setDeselect = useStore(v => v.setSelectAttribute);
+    const setDeselect = useStore(v => v.setAttributeSelect);
 
     return (
         <FloatingPanel panelType={FLOATING_PANEL_TYPE.ATTRIBUTE} onEffectClose={() => setDeselect()}>
@@ -20,9 +20,9 @@ export const RowFloatingActions = () => {
 
 const Actions = () => {
 
-    const selected = useStore(v => v.selectedAttribute);
-    const setDeleteModal = useStore(v => v.setDeleteAttributeModal);
-    const setEditModal = useStore(v => v.setEditAttributeModal);
+    const selected = useStore(v => v.attributeSelected);
+    const setDeleteModal = useStore(v => v.setAttributeDeleteModal);
+    const setEditModal = useStore(v => v.setAttributeEditModal);
 
 
     if (!selected) return null;

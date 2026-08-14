@@ -1,28 +1,32 @@
-"use client";
+import { useSortable } from "@dnd-kit/react/sortable";
 
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+interface Props {
+    id: string | number;
+    index: number;
+    disabled?:boolean;
+}
 
-
-export const useSortableNode = (id: number | string) => {
-
+export const useSortableNode = ({ id, index, disabled=false }: Props) => {
     const {
-        attributes,
-        listeners,
-        setNodeRef,
-        transform,
-        transition,
-        isDragging
-    } = useSortable({ id });
-
-    const style = {
-        transform: CSS.Transform.toString(transform),
-        transition,
-        opacity: isDragging ? 0.6 : 1,
-    };
+        ref,
+        handleRef,
+        isDragging,
+        isDropping,
+        isDragSource,
+        isDropTarget,
+        
+    } = useSortable({
+        id,
+        index,
+        disabled
+    });
 
     return {
-        style, setNodeRef,
-        attributes, listeners, isDragging
-    }
-}
+        ref,
+        handleRef,
+        isDragging,
+        isDropping,
+        isDragSource,
+        isDropTarget,
+    };
+};

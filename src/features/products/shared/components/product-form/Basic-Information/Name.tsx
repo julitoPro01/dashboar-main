@@ -1,21 +1,21 @@
-import { INPUT_FIELD_STYLE } from "@/src/shared/theme/inputField"
-import { useFormContext } from "react-hook-form"
-import clsx from 'clsx';
+import { useFormContext, useFormState } from "react-hook-form"
+import { Input } from "@/src/shared/form";
+import { ProductFormData } from "@/src/features/products/types";
 
 export const Name = () => {
 
-  const { register } = useFormContext<{ name: string }>()
+  const { register,control } = useFormContext<ProductFormData>()
 
+  const {errors,dirtyFields} = useFormState({control,name:"name"})
+  
   return (
-    <div>
-      <label className={INPUT_FIELD_STYLE.label+" "+INPUT_FIELD_STYLE.isRequired}>Nombre</label>
-      <input className={clsx(INPUT_FIELD_STYLE.base,
-        {
-          [INPUT_FIELD_STYLE.states.normal]: true
-        })}
-        placeholder="e.g Premiun Watch"
-        {...register("name")}
-      />
-    </div>
+    <Input
+      label="Nombre"
+      placeholder="e.g Premiun Watch"
+      labelOption={{type:"top",required:true}}
+      error={errors?.name?.message}
+      isDirty={dirtyFields.name}
+      {...register("name")}
+    />
   )
 }

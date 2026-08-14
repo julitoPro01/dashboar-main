@@ -1,4 +1,4 @@
-import { MetaPagination } from "@/src/shared/table";
+import { MetaPagination } from "@/src/shared/table/pagination";
 import { AttributeDataTypeDb } from "../../attribute-definition/types";
 import { CategoryAttrDisplayGroupDb } from "./categoryAttr";
 

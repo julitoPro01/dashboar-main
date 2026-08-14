@@ -1,13 +1,13 @@
 type SuccessCode = 200 | 201;
 
-export type ApiSuccessReturn<T=never> = {
+export type ApiSuccessReturn<T = never> = {
   ok: true;
   code: SuccessCode;
   msg: string;
   data: T
 }
 
-export type ApiEntityInUseData = { entity: string, count: number }
+export type ApiEntityInUseData = { entity: string, count: number, isOk?: boolean, id: number, name?:string }
 
 //-----------------------
 
@@ -28,13 +28,13 @@ export type ApiErrorCode =
   | "NOT_FOUND"
   | "UNKNOWN";
 
-export type ApiErrorReturn<T=never> = {
+export type ApiErrorReturn<T = never> = {
   ok: false;
   code: ErrorCode;
   errorType: ApiErrorType;
   errorCode: ApiErrorCode;
   msg: string;
-  data?: T ,
+  data?: T,
   error?: unknown
 }
 
@@ -48,7 +48,7 @@ export const ApiResponse = {
     data
   }),
 
-  created: <T>(msg = "Solicitud exitosa", data: T={} as T): ApiSuccessReturn<T> => ({
+  created: <T>(msg = "Solicitud exitosa", data: T = {} as T): ApiSuccessReturn<T> => ({
     ok: true,
     code: 201,
     msg,

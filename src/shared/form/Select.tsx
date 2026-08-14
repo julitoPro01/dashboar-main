@@ -1,39 +1,65 @@
 import clsx from "clsx";
-import { INPUT_FIELD_STYLE } from "../theme/inputField";
-import { FormInputProps, InputStateType } from "./types"
+import { FormInputProps, FieldStatusType } from "./types"
+import { SelectHTMLAttributes } from "react";
+import { FIELD_STYLE } from "./style";
+import { FieldLayout } from "./FieldLayout";
 
 
-export const Select = ({
-    error = false,
-    isDirty = false,
-    isRequired = false,
-    label,
-    value = "",
-    className = "",
-    description = "",
-    children,
-    onChange,
-}: FormInputProps & { children: React.ReactNode }) => {
 
-    const state: InputStateType = error ? "error" : isDirty ? "dirty" : "normal";
+interface Props extends FormInputProps, SelectHTMLAttributes<HTMLSelectElement> {
+    options: React.ReactNode;
+}
+
+
+/**
+ * defatult: 
+ * positonLabel = "top";
+ * textSize = "sm";
+ * fieldSize = "md";
+ * layout = "col";
+ *    border=1,
+  *  roundedSize="lg",
+ * @param param0 
+ * @returns 
+ */
+
+export const Select = (props: Props) => {
+
+    const {
+        roundedSize,
+        border,
+        fieldSize,
+        textSize,
+        fieldIcon,
+        fieldClass,
+        error,
+        isDirty,
+        labelOption,
+        ...rest
+    } = props;
+
+    const status: FieldStatusType = error ? "error" : isDirty ? "dirty" : "normal";
+
+    const field = clsx(
+        FIELD_STYLE.base,
+        fieldIcon && "ps-10",
+        FIELD_STYLE.borderSize[border ?? 1],
+        FIELD_STYLE.roundedSize[roundedSize ?? "lg"],
+
+        FIELD_STYLE.textSize[textSize ?? "sm"],
+        FIELD_STYLE.size[fieldSize ?? "md"],
+        FIELD_STYLE.status[status],
+        fieldClass
+    )
 
     return (
-        <div className={className}>
-            <label className={`${INPUT_FIELD_STYLE.label} ${isRequired && INPUT_FIELD_STYLE.isRequired}`}>{label}</label>
-            {
-                description &&
-                <span className="text-xs font-medium text-text-muted"> {description} </span>
-            }
-            <select
-                className={clsx(INPUT_FIELD_STYLE.base, INPUT_FIELD_STYLE.states[state])}
-                value={value}
-                onChange={({ target: { value } }) => onChange?.(value)}
-            >
+        <FieldLayout {...props} >
+            <select className={field}  {...rest} >
                 <option value={0} className="text-text-muted" > Seleccionar</option>
-            
-                {children}
+                {props.options}
             </select>
-            {error && <span className={INPUT_FIELD_STYLE.labelError} >{error}</span>}
-        </div>
+        </FieldLayout>
     )
+
+
 }

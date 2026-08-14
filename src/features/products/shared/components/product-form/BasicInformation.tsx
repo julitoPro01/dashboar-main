@@ -1,8 +1,8 @@
 
-import { Name } from "./Basic-Information/Name"
-import { Sku } from "./Basic-Information/Sku"
-import { Slug } from "./Basic-Information/Slug"
-import { ShortDescription } from "./Basic-Information/ShortDescription"
+import { Name } from "./basic-Information/Name"
+import { Sku } from "./basic-Information/Sku"
+import { Slug } from "./basic-Information/Slug"
+import { ShortDescription } from "./basic-Information/ShortDescription"
 
 export const BasicInformation = () => {
     return (

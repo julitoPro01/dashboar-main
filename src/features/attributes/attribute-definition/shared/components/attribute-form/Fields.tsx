@@ -7,11 +7,12 @@ import { IoClose } from "react-icons/io5";
 import { IoMdAdd } from "react-icons/io";
 import { useEffect } from "react";
 import { RiDragMove2Fill } from "react-icons/ri";
-import { useSortableNode, Sorteable, moveDragEnd } from "@/src/shared/sortable";
 import { UpsertAttributeForm } from "../../../types";
 import { DATA_TYPE_OPTIONS } from "../../../constants/dataTypeLabel";
 import { FaUndo } from "react-icons/fa";
 import {type BasicFormReturn } from "@/src/shared/form";
+import { DragDropProvider } from "@dnd-kit/react";
+import { moveDragEnd, useSortableNode } from "@/src/shared/sortable";
 
 
 interface Props {
@@ -160,21 +161,22 @@ export const Fields = ({ form }: Props) => {
 
                     </div>
                     <br />
-                    <Sorteable onDragEnd={handleDragEnd} itemIds={state.values.map(v => v.id)} >
+                        <DragDropProvider onDragEnd={handleDragEnd}>
                         <div className=" flex flex-wrap gap-3">
-                            {state.values.map((v) => (
-
-                                <Sortable
-                                    key={v.id}
-                                    id={v.id}
-                                    value={v.value}
-                                    displayOrder={v.displayOrder}
-                                    // isSystemDefault={state.isSystemDefault}
-                                    onDelValue={() => handleDelValues(v.value)}
+                            {state.values.map((v,i) => (
+                                
+                                <SortableItem
+                                key={v.id}
+                                index={i}
+                                id={v.id}
+                                value={v.value}
+                                displayOrder={v.displayOrder}
+                                // isSystemDefault={state.isSystemDefault}
+                                onDelValue={() => handleDelValues(v.value)}
                                 />
                             ))}
                         </div>
-                    </Sorteable>
+                            </DragDropProvider>
                 </div>
             }
             <div className="space-x-5">
@@ -196,10 +198,10 @@ export const Fields = ({ form }: Props) => {
     )
 }
 
-type SortableProps = { id: number, value: string, displayOrder: number, onDelValue: () => void }
-const Sortable = ({ id, onDelValue, displayOrder, value }: SortableProps) => {
+type SortableProps = {index:number, id: number, value: string, displayOrder: number, onDelValue: () => void }
+const SortableItem = ({ id, index, onDelValue, displayOrder, value }: SortableProps) => {
 
-    const { setNodeRef, style, attributes, listeners } = useSortableNode(id);
+    const { ref, handleRef} = useSortableNode({id,index});
 
     return (
         <div
@@ -207,8 +209,7 @@ const Sortable = ({ id, onDelValue, displayOrder, value }: SortableProps) => {
                 "group flex items-center gap-2 rounded-lg border px-2 py-1 transition-colors",
                 "border-border-select bg-primary-light/10"
             )}
-            ref={setNodeRef}
-            style={style}
+            ref={ref}
         >
             {/* Orden */}
             <span
@@ -221,7 +222,7 @@ const Sortable = ({ id, onDelValue, displayOrder, value }: SortableProps) => {
             <button
                 type="button"
                 className={`disabled:cursor-no-drop cursor-grab active:cursor-grabbing text-text-secondary hover:text-primary transition-colors`}
-                {...attributes} {...listeners}
+                ref={handleRef}
             >
                 <RiDragMove2Fill size={16} />
             </button>

@@ -19,7 +19,7 @@ export const LayoutPanel = ({ main_categories, children }: Props) => {
                         <Panel defaultSize={"45%"} maxSize={"75%"} minSize={"20%"} >
                             {main_categories}
                         </Panel>
-                        <Separator className="w-1.5 border-l border-border select-none hover:bg-primary-light/50  " />
+                        <Separator className="w-1.5 bg-bg-select border-l border-border select-none hover:bg-primary-light/50  " />
                         <Panel >
                             {children}
                         </Panel>

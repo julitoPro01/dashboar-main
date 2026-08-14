@@ -20,6 +20,7 @@ interface Props {
     isDynamic?: boolean
 }
 
+//TODO: ELIMINAR
 export const FloatingPanelFixed = ({ children, onEffectClose, anchorSide, panelType, x = 0, y = 0, isDynamic }: Props) => {
 
     const { open, cx: CX, cy: CY, type } = useStore(v => v.floatingPanel);

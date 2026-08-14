@@ -785,9 +785,12 @@ model ProductAttributeValue {
   productId             Int
   product            Product            @relation(fields: [productId], references: [id])
 
+ // Atributo definido por el sistema
+  attributeDefinitionId Int?
+  attributeDefinition AttributeDefinition? @relation(fields: [attributeDefinitionId], references: [id])
 
-  attributeDefinitionId Int
-  attributeDefinition AttributeDefinition @relation(fields: [attributeDefinitionId], references: [id])
+ // Atributo personalizado exclusivo del producto
+  customName String?
 
  // Para valores libres
   valueText     String?

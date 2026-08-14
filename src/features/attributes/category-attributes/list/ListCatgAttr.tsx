@@ -14,32 +14,41 @@ interface Props { pagination: PaginationState }
 
 export const ListCatgAttr = ({ pagination }: Props) => {
 
-    const filters = useStore(v => v.categoryAttrFilters);
+    const filters = useStore(v => v.categoryAttrsFilters);
 
     const pag = useStableUrlPagination(pagination, filters, APP_ROUTES.ATTRIBUTES.CATEGORY)
-
-    const cleanSelectionFilter = useStore(v => v.setCategoryAttrFilters);
-    const cleanSelectionIds = useStore(v => v.resetCategoryAttrSelectedIds);
 
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
     const [columnSizing, setColumnSizing] = useState<ColumnSizingState>({});
 
-    const { categoryAttrs, meta, updateData, actionType } = useCategoryAttrs(pag, filters);
+    const { categoryAttrs, meta, updateData, actionType, invalidationReason } = useCategoryAttrs(pag, filters);
 
 
-    //Limpiamos los ides seleccionados al desmontar
+    //Limpiamos al desmontar
     useEffect(() => {
         return () => {
-            cleanSelectionIds();
-            cleanSelectionFilter({ fil: { selection: { type: "all" } } })
+            const { setCategoryAttrsFilters, setCategoryAttrsSelectedIds } = useStore.getState();
+            // Los filtros de seleccion
+            setCategoryAttrsFilters({ fil: { selection: { type: "all" } } });
+            // los ides seleccionados
+            setCategoryAttrsSelectedIds([]);
         }
-    }, [])
+    }, []);
+
+
+
 
 
     return (
         <TableProvider
             columns={columnDef} data={categoryAttrs}
-            meta={{ pagination: pag, metaPagination: meta, updateData }}
+            meta={{
+                pagination: pag,
+                metaPagination: meta,
+                updateData,
+                // custom
+                actionType,invalidationReason
+            }}
             stateOptions={{
                 columnResizeMode: "onChange",
                 enableColumnResizing: true,
@@ -52,7 +61,7 @@ export const ListCatgAttr = ({ pagination }: Props) => {
             stateAction={{ setRowSelection, setColumnSizing }}
         >
             <ManagerAttribute />
-            <Table actionType={actionType} />
+            <Table />
         </TableProvider>
     )
 }

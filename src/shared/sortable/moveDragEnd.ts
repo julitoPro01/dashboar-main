@@ -1,24 +1,33 @@
-"use client";
+import { isSortable } from "@dnd-kit/react/sortable";
+import type { DragEndEvent } from "@dnd-kit/react";
 
-import { DragEndEvent } from "@dnd-kit/core"
-import { arrayMove } from '@dnd-kit/sortable';
+export const moveDragEnd = <T>(
+    values: T[],
+    action: (
+        values: T[],
+        oldIndex: number,
+        newIndex: number
+    ) => void
+) => {
+    return (event: DragEndEvent) => {
+        if (event.canceled) return;
 
-type HasId ={ id: string | number };
+        const { source } = event.operation;
 
-export const moveDragEnd = <T extends HasId>(values: T[], action: (values: T[], oldIndex: number, newIndex: number) => void) => {
+        if (!isSortable(source)) return;
 
-    return (e: DragEndEvent) => {
-        const { active, over } = e;
-        if (!over || active.id === over.id) return;
+        const {
+            initialIndex: oldIndex,
+            index: newIndex
+        } = source;
 
-        const oldIndex = values.findIndex(item => item.id === active.id);
-        const newIndex = values.findIndex(item => item.id === over.id);
+        if (oldIndex === newIndex) return;
 
-        if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) return;
-        action(arrayMove(values, oldIndex, newIndex), oldIndex, newIndex)
-    }
+        const newValues = [...values];
+        const [item] = newValues.splice(oldIndex, 1);
 
+        newValues.splice(newIndex, 0, item);
 
-}
-
-
+        action(newValues, oldIndex, newIndex);
+    };
+};

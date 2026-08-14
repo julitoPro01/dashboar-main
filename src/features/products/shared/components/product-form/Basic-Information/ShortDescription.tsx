@@ -1,19 +1,28 @@
-import { INPUT_FIELD_STYLE } from "@/src/shared/theme/inputField"
-import clsx from "clsx"
-import { useFormContext } from "react-hook-form"
+import { ProductFormData } from "@/src/features/products/types";
+import { Textarea } from "@/src/shared/form";
+import { useFormContext, useFormState } from "react-hook-form"
 
 export const ShortDescription = () => {
-    const { register } = useFormContext<{ shortDescription: string }>();
+    const { register,control } = useFormContext<ProductFormData>();
+
+      const {errors,dirtyFields} = useFormState({control,name:"shortDescription"})
+    
+
     return (
-        <div>
-            <label className={INPUT_FIELD_STYLE.label + " " + INPUT_FIELD_STYLE.isRequired}>Descripción corta</label>
-            <textarea className={clsx(INPUT_FIELD_STYLE.base, "max-h-30 min-h-15", INPUT_FIELD_STYLE.states.normal)}
-                rows={3}
-                maxLength={300}
-                minLength={10}
-                placeholder="Resumen breve para vistas de lista y tarjeta (máximo 300 caracteres)"
-                {...register("shortDescription")}
-            />
-        </div>
+
+        <Textarea
+            label="Descripción corta"
+            labelOption={{type:"top",required:true,
+                description:"Se mostrará en vistas de lista y tarjetas"
+            }}
+            rows={3}
+            maxLength={300}
+            minLength={10}
+            placeholder="Resume las principales características y beneficios del producto... (máximo 300 caracteres)"
+            error={errors.shortDescription?.message}
+            isDirty={dirtyFields.shortDescription}
+            {...register("shortDescription")}
+        />
+
     )
 }

@@ -12,9 +12,10 @@ interface Props {
     children: React.ReactNode;
     position?: keyof typeof dirr | { custom: string };
     padding?:string;
+    margin?:string
 }
 
-export const FloatingActionBar = ({ children, position = "top-c",padding="p-1.5" }: Props) => {
+export const FloatingActionBar = ({ children, position = "top-c",padding="p-1.5",margin="" }: Props) => {
 
     let posit = "";
     if (typeof position === "object")
@@ -27,8 +28,9 @@ export const FloatingActionBar = ({ children, position = "top-c",padding="p-1.5"
             className={` fixed
                 ${posit}
                 ${padding}
+                ${margin}
                 z-100
-
+                
                 flex
                 flex-col
                 gap-2

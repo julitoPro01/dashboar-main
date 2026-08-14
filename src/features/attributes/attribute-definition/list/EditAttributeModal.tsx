@@ -16,8 +16,8 @@ interface Props { updatedBy: string; updatedById: number }
 
 export const EditAttributeModal = (params: Props) => {
 
-  const modal = useStore(v => v.editAttributeModal);
-  const setOpenModal = useStore(v => v.setEditAttributeModal);
+  const modal = useStore(v => v.attributeEditModal);
+  const setOpenModal = useStore(v => v.setAttributeEditModal);
 
   const filters = useStore(v => v.attributeFilters);
   const pag = getPaginationParams({ includeState: true, sortByAcceptOnly: ATTRIBUTE_SORTBY_ACCEPT_ONLY })

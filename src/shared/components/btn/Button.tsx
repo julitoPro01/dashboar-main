@@ -5,8 +5,7 @@ import { MouseEvent } from "react";
 const positions = { start: "justify-start", center: "justify-center", end: "justify-end" };
 const base = `
 inline-flex items-center gap-2
-font-medium
-transition-colors duration-200
+transition-all duration-200
 cursor-pointer
 disabled:opacity-65 select-none
 disabled:cursor-not-allowed
@@ -14,19 +13,20 @@ disabled:cursor-not-allowed
 
 const variants = {
   dynamic: "",
-  primary: `bg-primary text-white`,
-  secondary: `border border-border-strong text-text `,
-  ghost: `text-text`,
-  ghostDanger: 'text-red-500',
-  outline: `border border-border text-text`,
-  danger: `bg-error-strong text-white`,
-  tab: `text-text-muted`,
-  tabLight: `text-text-muted`,
+  primary: `bg-primary text-white font-medium`,
+  secondary: `border border-border-strong text-text font-medium`,
+  ghost: `text-text font-medium`,
+  ghostDanger: 'text-red-500 font-medium',
+  outline: `border border-border text-text font-medium`,
+  danger: `bg-error-strong text-white font-medium`,
+  tab: `text-text-muted font-medium`,
+  tabLight: `text-text-muted font-medium`,
   select: `
   text-text-muted border border-border-input bg-surface-light
-  cursor-pointer select-peer`,
-  input: `text-text border border-border-input bg-surface-light`,
-  basic: `text-text-muted`
+  cursor-pointer select-peer font-medium`,
+  input: `text-text border border-border-input bg-surface-light font-medium`,
+  basic: `text-text-muted font-medium`,
+  confirm:`text-primary dark:text-text-select border border-primary bg-primary/5 font-semibold`
 }
 
 const active = "active:text-text/70";
@@ -44,7 +44,9 @@ const hover = {
   select: `hover:border-blue-400 ${active}`,
   input: `thover:bg-hover ${active}`,
   underline: `hover:text-text hover:underline hover:underline-offset-4 hover:decoration-1 ${active}`,
-  basic: `hover:text-text ${active}`
+  basic: `hover:text-text ${active}`,
+  confirm:`hover:bg-primary/10 hover:border-border-select hover:shadow-lg active:scale-[0.98]
+  focus:outline-none focus:ring-1 focus:ring-primary/30`
 }
 
 
@@ -107,7 +109,7 @@ export const Button = ({
     positions[position],
     variants[variant],
     hover[select === "underline" ? "underline" : variant],
-    variant !== "basic" && sizes(padding)[size],
+    sizes(padding)[size],
     active && selected[select],
     `rounded-${rounded}`,
     className

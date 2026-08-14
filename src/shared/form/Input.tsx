@@ -1,51 +1,62 @@
 import clsx from "clsx"
-import { INPUT_FIELD_STYLE } from "../theme/inputField"
-import { FormInputProps, InputStateType } from "./types";
+import { FieldStatusType, FormInputProps } from "./types";
+import { InputHTMLAttributes } from "react";
+import { FIELD_STYLE } from "./style";
+import { FieldLayout } from "./FieldLayout";
 
 
-export const Input = ({
-    error = false,
-    isDirty = false,
-    isRequired = false,
-    label,
-    value = "",
-    placeholder = "",
-    className = "",
-    description = "",
-    onChange, disabled = false
-}: FormInputProps) => {
+interface Props extends FormInputProps, InputHTMLAttributes<HTMLInputElement> {
+}
 
-    const state: InputStateType = error ? "error" : isDirty ? "dirty" : "normal";
+
+/**
+ * defatult: 
+ * positonLabel = "top";
+ * textSize = "sm";
+ * fieldSize = "md";
+ * layout = "col";
+ *    border=1,
+  *  roundedSize="lg",
+ * @param param0 
+ * @returns 
+ */
+
+
+export const Input = (props: Props) => {
+
+    const {
+        roundedSize,
+        border,
+        fieldSize,
+        textSize,
+        fieldIcon,
+        fieldClass,
+        error,
+        isDirty,
+        labelOption,
+
+        ...rest
+    } = props;
+
+    const status: FieldStatusType = error ? "error" : isDirty ? "dirty" : "normal";
+
+    const field = clsx(
+        FIELD_STYLE.base,
+        fieldIcon && "ps-10",
+        FIELD_STYLE.borderSize[border ?? 1],
+        FIELD_STYLE.roundedSize[roundedSize ?? "lg"],
+        
+        FIELD_STYLE.textSize[textSize ?? "sm"],
+        FIELD_STYLE.size[fieldSize ?? "md"],
+        FIELD_STYLE.status[status],
+        fieldClass
+    )
+
 
 
     return (
-        <div className={className}>
-
-            {label
-                ? <label className={`${INPUT_FIELD_STYLE.label} ${isRequired ? INPUT_FIELD_STYLE.isRequired : ""}`}>{label}</label>
-                : ""
-            }
-
-            {
-                description
-                    ? <span className="text-xs font-medium text-text-muted"> {description} </span>
-                    : ""
-            }
-
-            <input type="text"
-                className={clsx(
-                    disabled ? INPUT_FIELD_STYLE.baseDisabled : INPUT_FIELD_STYLE.base,
-                    INPUT_FIELD_STYLE.states[state])}
-                disabled={disabled}
-                placeholder={placeholder}
-                value={value}
-                onChange={({ target: { value } }) => onChange?.(value)}
-            />
-
-            {error
-                ? <span className={INPUT_FIELD_STYLE.labelError} >{error}</span>
-                : ""
-            }
-        </div>
+        <FieldLayout {...props} >
+            <input className={field} {...rest} />
+        </FieldLayout>
     )
 }

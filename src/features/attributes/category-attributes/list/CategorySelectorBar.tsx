@@ -4,8 +4,8 @@ import { FaRegFolder } from "react-icons/fa";
 
 export const CategorySelectorBar = () => {
 
-    const setOpenModal = useStore(v => v.setSelectCategoryModal);
-    const selectedCatgRelation = useStore(v => v.selectCategoryModal.paths);
+    const setOpenModal = useStore(v => v.setCategorySelectModal);
+    const selectedCatgRelation = useStore(v => v.aategorySelectModal.paths);
 
     const infoMsg = () => {
 

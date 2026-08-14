@@ -23,7 +23,7 @@ export const LogoUpload = () => {
     //     }
 
     return (
-        <div>
+        <div className="space-y-2">
             <span className={INPUT_FIELD_STYLE.label}>
                 Logo Corporativo
             </span>

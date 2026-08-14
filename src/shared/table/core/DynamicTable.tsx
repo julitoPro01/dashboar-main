@@ -11,8 +11,6 @@ export const DynamicTable = ({ HeaderRows, children,className }: Props) => {
     // <div className=" flex flex-col w-full h-full overflow-auto scrollbar-thin max-h-full">
       <div className={`relative flex flex-col flex-1 overflow-auto scrollbar-thin scrollbar-thumb-bg-select px-6 ${className}`}>
       
-      <div className="sticky right-0 top-0 h-full bg-amber-500 w-50" />
-
       <table className="relative left table-auto ">
         <thead className=" sticky top-0 z-10"  >
           {HeaderRows}

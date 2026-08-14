@@ -1,10 +1,8 @@
 "use client";
 
 import {
-    autoPlacement,
     autoUpdate,
     flip,
-    FloatingOverlay,
     FloatingPortal,
     offset,
     Placement,
@@ -16,7 +14,7 @@ import {
     useInteractions,
     useRole,
 } from "@floating-ui/react";
-import { useState } from "react";
+
 import { useFloatingPanel } from "./useFloatingPanel";
 import { FLOATING_PANEL_TYPE } from "@/src/store/uiSlice";
 

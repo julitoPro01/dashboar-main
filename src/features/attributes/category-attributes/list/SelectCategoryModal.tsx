@@ -1,5 +1,6 @@
 "use client";
 import { CategoryTreeSelector } from "@/src/features/category/shared/components";
+import { CatgTreeSelectorSelected } from "@/src/features/category/types";
 import { DynamicModal } from "@/src/shared/components/modal";
 import { useStore } from "@/src/store/useStore";
 import { useShallow } from "zustand/react/shallow";
@@ -7,17 +8,16 @@ import { useShallow } from "zustand/react/shallow";
 export const SelectCategoryModal = () => {
 
     const { setOpenModal, setFilters, isOpen, categoryId, paths } = useStore(useShallow(v => ({
-        setFilters: v.setCategoryAttrFilters,
-        setOpenModal: v.setSelectCategoryModal,
-        isOpen: v.selectCategoryModal.isOpen,
-        paths: v.selectCategoryModal.paths,
-        categoryId: v.categoryAttrFilters.categoryId
+        setFilters: v.setCategoryAttrsFilters,
+        setOpenModal: v.setCategorySelectModal,
+        isOpen: v.aategorySelectModal.isOpen,
+        paths: v.aategorySelectModal.paths,
+        categoryId: v.categoryAttrsFilters.categoryId
     })))
 
 
 
-    const handleApply = (categoryId: number, isParent: boolean, paths: { name: string, id: number }[]) => {
-        console.log(categoryId)
+    const handleApply = ({ id: categoryId, isParent, paths }: CatgTreeSelectorSelected) => {
         setOpenModal({ isOpen: false, paths, isParent });
         setFilters((fil) => {
             return {

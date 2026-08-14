@@ -1,11 +1,9 @@
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
 import { QUERY_KEYS } from "@/src/shared/react-query";
-import { AddCategoryAttrs, addCategoryAttrs, delCategoryAttrs, EditCategoryAttrs, editCategoryAttrs, getCategoryAttrs } from "@/src/action/attribute";
+import { getCategoryAttrs } from "@/src/action/attribute";
 import { useStore } from "@/src/store/useStore";
 import { useDelayedFetchState } from "@/src/shared/hooks";
-import { errorMessages, successMessage } from "@/src/shared/messages";
-import { getToastStyle, ToastError } from "@/src/shared/components/toaster";
-import { toast } from "sonner";
+
 import { CategoryAttrFilters, CategoryAttrsResponse } from "../types";
 import { PaginationState } from "@/src/shared/table/pagination";
 
@@ -16,13 +14,26 @@ export const useCategoryAttrs = (pag: PaginationState, fil: CategoryAttrFilters)
 
     const { data, isFetching, isError } = useQuery({
         queryKey: QUERY_KEYS.attributes.listCatg(pag, fil),
-        queryFn: () => getCategoryAttrs(pag, fil),
+        queryFn: async () => {
+            const res = await getCategoryAttrs(pag, fil);
+            // InvalidationReason | undefined
+            // { type: "create" | "update" | "add" | "delete" | "refresh", time: number }
+            const invalidationReason = useStore.getState().categoryAttrsInvalidationReason;
+            
+            return {
+                ...res,
+                actionType: fil.actionType,
+                invalidationReason
+            }
+        },
         select: (res) => {
             if (!res) return null;
 
             return {
                 data: res.data,
-                ok: res.ok
+                ok: res.ok,
+                actionType: res.actionType,
+                invalidationReason: res.invalidationReason
             }
         },
         staleTime: 60 * 1000,
@@ -54,105 +65,12 @@ export const useCategoryAttrs = (pag: PaginationState, fil: CategoryAttrFilters)
         delay: 1000,
     });
 
-    const catgAttrs = fil.actionType === "edit" ? [...data?.data?.categoryAttrs ?? []] : data?.data?.categoryAttrs ?? [];
-
 
     return {
-        categoryAttrs: catgAttrs,
+        categoryAttrs: data?.data?.categoryAttrs ?? [],
         meta: data?.data?.meta,
-        actionType: fil.actionType,
+        actionType: data?.actionType ?? "view",
+        invalidationReason:data?.invalidationReason,
         updateData
     }
 }
-
-export const useCategoryAttrActions = () => {
-
-    const queryClient = useQueryClient()
-    //---------------
-    const delMutation = useMutation({
-        mutationFn: delCategoryAttrs,
-        onSuccess: () => { queryClient.invalidateQueries({ queryKey: QUERY_KEYS.attributes.listCatg({}, {}) }); }
-    })
-
-    const deleteRows = ({ ids, updateIds }: { ids: number[], updateIds: number[] }, call: () => void) => {
-        delMutation.mutate({ ids, updateIds }, {
-            onSuccess: (val) => {
-                if (val.ok) {
-                    call()
-                    toastDelete()
-                } else toastError()
-            }, onError: () => {
-                toastError()
-            }
-        })
-    }
-    //---------------
-    const createMutation = useMutation({
-        mutationFn: addCategoryAttrs,
-        onSuccess: () => { queryClient.invalidateQueries({ queryKey: QUERY_KEYS.attributes.listCatg({}, {}) }) }
-    });
-
-    const assignRows = async (categoryId: number, data: AddCategoryAttrs[], call: () => void) => {
-
-        createMutation.mutate({
-            categoryId: categoryId,
-            data
-        }, {
-            onSuccess: async (data) => {
-                if (data.ok) {
-                    toastAssign();
-                    call()
-
-                } else
-                    toastError()
-            },
-            onError: () => {
-                toastError()
-            },
-        })
-
-    }
-    //---------------
-    const editMutation = useMutation({
-        mutationFn: editCategoryAttrs,
-        onSuccess: () => { queryClient.invalidateQueries({ queryKey: QUERY_KEYS.attributes.listCatg({}, {}) }) }
-    })
-
-    const editRows = (data: EditCategoryAttrs[], call: () => void) => {
-        editMutation.mutate(data, {
-            onSuccess: (data) => {
-                if (data.ok) {
-                    toastEdit()
-                    call()
-                } else {
-                    toastError()
-                }
-            },
-            onError: () => {
-                toastError()
-            }
-        })
-    }
-    const loading = createMutation.isPending || editMutation.isPending || delMutation.isPending;
-    const isError = createMutation.isError || editMutation.isError || delMutation.isError;
-
-    return {
-        deleteRows,
-        assignRows,
-        editRows,
-        loading,
-        isError
-    }
-}
-
-const succ = successMessage.deleted("Attributo");
-const toastDelete = () => toast.success(succ.description, { style: getToastStyle("success") })
-
-const toastAssign = () => toast.success("Los atributos se han asignado correctamente", { style: getToastStyle("success") })
-
-const toastEdit = () => toast.success("Los valores se han actualizado correctamente", { style: getToastStyle("success") })
-
-const toastError = () => ToastError({
-    title: errorMessages.generic.title,
-    description: errorMessages.generic.description
-}, { duration: 5000 })

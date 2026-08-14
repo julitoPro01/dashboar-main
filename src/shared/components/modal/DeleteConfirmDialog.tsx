@@ -26,8 +26,8 @@ export const DeleteConfirmDialog = ({
         <ConfirmDialog
             title={
                 notAvailable
-                    ? "No se puede eliminar el atributo"
-                    : "Eliminar atributo"
+                    ? `${entity} no disponible para su eliminación.`
+                    : `Eliminar ${entity.toLowerCase()}`
             }
             variant={notAvailable ? "warning" : "danger"}
             variantBtn="danger"

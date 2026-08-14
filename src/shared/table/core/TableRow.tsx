@@ -2,6 +2,7 @@ import { flexRender, Header, HeaderGroup, Row, VisibilityState } from "@tanstack
 import clsx from "clsx"
 import { memo } from "react";
 import { useSortableItemContext } from "../../sortable";
+// import { useSortableItemContext } from "../../sortable";
 
 export const HeaderRow = <T extends Record<string, any>>({ group }: { group: HeaderGroup<T> }) => {
     return (
@@ -53,8 +54,8 @@ const HeaderCell = memo(({ header, size, isResizing }: HeaderCell) => {
 //-----------------------
 
 // const selectedStyle = "bg-slate-100 dark:bg-[#202940]/95 ";
-const selectedStyle = "bg-slate-50 dark:bg-slate-800 text-text-muted";
-export type OpenPanelPayload<T = Record<string, any>> = {
+const selectedStyle = "bg-bg-select dark:bg-slate-800 border-border-select/50 text-text-muted";
+export type OpenPanelParams<T = Record<string, any>> = {
     cx: number, // clientX
     cy: number, // clientY
     original: T
@@ -64,30 +65,30 @@ interface RowProps {
     isSelected?: boolean,
     canSelect?: boolean
     row: Row<any>,
-    columnVisibility?: VisibilityState,
     onSelect?: (original: any) => void;
-    onOpenPanel?: (_: OpenPanelPayload<any>) => void;
-    reagent?: any;
-    isBorderSelect?:boolean
+    onOpenPanel?: (_: OpenPanelParams<any>) => void;
+    rowIndexId?: boolean;
 }
-export const BodyRowMemo = memo(({ row, isSelected = false, canSelect = false, onSelect, onOpenPanel }: RowProps) => {
+export const BodyRowMemo = memo(({ row, rowIndexId, isSelected = false, canSelect = false, onSelect, onOpenPanel }: RowProps) => {
 
     return <BodyRow row={row} isSelected={isSelected} canSelect={canSelect}
-        onSelect={onSelect} onOpenPanel={onOpenPanel} />
+        onSelect={onSelect} onOpenPanel={onOpenPanel} rowIndexId={rowIndexId} />
 })
 
-export const BodyRow = ({ row, isSelected = false, canSelect = false, onSelect, onOpenPanel }: RowProps) => {
+export const BodyRow = ({ row, rowIndexId, isSelected = false, canSelect = false, onSelect, onOpenPanel }: RowProps) => {
 
     return (
         <tr
             className={`group relative cursor-pointer border-b border-border transition-colors duration-200
-                ${isSelected ? selectedStyle:"hover:bg-slate-100  hover:dark:bg-slate-800/95 "}`}
+                ${isSelected ? selectedStyle : "hover:bg-slate-100  hover:dark:bg-slate-800/95 "}`}
             onClick={({ clientX, clientY }) => {
 
                 onOpenPanel && onOpenPanel({ cx: clientX, cy: clientY, original: row.original })
                 onSelect && onSelect(row.original)
                 canSelect && row.toggleSelected();
             }}
+
+            data-row-index={rowIndexId ? row.id : row.index}
         >
             {
                 row.getVisibleCells().map((cell) => {
@@ -109,22 +110,21 @@ export const BodyRow = ({ row, isSelected = false, canSelect = false, onSelect, 
 }
 
 export const SortableRow = memo(({ row, isSelected = false, canSelect = false, onSelect, onOpenPanel }: RowProps) => {
-    const { style, setNodeRef, isDragging } = useSortableItemContext();
+    const { ref, isDragging } = useSortableItemContext();
 
     return (
         <>
 
             <tr
-                className={`group relative ${isDragging ? "z-50" : ""} cursor-pointer hover:bg-slate-100 hover:dark:bg-slate-800 transition-colors duration-200
-                ${isSelected && selectedStyle}`}
+                className={`group relative ${isDragging ? "z-50 opacity-50" : "opacity-100"} cursor-pointer border-b border-border transition-colors duration-200
+                ${isSelected ? selectedStyle : "hover:bg-slate-100  hover:dark:bg-slate-800/95 "}`}
                 onClick={({ clientX, clientY }) => {
 
                     onOpenPanel && onOpenPanel({ cx: clientX, cy: clientY, original: row.original })
                     onSelect && onSelect(row.original)
                     canSelect && row.toggleSelected();
                 }}
-                ref={setNodeRef}
-                style={{ ...style }}
+                ref={ref }
             >
                 {
                     row.getVisibleCells().map((cell) => {
@@ -140,7 +140,7 @@ export const SortableRow = memo(({ row, isSelected = false, canSelect = false, o
                         </td>
                     })
                 }
-                <td className="w-full border-b border-border"> </td>
+                <td className="w-full"> </td>
             </tr>
 
         </>
@@ -174,7 +174,7 @@ export const DynamicBodyRow = ({ row, isSelected = false, canSelect = false, onS
                         </td>
                     })
                 }
-                <td className="w-full border-b border-border"> </td>
+                <td className="w-full"> </td>
             </tr>
 
         </>

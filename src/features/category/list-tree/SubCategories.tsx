@@ -10,6 +10,8 @@ import { MainCategory } from "@/src/store/categorySlice";
 import type { CategoryTreeNode } from "../types";
 import { CategoryTreeSkeleton } from "../shared/components";
 import { useCategoryTrees } from "../shared/hooks";
+import { ItemChild } from "./sub-categories/ItemChild";
+import { CreateCategory } from "./sub-categories/CreateCategory";
 
 export const SubCategories = () => {
 
@@ -30,10 +32,10 @@ const Render = ({ mainCategory: main }: RenderProps) => {
   const selectedId = useStore(v => v.selectedCategory?.id);
   const setSelect = useStore(v => v.setSelectCategory);
   const setFloatingMenu = useStore(v => v.setFloatingPanel);
-  
-  
+
+
   // //#1 Hook para inicializar las subcategorías de la categoría principal seleccionada.
-  const { data, isLoading } = useCategoryTrees({path:main.path});
+  const { data, isLoading } = useCategoryTrees({ path: main.path });
 
   // --- SELECCIONAMOS Y ABRIMOS EL MENU FLOTANTE
   const handleOpenFloatingMenu = (items: CategoryTreeNode[], cx: number, cy: number) => {
@@ -62,27 +64,49 @@ const Render = ({ mainCategory: main }: RenderProps) => {
 
   return (
     <>
-      <div className="px-3 hover:scrollbar-thumb-active scrollbar-thin scrollbar-transparent overflow-auto h-full w-full">
+      <div className=" hover:scrollbar-thumb-active scrollbar-thin scrollbar-transparent overflow-auto h-full w-full">
 
         <div className=" min-w-min">
 
           <ItemMainCategory mainCategory={main} />
 
+          <div className="flex justify-end py-2 border-t border-border
+               text-xs uppercase tracking-wide font-semibold text-text-subtle">
+
+            <div className="w-40 flex justify-around">
+              <span className="px-4">Estado</span>
+              <span className="px-4">Nivel</span>
+            </div>
+          </div>
           {/* SUB CATEGORÍAS */}
           {
             isLoading
               ? <CategoryTreeSkeleton />
-              : data[0]?.children.map(v => {
+              : data[0]?.children.map((v: CategoryTreeNode) => {
 
-                return (<RenderCategoryTree
-                  key={v.id}
+                return (
+                  <div key={v.id} className="group">
+                    {
+                      v.isCreating
+                        ? <CreateCategory id={v.id} />
+                        : <ItemChild
+                          ctg={v}
+                          selectedPaths={[v]}
+                          isSelected={v.id === selectedId}
+                          hasChildren={!!v.children.length}
+                          onOpenFloatingMenu={handleOpenFloatingMenu}
+                        />
+                    }
 
-                  categoryTree={v}
-                  selectedItems={[v]}
-                  selectedId={selectedId}
-                  onOpenFloatingMenu={handleOpenFloatingMenu}
-                />)
-                
+                    <RenderCategoryTree
+                      categoryTree={v.children}
+                      selectedPaths={[v]}
+                      selectedId={selectedId}
+                      onOpenFloatingMenu={handleOpenFloatingMenu}
+                    />
+                  </div>
+                )
+
               })
           }
         </div>

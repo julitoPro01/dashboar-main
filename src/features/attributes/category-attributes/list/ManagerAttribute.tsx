@@ -13,10 +13,10 @@ type Action = "view" | "assign" | "edit";
 export const ManagerAttribute = () => {
 
     const { setFilters, categoryId, actionType, setCleanSelectedIds } = useStore(useShallow((v) => ({
-        setFilters: v.setCategoryAttrFilters,
-        setCleanSelectedIds: v.resetCategoryAttrSelectedIds,
-        actionType: v.categoryAttrFilters.actionType,
-        categoryId: v.categoryAttrFilters.categoryId,
+        setFilters: v.setCategoryAttrsFilters,
+        setCleanSelectedIds: v.setCategoryAttrsSelectedIds,
+        actionType: v.categoryAttrsFilters.actionType,
+        categoryId: v.categoryAttrsFilters.categoryId,
     })));
 
     const table = useTableContext().table!;
@@ -39,7 +39,7 @@ export const ManagerAttribute = () => {
 
     useEffect(() => {
         table.resetRowSelection();
-        setCleanSelectedIds();
+        setCleanSelectedIds([]);
     }, [categoryId])
 
     return (

@@ -1,4 +1,5 @@
 export * from './useCategoryTrees';
+export * from './useSearchCategoryTrees'
 export * from './useCreateCategoryTree';
 export * from './useDeleteCategory';
 export * from './useUpdateCategoryTree';

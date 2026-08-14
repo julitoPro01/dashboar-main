@@ -1,12 +1,12 @@
 
 import { useSortableNode } from "./useSortableNode";
 
-export const SortableItem = ({id,children}:{id: string,children:React.ReactNode}) => {
+export const SortableItem = ({ id, index, children }: { id: string, index: number, children: React.ReactNode }) => {
 
-    const { setNodeRef, style, attributes, listeners } = useSortableNode(id)
+    const { ref } = useSortableNode({ id, index })
 
     return (
-        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+        <div ref={ref}>
             {children}
         </div>
     );

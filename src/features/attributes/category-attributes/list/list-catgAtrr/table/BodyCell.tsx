@@ -18,12 +18,13 @@ export const BodyCells = {
             />
         </div>,
     Index: (index: string) => <span>{index}</span>,
-    OrderEdit: (order: number, disabled: boolean) => {
-        const { attributes, listeners } = useSortableItemContext();
+    OrderEdit: (order: number) => {
+        
+        const { handleRef } = useSortableItemContext();
+
         return (<button
             className={`flex items-center justify-center gap-2 not-disabled:cursor-grab active:cursor-grabbing disabled:cursor-no-drop not-disabled:hover:text-text-strong w-full h-full`}
-            {...(!disabled && attributes)} {...(!disabled && listeners)}
-            disabled={disabled}
+            ref={ handleRef}
         >
             <RxDragHandleDots2 size={20} /> <span>{order}</span>
         </button>)
@@ -45,7 +46,7 @@ export const BodyCells = {
     },
 
     Group: (disabled: boolean, displayGroup: CategoryAttrDisplayGroupDb | null, onChange: (val: string) => void, canSelected: boolean) => {
-        const init =displayGroup ?? CATEGORY_ATTR_GROUP_OPTIONS.find(v=>v.value==="GENERAL")!.value;
+        const init = displayGroup ?? CATEGORY_ATTR_GROUP_OPTIONS.find(v => v.value === "GENERAL")!.value;
         if (canSelected)
             return (
                 <select
