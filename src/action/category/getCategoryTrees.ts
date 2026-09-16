@@ -35,10 +35,10 @@ export const getCategoryTrees = async (props?: CategoryTreeFilters ) => {
             orderBy: { level: "asc" }
         });
 
-        const treeCatgs = buildCategoryTrees<CategoryTreeResponse>(res);
+        const treeCatgs = buildCategoryTrees(res);
+;
 
-
-        return ApiResponse.success("Consulta exitosa.", treeCatgs)
+        return ApiResponse.success<CategoryTreeResponse[]>("Consulta exitosa.", treeCatgs)
 
     });
 

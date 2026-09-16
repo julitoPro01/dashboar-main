@@ -1,7 +1,7 @@
 "use client"
 
 import { useForm } from "react-hook-form"
-import { addSupplier } from "@/src/action"
+import { createSupplier } from "@/src/action"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { errorMessages, successMessage } from "@/src/shared/messages"
 import { ToastError, ToastSuccess } from "@/src/shared/components/toaster"
@@ -18,7 +18,7 @@ export const SupplierRegister = ({ user }: Props) => {
 
   const { handleSubmit, register, formState: { errors, isSubmitting }, reset } = useForm<SupplierFormType>({ resolver: zodResolver(supplierFormSchema), defaultValues: { capabilities: [] } })
   const onSubmit = async (state: SupplierFormType) => {
-    const res = await addSupplier(
+    const res = await createSupplier(
       {
         name: state.name,
         address: state.address,

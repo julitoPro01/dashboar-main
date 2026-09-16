@@ -1,8 +1,9 @@
 import { createCategory } from "@/src/action/category";
 import { ToastError, ToastSuccess } from "@/src/shared/components/toaster";
-import { createSlug, sleep } from "@/src/shared/utils";
+import { generateSlug, sleep } from "@/src/shared/utils";
 import { getErrorMessage } from "@/src/shared/messages";
 import { useState } from "react";
+import { RECORD_STATUS_ID } from "@/src/shared/domains/recordStatus";
 
 interface Props { name: string, id: number }
 
@@ -11,14 +12,15 @@ export const useCreateMainCategory = (user: Props) => {
     const [isPending, setIsPending] = useState(false);
 
     const create = async (name: string) => {
-        
+
         setIsPending(true);
 
         const res = await createCategory({
             name,
-            slug: createSlug(name),
+            slug: generateSlug(name),
             createdBy: user.name,
-            createdById: user.id
+            createdById: user.id,
+            recordStatusId: RECORD_STATUS_ID.DRAFT
         });
 
         if (res.ok) {
@@ -38,7 +40,7 @@ export const useCreateMainCategory = (user: Props) => {
         return res;
     }
 
-    return {createCategory:create,isPending}
+    return { createCategory: create, isPending }
 }
 
 const toastSuccess = (type: "update" | "create") => {

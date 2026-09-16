@@ -1,4 +1,4 @@
-import { RecordStatusDb } from "@/src/shared/domains/status";
+import { RecordStatusDb } from "@/src/shared/domains/recordStatus";
 import { ReadonlyURLSearchParams } from "next/navigation";
 
 
@@ -34,7 +34,7 @@ export interface OptionNormalizePag {
 export type ParsePagination=Omit<OptionNormalizePag, "parseState">;
 
 export interface CreateUrlOptions extends Omit<OptionNormalizePag, "parseState"> {
-    deleteState?: true;
+    deleteState?: boolean;
 }
 
 export type PaginationParams = {

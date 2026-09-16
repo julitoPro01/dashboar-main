@@ -82,6 +82,7 @@ const RenderContent = ({ id, name, parentId, onClose }: R) => {
             entitiesInUse={entitiesInUse}
             onCloseModal={onClose}
             onConfirm={handleConfirm}
+            
         />
     )
 }

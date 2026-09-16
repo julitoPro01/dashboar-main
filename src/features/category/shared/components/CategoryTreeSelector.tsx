@@ -1,9 +1,9 @@
 "use client"
 import { useState } from "react";
-import { Item } from "./categoryTree-selector/Item";
+import { ItemTree } from "./categoryTree-selector/ItemTree";
 import { NodeTree } from "./categoryTree-selector/NodeTree";
 import { Button } from "@/src/shared/components/btn";
-import { useCategoryTrees, useSearchCategoryTrees } from "../hooks";
+import { useSearchCategoryTrees } from "../hooks";
 import { CategoryTreeSkeleton } from "./CategoryTreeSkeleton";
 import { CategoryTreeResponse, CatgTreeSelectorPath, CatgTreeSelectorSelect, CatgTreeSelectorSelected, } from "../../types";
 
@@ -15,9 +15,15 @@ interface Props {
     name?: string;
     path?: string;
     onConfirm: (params: CatgTreeSelectorSelected) => void;
-    search: string
+    search?: string
+    allowSelectingAll?: boolean
 }
-export const CategoryTreeSelector = ({ categoryId: id = 0, paths: pts = [], path = "", name = "", search, onConfirm }: Props) => {
+export const CategoryTreeSelector = ({
+    categoryId: id = 0,
+    paths: pts = [],
+    path = "", name = "", search,
+    allowSelectingAll,
+    onConfirm }: Props) => {
 
     const [select, setSelect] = useState<CatgTreeSelectorSelect>({ id, path, isParent: false, name });
 
@@ -35,40 +41,50 @@ export const CategoryTreeSelector = ({ categoryId: id = 0, paths: pts = [], path
         return <div className="px-8 pt-6 pb-8"><CategoryTreeSkeleton /></div>
 
     return (
-        <div className="h-full flex flex-col">
+        <>
+            <div className="h-full flex flex-col relative ">
 
-            {/* <!-- Header --> */}
+                {/* <!-- Header --> */}
 
-            <div className="px-6 sm:px-8 flex  py-2 border-t border-border
-               text-xs uppercase tracking-wide font-semibold text-text-subtle">
-                <div>Categoría</div>
-                <div className="w-40 ml-auto flex justify-around ">
-                    <span className="px-4">Estado</span>
-                    <span className="px-4">Nivel</span>
+                <div className="px-6 sm:px-8 flex  py-2 border-t border-border
+               text-xs uppercase tracking-wide font-semibold text-text-subtle min-w-80">
+                    <div>Categoría</div>
+                    <div className="w-40 ml-auto flex justify-around ">
+                        <span className="px-4">Estado</span>
+                        <span className="px-4">Nivel</span>
+                    </div>
                 </div>
-            </div>
-            {/* <!-- Content --> */}
-            <div className="px-6 sm:px-8 flex-1">
+                {/* <!-- Content --> */}
+                <div className=" overflow-scroll scrollbar-hide pb-6 px-6 sm:px-8 flex-1">
 
-                {/* <!-- Root Node --> */}
-                {
-                    data.map(v => {
-                        return (
-                            <div key={v.id} className="group">
-                                <Item ctg={v} selectedPath={[v]} onSelect={handleSelect}
-                                    isSelected={v.id === select.id} hasChildren={!!v.children.length} />
-                                <NodeTree
-                                    onSelect={handleSelect} selected={{ id: select.id, path: select.path }}
-                                    categoryTree={v.children} selectedPath={[v]} />
-                            </div>
-                        )
-                    })
-                }
-            </div>
+                    {/* <!-- Root Node --> */}
+                    {
+                        data.map(v => {
+                            return (
+                                <div key={v.id} className="group">
+                                    <ItemTree
+                                        ctg={v}
+                                        selectedPaths={[v]}
+                                        onSelect={handleSelect}
+                                        isSelected={v.id === select.id}
+                                        hasChildren={!!v.children.length}
+                                        allowSelectingAll={allowSelectingAll}
+                                        isOpen
+                                    />
+                                    <NodeTree
+                                        onSelect={handleSelect}
+                                        selected={{ id: select.id, path: select.path }}
+                                        categoryTree={v.children}
+                                        selectedPath={[v]}
+                                        allowSelectingAll={allowSelectingAll}
+                                    />
+                                </div>
+                            )
+                        })
+                    }
+                </div>
 
-
-
-            <div className='sticky bottom-0 left-0 flex  items-center bg-background py-3 px-4 '>
+            <div className='sticky bottom-0 left-0 flex  items-center bg-surface py-3 px-4 '>
                 <div className='flex flex-wrap'>
                     <span className='text-text-muted pe-2'>
                         Seleccionado:
@@ -89,7 +105,11 @@ export const CategoryTreeSelector = ({ categoryId: id = 0, paths: pts = [], path
                         path: select.path
                     })} > Confirmar </Button>
             </div>
-        </div>
+
+            </div>
+
+
+        </>
     )
 }
 

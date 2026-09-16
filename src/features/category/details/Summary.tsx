@@ -1,4 +1,4 @@
-import { RECORD_STATUS_STYLES, RecordStatusDb, serializeRecordStatusLabel } from "@/src/shared/domains/status";
+import {  RecordStatusBadge, RecordStatusDb, serializeRecordStatusLabel } from "@/src/shared/domains/recordStatus";
 import { IMAGE_STYLE } from "@/src/shared/theme/image";
 import { dateFormatter } from "@/src/shared/utils";
 import Image from "next/image";
@@ -18,30 +18,23 @@ export const Summary = ({
     description, createdAt, updatedAt
 }: Props) => {
 
-    const labelStatus = serializeRecordStatusLabel(recordStatus);
-    const style = RECORD_STATUS_STYLES[recordStatus].colorTxt500;
 
     return (
         <section className="col-span-12 lg:col-span-8">
             <div className="bg-surface border border-border rounded-xl shadow-card overflow-hidden">
-                <div className="flex flex-col md:flex-row">
+                <div className="flex flex-col items-start sm:items-center sm:flex-row gap-6 p-6">
 
-                    <div className={IMAGE_STYLE.thumb}>
-                        <img
-                            src="/placeholder-category.jpg"
-                            alt="Categoría"
-                            className="w-full h-full object-cover aspect-16/10"
-                        />
+                    <div className={IMAGE_STYLE.thumb+" rounded-md "}>
+                        
                         <Image src={imageUrl ?? "/assets/notfound.jpg"} className={IMAGE_STYLE.image}
-                            sizes={IMAGE_STYLE.size_thumb} alt={name} fill />
+                            sizes={IMAGE_STYLE.size_thumb} alt={name} fill
+                            loading="eager" />
                     </div>
 
-                    <div className="flex-1 p-6">
+                    <div className="w-full">
 
                         <div className="flex items-center justify-between mb-4">
-                            <span className={`py-1 rounded-md text-xs font-medium ${style}`}>
-                                {labelStatus}
-                            </span>
+                            <RecordStatusBadge status={recordStatus} />
                             <span className="text-text text-xs">Nivel: <span className="font-semibold">{level}</span> </span>
                         </div>
 

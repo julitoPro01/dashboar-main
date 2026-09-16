@@ -27,6 +27,7 @@ export const useCreateCategoryTree = (mainCategoryPath: string,id:number) => {
             if (res.ok) {
 
                 const data = res.data;
+                // console.log(data)
                 updateCache(id, {
                     id: data.id,
                     name:data.name,

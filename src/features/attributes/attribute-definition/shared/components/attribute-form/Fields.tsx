@@ -12,7 +12,8 @@ import { DATA_TYPE_OPTIONS } from "../../../constants/dataTypeLabel";
 import { FaUndo } from "react-icons/fa";
 import {type BasicFormReturn } from "@/src/shared/form";
 import { DragDropProvider } from "@dnd-kit/react";
-import { moveDragEnd, useSortableNode } from "@/src/shared/sortable";
+import { moveDragEnd } from "@/src/shared/sortable";
+import { useSortable } from "@dnd-kit/react/sortable";
 
 
 interface Props {
@@ -201,7 +202,7 @@ export const Fields = ({ form }: Props) => {
 type SortableProps = {index:number, id: number, value: string, displayOrder: number, onDelValue: () => void }
 const SortableItem = ({ id, index, onDelValue, displayOrder, value }: SortableProps) => {
 
-    const { ref, handleRef} = useSortableNode({id,index});
+    const { ref, handleRef} = useSortable({id,index});
 
     return (
         <div

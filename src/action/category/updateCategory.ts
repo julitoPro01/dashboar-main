@@ -3,7 +3,7 @@
 import prisma from "@/lib/prisma"
 import { CategoryUpdateSchema } from "./schema/UpsertCategorySchema"
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils"
-import { RECORD_STATUS_ID } from "@/src/shared/domains/status";
+import { RECORD_STATUS_ID } from "@/src/shared/domains/recordStatus";
 
 
 export interface UpdateCategory {

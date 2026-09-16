@@ -6,9 +6,9 @@ import { getAuthRoles } from "../action/auth";
 export const useBootDataStore = create<BootDataSlice>((set) => ({
     bootVerificationStatuses: [],
     bootAuthRoles: [],
-    bootRecordStatuses: [],
+    bootRecordStatuses: [], // TODO: USAR SOLO EN CASOS ESPECIALES
     isBootDataLoaded: "loading",
-    user: {  },
+    user: undefined,
     setBootData: async (user) => {
 
         const [verificationStatuses, authRoles, recordStatuses] = await Promise.all([

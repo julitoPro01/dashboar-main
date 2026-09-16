@@ -1,4 +1,4 @@
-import { RecordStatusDb } from "@/src/shared/domains/status";
+import { RecordStatusDb } from "@/src/shared/domains/recordStatus";
 
 export interface CategoryTreeResponse {
     id: number;
@@ -10,7 +10,7 @@ export interface CategoryTreeResponse {
     recordStatus: {
         name: RecordStatusDb;
     };
-    children: CategoryTreeResponse[];
+    children: CategoryTreeNode[];
     _count: {
         categoryAttributes: number;
     };

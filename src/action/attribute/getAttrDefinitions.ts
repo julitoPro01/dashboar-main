@@ -2,7 +2,7 @@
 import prisma from "@/lib/prisma";
 import { Prisma } from "@/src/generated/prisma/client";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
-import { createDateRangeFilter } from "../utils/dateRanger.filter";
+import { createDateRangePrisma } from "../utils/dateRanger.filter";
 import { AttributeDefinitionsResponse, AttributeFilters } from "@/src/features/attributes/attribute-definition/types";
 import { buildMeta, PaginationState } from "@/src/shared/table/pagination";
 import { buildOrderBy } from "@/src/shared/table/filters";
@@ -18,10 +18,10 @@ export const getAttrDefinitions = async (pag: Pag, fil: Filters) => {
     if (search)
         filters.push({ OR: [{ name: { contains: search, mode: "insensitive" } }] });
 
-    const cratedDate = createDateRangeFilter(registeredFrom, registeredTo);
+    const cratedDate = createDateRangePrisma(registeredFrom, registeredTo);
     if (cratedDate) filters.push({ createdAt: cratedDate });
 
-    const updatedDate = createDateRangeFilter(updatedFrom, updatedTo);
+    const updatedDate = createDateRangePrisma(updatedFrom, updatedTo);
     if (updatedDate) filters.push({ updatedAt: updatedDate });
 
     if (dataType) filters.push({ dataType });

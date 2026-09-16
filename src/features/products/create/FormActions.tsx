@@ -1,34 +1,27 @@
 import { Button } from "@/src/shared/components/btn";
 import { FloatingActionBar } from "@/src/shared/components/floating";
 import { useFormState } from "react-hook-form";
+import { BiPlus } from "react-icons/bi";
 
 
 export const FormActions = () => {
 
-    const { isSubmitting,isDirty } = useFormState();
+    const { isSubmitting, isDirty } = useFormState();
 
     return (
-        <FloatingActionBar position={"bottom-r"} >
-
-            <div className="flex items-center justify-end gap-3 ">
-
-
-                <Button variant="basic"
-                    disabled={isSubmitting}
-                >
-                    Cancelar
-                </Button>
-
-                <Button variant="confirm"
+        <FloatingActionBar
+            variant="basic" padding=""
+            position={"bottom-r"} className="mr-4 md:mr-8 rounded-full" >
+                <Button
+                    variant="confirm" rounded="full"
                     type="submit"
-                    rounded="full"
                     loading={isSubmitting}
                     disabled={!isDirty}
                 >
+                    <BiPlus size={18}/>
                     {isSubmitting ? "Creando..." : "Crear producto"}
                 </Button>
 
-            </div>
         </FloatingActionBar>
     );
 };

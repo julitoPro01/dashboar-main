@@ -31,11 +31,6 @@ export const ATTRIBUTE_INPUT_CONFIG: Record<
         field: "valueText",
     },
 
-    JSON: {
-        input: "textarea",
-        field: "valueJson",
-    },
-
     LONG_TEXT: {
         input: "textarea",
         field: "valueText",
@@ -43,7 +38,7 @@ export const ATTRIBUTE_INPUT_CONFIG: Record<
 
     MULTISELECT: {
         input: "multiselect",
-        field: "valueJson",
+        field: "valueOptionIds",
     },
 
     NUMBER: {
@@ -58,7 +53,7 @@ export const ATTRIBUTE_INPUT_CONFIG: Record<
 
     SELECT: {
         input: "select",
-        field: "valueText",
+        field: "valueNumber",
     },
 
     TEXT: {

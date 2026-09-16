@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { IMAGE_STYLE } from "@/src/shared/theme/image/imageStyle";
 import { dateFormatter } from "@/src/shared/utils";
-import { RecordStatusBadge, RecordStatusDb } from "@/src/shared/domains/status";
+import { RecordStatusBadge, RecordStatusDb } from "@/src/shared/domains/recordStatus";
 import { Badge } from "@/src/shared/components/badge";
 import { SUPPLIER_CAPABILITIES_LABELS, SUPPLIER_RELATION_MODE_LABEL } from "../../constants";
 import { SupplierCapabilityDb, SupplierRelationModeDb } from "../../types";

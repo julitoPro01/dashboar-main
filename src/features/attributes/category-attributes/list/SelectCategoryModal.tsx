@@ -10,8 +10,8 @@ export const SelectCategoryModal = () => {
     const { setOpenModal, setFilters, isOpen, categoryId, paths } = useStore(useShallow(v => ({
         setFilters: v.setCategoryAttrsFilters,
         setOpenModal: v.setCategorySelectModal,
-        isOpen: v.aategorySelectModal.isOpen,
-        paths: v.aategorySelectModal.paths,
+        isOpen: v.categorySelectModal.isOpen,
+        paths: v.categorySelectModal.paths,
         categoryId: v.categoryAttrsFilters.categoryId
     })))
 

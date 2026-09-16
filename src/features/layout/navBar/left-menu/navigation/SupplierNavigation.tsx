@@ -2,11 +2,11 @@
 
 import { useEffect, useMemo, useState, } from 'react';
 import { APP_ROUTES } from '@/src/shared/routes';
-import { serializeRecordStatus, type RecordStatusDb } from '@/src/shared/domains/status';
 import { Button } from '@/src/shared/components/btn';
 import { AiOutlineProduct } from 'react-icons/ai';
 import { ListDropDownMemo } from '@/src/shared/components/navigation';
 import { createURLPaginationParams } from '@/src/shared/table/pagination/utils';
+import { RecordStatusDb, serializeRecordStatus } from '@/src/shared/domains/recordStatus';
 
 interface Props { pathName: string, recordStatus?: RecordStatusDb }
 export const SupplierNavigation = ({ pathName, recordStatus }: Props) => {

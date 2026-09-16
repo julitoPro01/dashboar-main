@@ -1,6 +1,6 @@
 import { Prisma } from "@/src/generated/prisma/client";
 
-export const createDateRangeFilter = (
+export const createDateRangePrisma = (
     from?: string,
     to?: string
 ): Prisma.DateTimeFilter | undefined => {
@@ -26,3 +26,27 @@ export const createDateRangeFilter = (
     return filter;
 };
 
+
+
+export const createDateRangeSql = (
+    from?: string,
+    to?: string
+) => {
+    const range: {
+        from?: Date;
+        to?: Date;
+    } = {};
+
+    if (from) {
+        const fromDate = new Date(`${from}T00:00:00.000Z`);
+        range.from = fromDate;
+    }
+
+    if (to) {
+        const toDate = new Date(`${to}T00:00:00.000Z`);
+        toDate.setUTCDate(toDate.getUTCDate() + 1);
+        range.to = toDate;
+    }
+
+    return range;
+};

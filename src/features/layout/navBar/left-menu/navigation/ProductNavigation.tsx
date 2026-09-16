@@ -1,7 +1,7 @@
 "use client"
 import { Button } from "@/src/shared/components/btn";
 import { ListDropDownMemo } from "@/src/shared/components/navigation";
-import { type RecordStatusDb, serializeRecordStatus } from "@/src/shared/domains/status";
+import { RecordStatusDb, serializeRecordStatus } from "@/src/shared/domains/recordStatus";
 import { APP_ROUTES } from "@/src/shared/routes";
 import { createURLPaginationParams } from "@/src/shared/table/pagination/utils";
 

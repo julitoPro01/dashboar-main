@@ -497,6 +497,7 @@ model Currency {
 model Product {
   id                   Int       @id @default(autoincrement())
   supplierId          Int
+  categoryId          Int
   verificationStatusId Int
   name                 String
   publicId            String    @unique @default(uuid())
@@ -533,9 +534,9 @@ model Product {
   wishlistItems          WishlistItem[]
   featuredAds            FeaturedAdItem[]
   reviews                 ProductReview[]
-  supplier                Supplier?                @relation(fields: [supplierId], references: [id])
+  supplier                Supplier              @relation(fields: [supplierId], references: [id])
   verificationStatus     VerificationStatus      @relation(fields: [verificationStatusId], references: [id])
-  productCategories      ProductCategory[]
+  category              Category @relation(fields: [categoryId],references: [id])
   images                  ProductImage[]
   movies                  ProductMovie[]
   productVariants                ProductVariant[]
@@ -566,6 +567,8 @@ model ProductVariant {
   id              Int             @id @default(autoincrement())
   productId      Int
   sku             String          @unique
+  barcode String? @unique
+  
   stockQuantity  Int
   minStock       Int?
   price           Decimal         @db.Decimal(10,2)
@@ -577,7 +580,7 @@ model ProductVariant {
 
   createdAt      DateTime        @default(now())
   updatedAt      DateTime?       @updatedAt
-  deletedAt      DateTime?
+  deletedAt      DateTime?  
 
   recordStatusId Int  
   recordStatus RecordStatus @relation(fields: [recordStatusId], references: [id])
@@ -713,7 +716,8 @@ model Category {
   creator UserAuthentication? @relation(fields: [createdById], references: [id],name: "CategoryCreatedBy")
   updater UserAuthentication? @relation(fields: [updatedById], references: [id],name: "CategoryUpdatedBy")
 
-  productCategories ProductCategory[]
+  // productCategories ProductCategory[]
+  products Product[]
   promotions         Promotion[]
   categoryAttributes CategoryAttribute[]
 
@@ -797,7 +801,7 @@ model ProductAttributeValue {
   valueNumber   Float?
   valueBoolean  Boolean?
   valueDate     DateTime?
-  valueJson     Json?
+  valueOptionIds      Int[] @default([])
 
   @@unique([productId, attributeDefinitionId])
   @@map("product_attribute_values")
@@ -811,7 +815,6 @@ model SystemAttributeValue{
 
 
   attributeDefinition AttributeDefinition @relation(fields: [attributeDefinitionId], references: [id], onDelete:Cascade)
-  variantAttributeValues VariantAttributeValue[]
 
   @@unique([attributeDefinitionId,value])
 
@@ -821,22 +824,22 @@ model VariantAttributeValue {
   id Int @id @default(autoincrement())
   variantId             Int
 
-  systemAttributeValueId Int?
-
   productVariant            ProductVariant    @relation(fields: [variantId], references: [id])
-  systemAttributeValue SystemAttributeValue? @relation(fields: [systemAttributeValueId], references: [id])
 
-  attributeDefinitionId Int
-  attributeDefinition AttributeDefinition @relation(fields: [attributeDefinitionId], references: [id])
+  attributeDefinitionId Int?
+  attributeDefinition AttributeDefinition? @relation(fields: [attributeDefinitionId], references: [id])
   @@unique([variantId, attributeDefinitionId])
-  @@index([attributeDefinitionId, systemAttributeValueId])
   @@index([attributeDefinitionId, valueText])
+
+// Atributo personalizado exclusivo del producto
+  customName String?
+
   // Para valores libres
-  valueText     String?
+  valueText     String? 
   valueNumber   Float?
   valueBoolean  Boolean?
   valueDate     DateTime?
-  valueJson     Json?
+  valueOptionIds      Int[] @default([]) // IDs de system attribute value
 
   @@map("variant_attribute_values")
 }
@@ -854,20 +857,18 @@ enum AttributeDataType {
   URL
   EMAIL
   PHONE
-  JSON
 }
 
-model ProductCategory {
-  productId  Int
-  categoryId Int
+// model ProductCategory {
+//   productId  Int @unique
+//   categoryId Int
   
-  product  Product  @relation(fields: [productId], references: [id])
-  category Category @relation(fields: [categoryId], references: [id])
+//   product  Product  @relation(fields: [productId], references: [id])
+//   category Category @relation(fields: [categoryId], references: [id])
 
-  @@id([productId, categoryId])
-  @@index([categoryId])
-  @@map("product_categories")
-}
+//   @@index(categoryId)
+//   @@map("product_categories")
+// }
 
 // =============================================
 // 10. IMAGES & MEDIA
@@ -886,7 +887,7 @@ model ProductImage {
 
   product       Product?       @relation(fields: [productId], references: [id])
   productvariant       ProductVariant? @relation(fields: [variantId], references: [id])
-  mediaFile    MediaFile     @relation(fields: [fileId], references: [id])
+  mediaFile    MediaFile     @relation(fields: [fileId], references: [id], onDelete: Cascade)
 
   @@index([productId])
   @@index([variantId])

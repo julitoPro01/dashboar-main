@@ -1,12 +1,13 @@
 import { useBootDataStore } from "@/src/store/useBootDataStore";
 import { useStore } from "@/src/store/useStore";
 import { useCreateCategoryTree, useRemoveSubCategory } from "../../shared/hooks";
-import { createSlug } from "@/src/shared/utils";
+import { generateSlug } from "@/src/shared/utils";
 import { useEffect } from "react";
 import { CreateCategoryForm } from "../../shared/components";
 import { useBasicForm } from "@/src/shared/form";
+import { RECORD_STATUS_ID } from "@/src/shared/domains/recordStatus";
 
-export const CreateCategory = ({ id }: { id: number }) => {
+export const CreateCategory = ({ id, onOpen }: { id: number,onOpen?:()=>void }) => {
 
     const main = useStore(v => v.selectedMainCategory);
     const selected = useStore(v => v.selectedCategory);
@@ -22,15 +23,17 @@ export const CreateCategory = ({ id }: { id: number }) => {
     const { state, onSubmit, onCancel, handleChange, hasError } = useBasicForm({ name: "" }, { name: v => v.trim().length > 2 }, {
         async onSubmit({ name }) {
             if (!selected) return;
+            if (!user) return;
 
             const res = await createCategory({
                 name,
-                slug: createSlug(name),
+                slug: generateSlug(name),
+                recordStatusId: RECORD_STATUS_ID.DRAFT,
                 parentId: selected.id,
                 parentPath: selected.path,
                 parentLevel: selected.level,
-                createdBy: user.name!,
-                createdById: user.id!,
+                createdBy: user.name,
+                createdById: user.id,
             });
 
             if (res.ok) {
@@ -58,29 +61,29 @@ export const CreateCategory = ({ id }: { id: number }) => {
     });
 
     //-----------------
-    const setOpen = useStore(v => v.setCreateCategoryFormOpen);
+    const setCategoryOpen = useStore(v => v.setCreateCategoryFormOpen);
 
     useEffect(() => {
-        setOpen(true)
+        setCategoryOpen(true);
+        onOpen?.();
         return () => {
-            setOpen(false)
+            setCategoryOpen(false)
         }
     }, []);
 
     return (
 
         <div className="p-2">
-            <div className="absolute left-0 w-5.25 border-b border-border-strong top-1/2 -translate-y-1/2"
+            <div className="absolute left-0 w-5 border-b border-border-strong top-1/2 -translate-y-1/2"
             />
-            <div className="ml-4">
+            <div className="ml-3.5">
                 <CreateCategoryForm
                     value={state.name}
-                    disabled={hasError}
+                    disabled={hasError || isPending}
                     isSubmitting={isPending}
                     onSubmit={onSubmit}
                     onChange={v => handleChange("name", v)}
                     onClose={onCancel}
-                    onBlur={onCancel}
                 />
             </div>
         </div>

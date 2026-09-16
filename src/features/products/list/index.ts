@@ -4,3 +4,4 @@ export * from './layout/Header'; // CABECERA DE LA LISTA DE PRODUCTOS
 
 
 export * from './ListProducts';
+export * from './RowFloatingActions';

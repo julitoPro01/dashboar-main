@@ -2,11 +2,11 @@
 import { useStore } from "@/src/store/useStore";
 import { DynamicModal } from "@/src/shared/components/modal";
 
-import { getAvailableStatuses, serializeRecordStatusLabel } from "@/src/shared/domains/status";
+import { getAvailableStatuses, RECORD_STATUS_ID, RECORD_STATUS_OPTIONS, serializeRecordStatusLabel } from "@/src/shared/domains/recordStatus";
 import { useCategory, useUpdateCategoryTree } from "../shared/hooks";
 import { Input, Select, Textarea, useBasicForm } from "@/src/shared/form";
 import { inputMsg } from "@/src/shared/messages";
-import { createSlug, getDirtyValues } from "@/src/shared/utils";
+import { generateSlug, getDirtyValues } from "@/src/shared/utils";
 import { useBootDataStore } from "@/src/store/useBootDataStore";
 import { INPUT_FIELD_STYLE } from "@/src/shared/theme/inputField";
 import { CiImageOn } from "react-icons/ci";
@@ -38,7 +38,6 @@ export const EditCategoryModal = () => {
 
 const Render = ({ id = 0, onClose }: { id?: number, name?: string, onClose: () => void }) => {
 
-  const recordStatus = useBootDataStore(v => v.bootRecordStatuses);
   const user = useBootDataStore(v => v.user);
   const setFloating = useStore(v => v.setFloatingPanel);
 
@@ -53,6 +52,7 @@ const Render = ({ id = 0, onClose }: { id?: number, name?: string, onClose: () =
   } = useBasicForm(init, schema, {
     async onSubmit(val) {
 
+      if (!user) return;
       if (!hasDirty) return;
 
       const values = getDirtyValues(original, val);
@@ -60,7 +60,7 @@ const Render = ({ id = 0, onClose }: { id?: number, name?: string, onClose: () =
       const res = await update({
         id: id,
         ...values,
-        updatedBy: user.name!, updatedById: user.id!
+        updatedBy: user.name, updatedById: user.id
       })
 
       // Cerramos el panel flotante
@@ -83,7 +83,7 @@ const Render = ({ id = 0, onClose }: { id?: number, name?: string, onClose: () =
   // -- PADRE PRINCIPAL O SUB PADRE
 
   const statuses = getAvailableStatuses(currentStatus, parentStatus);
-  const statusTransitions = recordStatus.filter(v => statuses.includes(v.name));
+  const statusTransitions = RECORD_STATUS_OPTIONS.filter(v => statuses.includes(v.value));
 
   useEffect(() => {
     if (data?.ok)
@@ -108,14 +108,14 @@ const Render = ({ id = 0, onClose }: { id?: number, name?: string, onClose: () =
 
         <Input
           label="Nombre"
+          labelOption={{ type: "top", required: true }}
           value={state.name}
           isDirty={isDirty.name}
           error={isError.name}
-          isRequired
           placeholder="Nombre... (min.3)"
-          onChange={v => {
-            handleChange("name", v)
-            handleChange("slug", createSlug(v))
+          onChange={({ target }) => {
+            handleChange("name", target.value)
+            handleChange("slug", generateSlug(target.value))
           }}
         />
 
@@ -132,17 +132,18 @@ const Render = ({ id = 0, onClose }: { id?: number, name?: string, onClose: () =
           isDirty={isDirty.description}
           placeholder="Introduzca una descripción detallada de la categoría."
           rows={3}
-          onChange={v => handleChange("description", v)}
+          onChange={({ target }) => handleChange("description", target.value)}
         />
 
         <Select className="md:col-span-2"
           label="Estado" value={state.recordStatusId.toString()}
-          isRequired isDirty={isDirty.recordStatusId} error={isError.recordStatusId}
-          onChange={v => handleChange("recordStatusId", +v)} >
-          {statusTransitions.map(v =>
-            <option key={v.id} value={v.id} >{serializeRecordStatusLabel(v.name)}</option>
+          labelOption={{ type: "top", required: true }}
+          isDirty={isDirty.recordStatusId} error={isError.recordStatusId}
+          onChange={({ target }) => handleChange("recordStatusId", +target.value)}
+          options={statusTransitions.map(v =>
+            <option key={v.value} value={RECORD_STATUS_ID[v.value]} >{serializeRecordStatusLabel(v.value)}</option>
           )}
-        </Select>
+        />
 
         {/* IMAGE */}
         <div className="flex flex-col md:col-span-2 ">

@@ -1,5 +1,5 @@
 "use client";
-import { RecordStatusDb, serializeRecordStatus } from "@/src/shared/domains/status";
+import { RecordStatusDb, serializeRecordStatus } from "@/src/shared/domains/recordStatus";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createURLPaginationParams, parsePaginationParams } from "../../pagination/utils";

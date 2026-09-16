@@ -1,5 +1,5 @@
 import { handleSignOut } from "@/src/action/auth";
-import { NavItem } from "@/src/shared/components/navigation";
+import { SidebarLink } from "@/src/shared/components/navigation";
 import { FaRegUser } from "react-icons/fa";
 import { IoLogInOutline, IoLogOutOutline } from "react-icons/io5";
 
@@ -28,7 +28,7 @@ export const SessionButton = ({ isSignIn }: Props) => {
             ) : (
                 <>
                     <li>
-                        <NavItem
+                        <SidebarLink
                             href="/auth/login"
                             label="Login"
                             icon={<IoLogInOutline size={18} />}
@@ -36,7 +36,7 @@ export const SessionButton = ({ isSignIn }: Props) => {
                     </li>
 
                     <li>
-                        <NavItem
+                        <SidebarLink
                             href="/auth/create"
                             label="Crear cuenta"
                             icon={<FaRegUser size={16} />}

@@ -1,18 +1,29 @@
-import { useState } from "react";
-import { BiImageAdd } from "react-icons/bi";
-
 import { IoImagesOutline } from "react-icons/io5";
-import { SortableItem } from "./SortableItem";
 import { DragDropProvider } from "@dnd-kit/react";
-import { moveDragEnd } from "@/src/shared/sortable";
+import { AddImageCard, FIELD_STYLE, FIELD_VALIDATION } from "@/src/shared/form";
+import { Button } from "@/src/shared/components/btn";
+import { MdRestartAlt } from "react-icons/md";
+import { FaCheck } from "react-icons/fa6";
+import { SortableImageCard } from "../../gallery/SortableImageCard";
+import { useCrudImageGallery } from "../../../hooks";
+type Props = { isEdit?: boolean }
 
-export const ImageGallery = () => {
+export const ImageGallery = ({ isEdit }: Props) => {
 
-    const [images, setImages] = useState(imgs);
-
-    const handleDragEnd = moveDragEnd(images, (imgs) => {
-        setImages(imgs)
-    })
+    const {
+        handleAdd,
+        handleDelete,
+        handleDragEnd,
+        handleReset,
+        handleSetPrimary,
+        handleUpdate,
+        isSubmitting,
+        error,
+        dirty,
+        currentCount,
+        images,
+        maxImages
+    } = useCrudImageGallery();
 
 
     return (
@@ -29,72 +40,74 @@ export const ImageGallery = () => {
 
                     <div>
 
-                        <h3 className="text-lg font-semibold text-text-strong">
+                        <h3 className={`text-lg font-semibold text-text-strong ${FIELD_VALIDATION["*"]}`}>
                             Galería de imágenes
                         </h3>
-
-                        <p className="text-sm text-text-muted">
-                            Agrega imágenes del producto y define cuál será la principal.
-                        </p>
 
                     </div>
 
                 </div>
 
-                <span className="rounded-full bg-bg-soft-blue px-3 py-1 text-xs font-medium text-primary">
-                    2 / 5
-                </span>
-
+                <div className="inline-flex gap-4">
+                    <span className="rounded-full ml-auto bg-bg-soft-blue px-3 py-1 text-xs font-medium text-primary">
+                        {currentCount} / {maxImages}
+                    </span>
+                    {isEdit &&
+                        <>
+                            <Button variant="basic" size="xs" padding="p-0"
+                                disabled={!dirty || isSubmitting}
+                                onClick={handleReset}>
+                                <MdRestartAlt size={20} />
+                            </Button>
+                            <Button variant="basic" size="xs" padding="p-0" type="submit"
+                                disabled={!dirty}
+                                loading={isSubmitting}
+                            >
+                                <FaCheck size={20} />
+                            </Button>
+                        </>
+                    }
+                </div>
             </header>
 
             {/* GRID */}
-            <div className="grid grid-cols-2 gap-5 py-6 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-5 pt-6">
 
                 <DragDropProvider onDragEnd={handleDragEnd} >
 
-                    {images.map((v,i) => {
+                    {images.map((v, i) => {
 
                         return (
-                            <SortableItem key={v.id}
-                                index={i}
-                                id={v.id}
-                                isMain={v.isMain} order={v.order}
-                            >
-                                <img
-                                    src="/assets/notfound.jpg"
-                                    className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-                                />
+                            <SortableImageCard
+                                key={v.customId}
 
-                            </SortableItem>
+                                index={i}
+                                id={v.customId}
+                                isMain={v.isPrimary} order={i + 1}
+                                fileName={v.mediaFile.fileName}
+                                filePath={v.mediaFile.filePath}
+
+                                onUpdate={handleUpdate}
+                                onPrimary={handleSetPrimary}
+                                onDelete={handleDelete}
+                            />
+
                         )
                     })}
 
                 </DragDropProvider>
 
                 {/* ADD */}
-                <button
-                    className=" group aspect-square rounded-2xl border-2 border-dashed border-border bg-surface-light transition-all hover:border-primary hover:bg-bg-soft-blue">
-
-                    <div className="flex h-full flex-col items-center justify-center">
-
-                        <BiImageAdd
-                            size={48}
-                            className="text-text-muted transition duration-300 group-hover:-translate-y-1 group-hover:text-primary"
-                        />
-
-                        <span className="mt-4 text-sm font-medium text-text-muted group-hover:text-primary">
-
-                            Agregar imagen
-
-                        </span>
-
-                    </div>
-
-                </button>
+                {currentCount < maxImages &&
+                    <AddImageCard onChange={handleAdd} multiple />
+                }
 
             </div>
-
             {/* FOOTER */}
+            <div className="pb-6">
+                {error && <span className={FIELD_STYLE.validation.errorMsg}> {error.message} </span>}
+            </div>
+
             <footer className="border-t border-border bg-surface-light px-6 py-4">
 
                 <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-text-muted">
@@ -103,9 +116,9 @@ export const ImageGallery = () => {
 
                     <span>• La imagen definida "Principal" será la portada.</span>
 
-                    <span>• Máximo 5 imágenes.</span>
+                    <span>• Máximo {maxImages} imágenes.</span>
 
-                    <span>• Hasta 5 MB por imagen.</span>
+                    <span>• Recomendado: 1200 × 1200 px · JPG, PNG o WebP · máximo 5 MB.</span>
 
                 </div>
 
@@ -115,10 +128,3 @@ export const ImageGallery = () => {
     )
 
 }
-
-const imgs = [
-    { id: 1, isMain: true, order: 1 },
-    { id: 2, isMain: false, order: 2 },
-    { id: 3, isMain: false, order: 3 },
-    { id: 4, isMain: false, order: 4 },
-]

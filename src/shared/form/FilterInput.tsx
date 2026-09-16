@@ -12,6 +12,7 @@ interface Props {
   type:"number"|"text"|"date"
 }
 
+//TODO: ELIMINAR
 export const FilterInput = (p: Props) => {
   return (
     <>

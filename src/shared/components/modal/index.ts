@@ -1,6 +1,5 @@
-// export * from './ActionModalButton';
-// export * from './AsyncActionModalButton';
 export * from './DynamicModal';
+export * from './SideModal';
 
 export * from './ConfirmDialog'
 export * from './DeleteConfirmDialog';

@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { FaRegFolder } from "react-icons/fa";
 import { MdOutlineSubdirectoryArrowRight, MdPostAdd } from "react-icons/md";
-import { RECORD_STATUS_STYLES } from "@/src/shared/domains/status";
 
 
 import { useStore } from "@/src/store/useStore";
@@ -71,18 +70,7 @@ export const MainCategories = ({ mainCategories, user }: Props) => {
                 : a.recordStatus.localeCompare(b.recordStatus, "es", { sensitivity: "base", numeric: true });
         })])
     }
-    // Hook para manejar la lógica de agregar categoría raíz, seleccionar categoría y enviar nueva categoría.
-    // const {
-    //     selected, isSubmitting, name,
-    //     handleSelect, handleNameChange, handleAddDraft
-    // } = useCreateMainCategory({ setCategories, user });
-
-    // Hook para escuchar ( actualizar o eliminar) la categoría raíz en la lista después de la acción correspondiente.
-    // Actualizar el seleccionado
-    // useMainCategoryCache({ setCategories });
-
-    // useRefreshSelectedMain(mainCategories);
-
+  
 
     const handleActiveForm = (isActive: boolean = true) => {
         if (!isActive)
@@ -132,7 +120,7 @@ export const MainCategories = ({ mainCategories, user }: Props) => {
     return (
         <div className=" flex flex-col h-full scrollbar-hide overflow-auto  relative">
 
-            <div className=" flex items-center gap-2 border-b border-border px-4 py-4 sticky top-0 left-0 z-1 bg-surface">
+            <div className=" flex items-center gap-2 border-b border-border px-4 py-4 sticky top-0 left-0 z-1 bg-surface h-20">
                 <div className="truncate flex gap-4 flex-1 items-center">
                     <span className="text-text font-bold truncate">Categorias</span>
                 </div>
@@ -157,7 +145,7 @@ export const MainCategories = ({ mainCategories, user }: Props) => {
                 }
                 {
                     categories.map((v, i) => {
-                        const styleBg = RECORD_STATUS_STYLES[v.recordStatus].colorBg400
+
                         return (
                             <li key={v.id}
                                 className={clsx("flex items-center justify-between py-2 px-2 rounded-lg transition-colors select-none cursor-pointer",
@@ -175,7 +163,7 @@ export const MainCategories = ({ mainCategories, user }: Props) => {
                                         {v.name}
                                     </span>
                                 </div>
-                                < div className={`size-2 rounded-full ${styleBg}`} />
+                                < div className={`size-2 rounded-full`} />
 
                             </li>
                         )

@@ -1,6 +1,8 @@
-import { RecordStatusDb, VerificationStatusDb } from "@/src/shared/domains/status";
 
 //---------------------------------
+
+import { RecordStatusDb } from "@/src/shared/domains/recordStatus";
+import { VerificationStatusDb } from "@/src/shared/domains/verificationStatus";
 
 export interface PreviewProductDetailsResponse {
     id: number;
@@ -53,7 +55,7 @@ export type ProductVariantDetailsResponse = {
 export type CategoryDetailsResponse = {
     id: number;
     name: string;
-    parentId: number | null;
+    parentId?: number | null;
 }
 
 export interface ProductDetailsResponse {

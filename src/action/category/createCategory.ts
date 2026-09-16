@@ -1,14 +1,13 @@
 "use server"
 
 import prisma from "@/lib/prisma"
-import { CategoryCreateSchema } from "./schema/UpsertCategorySchema"
+import { categoryCreateSchema } from "./schema/UpsertCategorySchema"
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
-import { RECORD_STATUS_ID } from "@/src/shared/domains/status";
 
 export interface CreateCategoryPayload {
     name: string;
     description?: string | null;
-    recordStatusId?: number;
+    recordStatusId: number;
     slug: string;
     imageUrl?: string | null;
 
@@ -24,7 +23,7 @@ export const createCategory = async (data: CreateCategoryPayload) => {
 
     return PromiseReturn(async () => {
 
-        const parse = CategoryCreateSchema.parse(data);
+        const parse = categoryCreateSchema.parse(data);
 
         const exist = await prisma.category.findFirst({
             where: { name: { contains: parse.name, mode: "insensitive" }, parentId: parse.parentId }
@@ -40,7 +39,7 @@ export const createCategory = async (data: CreateCategoryPayload) => {
             data: {
                 name: parse.name,
                 description: parse.description ?? null,
-                recordStatusId: parse.recordStatudId ?? RECORD_STATUS_ID.DRAFT,
+                recordStatusId: parse.recordStatusId,
                 slug: parse.slug,
                 imageUrl: parse.imageUrl ?? null,
                 parentId: parse.parentId ?? null,

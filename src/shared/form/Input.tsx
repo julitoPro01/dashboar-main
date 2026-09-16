@@ -34,6 +34,10 @@ export const Input = (props: Props) => {
         error,
         isDirty,
         labelOption,
+        iconPosition = "left",
+        maxLength,
+        maxLengthLabel,
+        currentLengthLabel,
 
         ...rest
     } = props;
@@ -42,10 +46,12 @@ export const Input = (props: Props) => {
 
     const field = clsx(
         FIELD_STYLE.base,
-        fieldIcon && "ps-10",
+        FIELD_STYLE.text,
+        FIELD_STYLE.placeholder,
+        (fieldIcon && !fieldClass) && iconPosition === "left" ? "ps-10" : "pr-10",
         FIELD_STYLE.borderSize[border ?? 1],
-        FIELD_STYLE.roundedSize[roundedSize ?? "lg"],
-        
+        FIELD_STYLE.roundedSize[roundedSize ?? "md"],
+
         FIELD_STYLE.textSize[textSize ?? "sm"],
         FIELD_STYLE.size[fieldSize ?? "md"],
         FIELD_STYLE.status[status],

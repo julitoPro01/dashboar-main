@@ -27,12 +27,13 @@ export const ItemFloatingActions = () => {
 
   return (
 
-    <FloatingPanel onEffectClose={() => setSelect()} panelType={FLOATING_PANEL_TYPE.CATEGORY}>
+    <FloatingPanel
+    onEffectClose={() => setSelect()} panelType={FLOATING_PANEL_TYPE.CATEGORY}>
       {
         !selected
           ? <span className="text-text-muted p-2">Categoría no seleccionado</span>
           :
-          <div className="p-2 flex flex-col text-text">
+          <div className="p-2 flex flex-col text-text bg-surface-black">
             {/* #1 */}
             <Button onClick={() => handleDetails(selected.publicId)} variant="ghost" position="start">Ver detalles</Button>
             {/* #2 */}

@@ -2,7 +2,7 @@
 
 import { Button } from "@/src/shared/components/btn";
 import { ListDropDownMemo } from "@/src/shared/components/navigation";
-import { serializeRecordStatus, type RecordStatusDb } from "@/src/shared/domains/status";
+import { RecordStatusDb, serializeRecordStatus } from "@/src/shared/domains/recordStatus";
 import { APP_ROUTES } from "@/src/shared/routes";
 import { createURLPaginationParams } from "@/src/shared/table/pagination/utils";
 import { useEffect, useMemo, useState } from "react";

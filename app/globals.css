@@ -5,6 +5,7 @@
 @plugin "tailwind-scrollbar";
 
 @import "./style/Animation-Modal.css";
+@import "./style/Animation-SideModal.css";
 @import "./style/left-menu.style.css";
 /* @import "tw-animate-css"; */
 

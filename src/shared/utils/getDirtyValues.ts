@@ -1,4 +1,6 @@
-export function getDirtyValues<T extends Record<string, unknown>>(
+
+
+export function getDirtyValues<T extends any>(
     oldValues: Partial<T>,
     newValues: Partial<T>
 ): Partial<T> {

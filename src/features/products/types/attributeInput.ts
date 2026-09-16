@@ -12,7 +12,7 @@ export type AttributeValueField =
     | "valueNumber"
     | "valueBoolean"
     | "valueDate"
-    | "valueJson";
+    | "valueOptionIds";
 
 export type AttributeInputConfig = {
     input: AttributeInputType;

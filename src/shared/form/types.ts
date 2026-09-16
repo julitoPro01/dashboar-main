@@ -12,9 +12,9 @@ type Label = {
 
 type LabelOption =
     | { type: "left" } & Label
-    | { type: "left-join",border?:string, rounded?:string} & Label
-    | { type: "top", description?: string } & Label
-    | { type: "top-floating" } & Label
+    | { type: "left-join", border?: string, rounded?: string } & Label
+    | { type: "top", description?: string, descrPosition?: "top" | "bottom" } & Label
+    | { type: "top-floating", description?: string } & Label
 
 export interface FormInputProps {
 
@@ -22,12 +22,19 @@ export interface FormInputProps {
     border?: 0 | 1 | 2;
     fieldSize?: FieldSize;
     textSize?: TextSize;
-    fieldIcon?: React.ReactNode;
     fieldClass?: string,
+
     error?: string | boolean | undefined;
     isDirty?: boolean;
+
     labelOption?: LabelOption;
-    label?:string
+    label?: string
+
+    fieldIcon?: React.ReactNode;
+    iconPosition?: "left" | "right"
+
+    maxLengthLabel?: number
+    currentLengthLabel?: number
 }
 
 export type FieldStatusType = "error" | "normal" | "dirty";

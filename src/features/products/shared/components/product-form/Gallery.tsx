@@ -1,7 +1,11 @@
 import { ImageGallery } from "./gallery/ImageGallery"
 
-export const Gallery = () => {
+interface Props {isEdit?:boolean}
+
+export const Gallery = (props: Props) => {
+    
     return (
-        <ImageGallery />
+        
+        <ImageGallery {...props} />
     )
 }

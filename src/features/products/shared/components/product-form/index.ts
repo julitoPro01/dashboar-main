@@ -1,7 +1,9 @@
 
 export * from "./BasicInformation";
-export * from "./DetailedDescription";
 export * from "./Gallery";
-export * from "./Categorization";
-export * from "./SystemAttributes";
 export * from "./CustomAttributes";
+
+export * from "./SupplierSelection";
+export * from "./Categorization";
+
+export * from "./RecordStatusInfo"

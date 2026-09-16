@@ -1,14 +1,11 @@
 
 import { FloatingWrapper } from "@/src/shared/components/floating";
 import { SelectableItem } from "@/src/shared/components/items";
-import { RECORD_STATUS_LABEL, RECORD_STATUS_STYLES } from "@/src/shared/domains/status";
+import { RECORD_STATUS_LABEL, RECORD_STATUS_OPTIONS, RECORD_STATUS_STYLE } from "@/src/shared/domains/recordStatus";
 import { CellTitle } from "@/src/shared/table/core";
 import { AppliedFilterLabel, OpenFilterButton, useRecordStatusFilter } from "@/src/shared/table/filters";
-import { useBootDataStore } from "@/src/store/useBootDataStore";
 
 export const RecordStatus = () => {
-
-    const recStatus = useBootDataStore(v => v.bootRecordStatuses);
 
     const { value, isActive, handleChange, handleClose, handleOpen } = useRecordStatusFilter();
 
@@ -22,7 +19,7 @@ export const RecordStatus = () => {
                 />
             </CellTitle>
 
-            {!isActive && value && <AppliedFilterLabel label={RECORD_STATUS_LABEL[value]} onClick={()=> handleChange()} />}
+            {!isActive && value && <AppliedFilterLabel label={RECORD_STATUS_LABEL[value]} onClick={() => handleChange()} />}
 
             <FloatingWrapper open={isActive} onClose={handleClose} >
                 <div className="p-2 w-40" >
@@ -34,14 +31,14 @@ export const RecordStatus = () => {
                         activeBullet
                     />
                     {
-                        recStatus.map(v => (
+                        RECORD_STATUS_OPTIONS.map(v => (
                             <SelectableItem
-                                key={v.id}
-                                label={RECORD_STATUS_LABEL[v.name]}
-                                onClick={() => handleChange(v.name)}
-                                isSelected={v.name === value}
+                                key={v.value}
+                                label={v.label}
+                                onClick={() => handleChange(v.value)}
+                                isSelected={v.value === value}
                                 activeBullet
-                                bulletStyle={RECORD_STATUS_STYLES[v.name].colorBg400}
+                                bulletStyle={RECORD_STATUS_STYLE[v.value]}
                             />
                         ))
                     }

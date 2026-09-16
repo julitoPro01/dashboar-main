@@ -6,6 +6,7 @@ export const SUPPLIER_RELATION_MODE_LABEL:Record<SupplierRelationModeDb,string>=
     CATALOG: "Solo catálogo",
 } as const;
 
+
 export const SUPPLIER_RELATION_MODE_BADGE_STYLE: Record<SupplierRelationModeDb, string> = {
     OWNER:
         "border-slate-300 bg-slate-100 text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300",

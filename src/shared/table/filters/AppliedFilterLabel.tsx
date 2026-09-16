@@ -73,7 +73,7 @@ export const AppliedFilterLabel = ({
 
           <span
             className="
-            px-0.5 pr-1 text-xs font-medium
+            px-0.5 pr-1.5 text-xs font-medium
             text-blue-700 dark:text-blue-200
           "
           >

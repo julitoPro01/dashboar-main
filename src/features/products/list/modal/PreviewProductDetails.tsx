@@ -16,8 +16,8 @@ export const PreviewProductDetails = () => {
     const [loading, setLoading] = useState({ ok: false, isError: false })
     // const prevSelectedId = useRef<number | undefined>(undefined);
 
-    const selectedProductId = useStore(v => v.selectedProduct?.to === "modal" ? v.selectedProduct.id : undefined);
-    const setSelectedProduct = useStore(v => v.setSelectedProduct);
+    const selectedProductId = useStore(v => v.productSelected?.to === "modal" ? v.productSelected.id : undefined);
+    const setSelectedProduct = useStore(v => v.setProductSelect);
 
     const onCloseModal = () => {
         // Deseleccionamos y cerramos el modal

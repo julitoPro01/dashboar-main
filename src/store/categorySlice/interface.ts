@@ -1,4 +1,4 @@
-import { RecordStatusDb } from "@/src/shared/domains/status";
+import { RecordStatusDb } from "@/src/shared/domains/recordStatus";
 
 type Category = {
     id: number,

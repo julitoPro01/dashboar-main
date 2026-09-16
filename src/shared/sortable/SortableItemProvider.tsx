@@ -1,6 +1,6 @@
 "use client";
+import { useSortable } from "@dnd-kit/react/sortable";
 import { createContext, useContext } from "react"
-import { useSortableNode } from "./useSortableNode";
 
 type Context = {
     ref: (element: Element | null) => void;
@@ -17,7 +17,7 @@ type Props = { disabled?: boolean, index: number, children: React.ReactNode, id:
 
 export const SortableItemProvider = ({ children, index, id, disabled=false }: Props) => {
 
-    const sortable = useSortableNode({ id, index,disabled });
+    const sortable = useSortable({ id, index,disabled });
 
     return (
         <SortableContextRow.Provider value={sortable} >

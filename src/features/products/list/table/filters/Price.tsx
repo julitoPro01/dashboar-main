@@ -1,13 +1,17 @@
 import { AppliedFilterLabel, OpenFilterButton, SortOrderButton, useMinMaxFilter, useSortOrderFilter } from "@/src/shared/table/filters"
 import { FloatingWrapper } from "@/src/shared/components/floating";
 import { FormEvent } from "react";
-import { FilterInput } from "@/src/shared/form";
+import { Input } from "@/src/shared/form";
 import { PRODUCT_SORTBY_ACCEPT_ONLY } from "../../../constants/filters";
 import { CellTitle } from "@/src/shared/table/core";
+import { useStore } from "@/src/store/useStore";
 
 const defSortBy = "price";
 
 export const Price = () => {
+
+    const setFilter = useStore(v => v.setProductFilters);
+
 
     const { handleToggle, order, sortBy } = useSortOrderFilter(defSortBy, PRODUCT_SORTBY_ACCEPT_ONLY);
 
@@ -19,8 +23,16 @@ export const Price = () => {
     const handleApply = (e: FormEvent) => {
         e.preventDefault();
 
-        console.log(filter)
+        setFilter({
+            priceMax: filter.max ? +filter.max : undefined,
+            priceMin: filter.min ? +filter.min : undefined
+        })
         handleClose()
+    }
+
+    const handleReset = () => {
+        handleClean();
+        setFilter({}, { priceMax: true, priceMin: true })
     }
 
     const labels = isActive ? [] : Object.entries(filter).map(([fil, v]) => `${fil}: S/${v}`);
@@ -36,14 +48,16 @@ export const Price = () => {
                 />
             </CellTitle>
 
-            {!isActive && labels.length > 0 && <AppliedFilterLabel label={labels.join(" - ")} onClick={() => handleClean()} />}
+            {!isActive && labels.length > 0 && <AppliedFilterLabel label={labels.join(" - ")}
+                onClick={handleReset} />}
 
 
             <FloatingWrapper open={isActive} onClose={handleCancel} >
                 <form onSubmit={handleApply} >
 
                     <div className="flex px-4 py-3 bg-surface-elevated font-semibold w-60">
-                        <button type="button" className=" text-xs text-text-muted hover:text-text" onClick={handleClean}>
+                        <button type="button" className=" text-xs text-text-muted hover:text-text"
+                            onClick={handleReset}>
                             Limpiar
                         </button>
                         <div className="flex-1"></div>
@@ -53,19 +67,33 @@ export const Price = () => {
                     </div>
 
                     {/* Options */}
-                    <div className="max-h-60 space-y-2 gap-2 px-5 py-4 text-start">
+                    <div className="max-h-60 space-y-2 p-4 text-start">
 
-                        <FilterInput onChange={({ target }) => handleChange("min", target.value)}
-                            label="Mínimo S/*"
-                            value={values.min}
+                        <span className="text-text-muted font-semibold text-xs tracking-wider">Mínimo</span>
+                        <Input fieldClass="ps-7"
                             type="number"
-                            isError={errors.min}
+                            fieldSize="sm"
+                            placeholder="0.00"
+                            value={values.min}
+                            error={errors.min}
+                            min={0}
+                            step="0.01"
+                            fieldIcon={"S/"}
+                            onChange={({ target }) => handleChange("min", target.value)}
                         />
 
-                        <FilterInput onChange={({ target }) => handleChange("max", target.value)}
-                            label="Máximo S/*"
+                        <span className="text-text-muted font-semibold text-xs tracking-wider">Máximo</span>
+                        <Input fieldClass="ps-7"
+                            type="number"
+                            fieldSize="sm"
+                            placeholder="0.00"
+                            min={0}
+                            step="0.01"
                             value={values.max}
-                            type="number" isError={errors.max} />
+                            error={errors.max}
+                            fieldIcon={"S/"}
+                            onChange={({ target }) => handleChange("max", target.value)}
+                        />
 
                     </div>
                 </form>

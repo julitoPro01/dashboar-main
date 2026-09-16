@@ -102,7 +102,7 @@ export const FloatingPanel = ({
             close();
             onEffectClose?.();
         }
-    }, [pathname]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [pathname]); 
 
     if (!isOpen) return null;
 
@@ -120,7 +120,7 @@ export const FloatingPanel = ({
                 ref={refs.setFloating}
                 style={floatingStyles}
                 {...getFloatingProps()}
-                className="z-50 bg-surface-overlay shadow-dropdown border border-border rounded-lg"
+                className="z-50 shadow-dropdown border border-border rounded-lg overflow-hidden"
 
             >
                 {children}

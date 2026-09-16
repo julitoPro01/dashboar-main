@@ -1,0 +1,27 @@
+.SidePanelOpen {
+    animation: side-panel-in 200ms ease-out forwards;
+}
+
+.SidePanelClose {
+    animation: side-panel-out 200ms ease-in forwards;
+}
+
+@keyframes side-panel-in {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes side-panel-out {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(100%);
+    }
+}

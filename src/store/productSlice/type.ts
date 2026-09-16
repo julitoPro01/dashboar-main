@@ -1,4 +1,4 @@
-import { ProductDetailsResponse, ProductFilters } from "@/src/features/products/details/types";
+import { CategorizationForm, ProductDetailsResponse, ProductFilters } from "@/src/features/products/types";
 
 // page -> Product Details
 export type TYPE_PRODUCT_DETAILS =
@@ -16,7 +16,7 @@ interface ModalProductDetails {
 
 export type STATE_LOADING_PRODUCT = "loaded" | "loading";
 
-type TYPE_SELECTED = { id?: number, publicId?: string, lastCategoryId?: number, to?: "modal" | "dropDrow", index?: number }
+type TYPE_SELECTED = { id: number, publicId: string }
 
 // PAGE - INDEX 
 type Delete = Partial<Record<keyof ProductFilters, true>>;
@@ -25,21 +25,25 @@ export interface StateProduct {
     // PAGE - INDEX
     productFilters: ProductFilters;
 
-    loadingProductState: STATE_LOADING_PRODUCT;
-    selectedProduct: TYPE_SELECTED;
+    productLoadingState: STATE_LOADING_PRODUCT;
+    productSelected?: TYPE_SELECTED;
 
     productDetailsData?: ProductDetailsResponse;
-    modalTypeProductDetails: ModalProductDetails
+    productModalTypeDetails: ModalProductDetails
+
+ 
 }
 
 export interface ActionProduct {
     setProductFilters: (_: Partial<ProductFilters>, del?: Delete) => void;
 
-    setLoadingProductState: (_: STATE_LOADING_PRODUCT) => void;
-    setSelectedProduct: (_?: TYPE_SELECTED) => void;
+    setProductLoadingState: (_: STATE_LOADING_PRODUCT) => void;
+    setProductSelect: (_?: TYPE_SELECTED) => void;
 
-    setModalTypeProductDetails: (_: ModalProductDetails) => void;
+    setProductModalTypeDetails: (_: ModalProductDetails) => void;
     setProductDetailsData: (_?: ProductDetailsResponse) => void;
+
+
 }
 
 export type ProductSlice = StateProduct & ActionProduct;

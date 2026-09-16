@@ -15,10 +15,11 @@ export const APP_ROUTES = {
   PRODUCTS: {
     INDEX: '/products',
     CREATE: '/products/create',
-    VIEW: (id: string | number) => `/products/${id}`,
-    EDIT: (id: string | number) => `/products/${id}/edit`,
+    VIEW: (publicId: string) => `/products/${publicId}`,
+    EDIT: (publicId: string) => `/products/${publicId}/edit`,
     CATEGORIES: '/products/categories',
     INVENTORY: '/products/inventory',
+    VARIANT:(publicId:string)=>`/products/${publicId}/variant`
   },
 
   SUPPLIERS: {

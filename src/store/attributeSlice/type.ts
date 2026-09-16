@@ -32,7 +32,7 @@ export type AttributeState = {
     categoryAttrsFilters: CategoryAttrFilters;
     categoryAttrsSelectedIds: number[];
     categoryAttrStoreHistory: { prevActionType?: ActionType }
-    aategorySelectModal: SelectCatgModal;
+    categorySelectModal: SelectCatgModal;
     categoryAttrsDeleteModal?: DelCtgAttrMd;
     categoryAttrsInvalidationReason?: InvalidationReason;
 

@@ -42,7 +42,7 @@ export const LeftMenu = async () => {
                 </div>
             </div>
             <nav className="flex-1 overflow-y-auto scrollbar-hide  mt-2 ">
-                <ul className="flex flex-col">
+                <ul className="flex flex-col gap-1">
 
                     <NavigationItems />
 

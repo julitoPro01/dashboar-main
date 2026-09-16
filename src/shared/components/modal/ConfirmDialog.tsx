@@ -9,6 +9,7 @@ export const ConfirmDialog = ({
     details,
     confirmText = "Confirmar",
     cancelText = "Cancelar",
+    loadingText = "Procesando...",
     loading,
     confirmDisabled,
     onCancel,
@@ -67,7 +68,7 @@ export const ConfirmDialog = ({
                     disabled={confirmDisabled}
                     onClick={onConfirm}
                 >
-                    {loading ? "Procesando..." : confirmText}
+                    {loading ? loadingText : confirmText}
                 </Button>
             </div>
 
@@ -87,6 +88,7 @@ export interface ConfirmDialogProps {
 
     confirmText?: string;
     cancelText?: string;
+    loadingText?:string;
 
     loading?: boolean;
     confirmDisabled?: boolean;

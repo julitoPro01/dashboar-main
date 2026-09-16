@@ -26,7 +26,8 @@ const variants = {
   cursor-pointer select-peer font-medium`,
   input: `text-text border border-border-input bg-surface-light font-medium`,
   basic: `text-text-muted font-medium`,
-  confirm:`text-primary dark:text-text-select border border-primary bg-primary/5 font-semibold`
+  confirm:`text-primary dark:text-text-select border border-primary  bg-surface-black/70
+                backdrop-blur-md/70 font-semibold`
 }
 
 const active = "active:text-text/70";

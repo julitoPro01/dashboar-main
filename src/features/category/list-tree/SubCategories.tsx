@@ -2,16 +2,14 @@
 
 import { useStore } from "@/src/store/useStore";
 
-import { RenderCategoryTree } from "./sub-categories/RenderCategoryTree";
-
 import { FLOATING_PANEL_TYPE } from "@/src/store/uiSlice/interface";
 import { ItemMainCategory } from "./sub-categories/ItemMainCategory";
 import { MainCategory } from "@/src/store/categorySlice";
 import type { CategoryTreeNode } from "../types";
-import { CategoryTreeSkeleton } from "../shared/components";
+import { CategoryTreeSkeleton, ItemTree } from "../shared/components";
 import { useCategoryTrees } from "../shared/hooks";
-import { ItemChild } from "./sub-categories/ItemChild";
 import { CreateCategory } from "./sub-categories/CreateCategory";
+import { NodeTree } from "./sub-categories/NodeTree";
 
 export const SubCategories = () => {
 
@@ -61,56 +59,62 @@ const Render = ({ mainCategory: main }: RenderProps) => {
 
   }
 
-
   return (
     <>
-      <div className=" hover:scrollbar-thumb-active scrollbar-thin scrollbar-transparent overflow-auto h-full w-full">
-
-        <div className=" min-w-min">
+      <div className=" flex flex-col h-full w-full ">
 
           <ItemMainCategory mainCategory={main} />
-
-          <div className="flex justify-end py-2 border-t border-border
+          
+        <div className=" hover:scrollbar-thumb-active scrollbar-hide scrollbar-transparent overflow-auto h-full w-full">
+          <div className="min-w-80">
+            <div className="flex justify-end py-2 border-t border-border
                text-xs uppercase tracking-wide font-semibold text-text-subtle">
 
-            <div className="w-40 flex justify-around">
-              <span className="px-4">Estado</span>
-              <span className="px-4">Nivel</span>
+              <div className="w-40 flex justify-around">
+                <span className="px-4">Estado</span>
+                <span className="px-4">Nivel</span>
+              </div>
             </div>
+
+            {/* SUB CATEGORÍAS */}
+            {
+              isLoading
+                ? <CategoryTreeSkeleton />
+                : data[0]?.children.map((v: CategoryTreeNode) => {
+
+                  return (
+                    <div key={v.id} className="group">
+
+                      {
+                        v.isCreating
+                          ? <CreateCategory id={v.id} />
+                          :
+                          <ItemTree
+                            ctg={v}
+                            selectedPaths={[v]}
+                            isSelected={v.id === selectedId}
+                            hasChildren={!!v.children.length}
+                            onOpenFloatingMenu={handleOpenFloatingMenu}
+                            isOpen
+                            allowSelectingAll={true}
+                          />
+
+                      }
+                      <NodeTree
+                        selectedId={selectedId}
+                        categoryTree={v.children}
+                        selectedPaths={[v]}
+                        allowSelectingAll={true}
+                        onOpenFloatingMenu={handleOpenFloatingMenu}
+
+                      />
+                    </div>
+                  )
+
+                })
+            }
           </div>
-          {/* SUB CATEGORÍAS */}
-          {
-            isLoading
-              ? <CategoryTreeSkeleton />
-              : data[0]?.children.map((v: CategoryTreeNode) => {
-
-                return (
-                  <div key={v.id} className="group">
-                    {
-                      v.isCreating
-                        ? <CreateCategory id={v.id} />
-                        : <ItemChild
-                          ctg={v}
-                          selectedPaths={[v]}
-                          isSelected={v.id === selectedId}
-                          hasChildren={!!v.children.length}
-                          onOpenFloatingMenu={handleOpenFloatingMenu}
-                        />
-                    }
-
-                    <RenderCategoryTree
-                      categoryTree={v.children}
-                      selectedPaths={[v]}
-                      selectedId={selectedId}
-                      onOpenFloatingMenu={handleOpenFloatingMenu}
-                    />
-                  </div>
-                )
-
-              })
-          }
         </div>
-
       </div>
     </>
   )

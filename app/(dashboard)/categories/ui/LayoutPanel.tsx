@@ -20,7 +20,7 @@ export const LayoutPanel = ({ main_categories, children }: Props) => {
                             {main_categories}
                         </Panel>
                         <Separator className="w-1.5 bg-bg-select border-l border-border select-none hover:bg-primary-light/50  " />
-                        <Panel >
+                        <Panel>
                             {children}
                         </Panel>
                     </Group>

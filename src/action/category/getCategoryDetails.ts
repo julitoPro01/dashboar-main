@@ -4,12 +4,12 @@ import prisma from "@/lib/prisma";
 import { z } from "zod";
 
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
-import type { CategoryDetailsResponse } from "@/src/features/category/details/types/category.api";
+import { CategoryDetailsResponse } from "@/src/features/category/types";
 
 
 export const getCategoryDetails = async (publicId: string) => {
 
-    return PromiseReturn<CategoryDetailsResponse>(async () => {
+    return PromiseReturn(async () => {
 
         const parse = schema.safeParse({ publicId })
         if (!parse.success)
@@ -44,9 +44,7 @@ export const getCategoryDetails = async (publicId: string) => {
                 _count: {
                     select: {
                         children: true,
-                        productCategories: true,
                         categoryAttributes: true,
-
                     },
                 }
             }
@@ -68,7 +66,9 @@ export const getCategoryDetails = async (publicId: string) => {
             paths: paths.sort((a, b) => a.level - b.level).map(v => ({ name: v.name, id: v.id })),
             recordStatus: res.recordStatus.name,
             attributes: res.categoryAttributes.map(v => ({ ...v, name: v.attributeDefinition.name })).sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0)),
-            productsCount: res._count.productCategories,
+            // TODO:-------------
+            // productsCount: res._count.productCategories,
+            productsCount: 0,
             childCategoriesCount: res._count.children,
             attributeCount: res.categoryAttributes.length,
             // requiredAttributesCount: res.categoryAttributes.filter(v => v.isRequired).length,

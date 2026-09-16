@@ -59,6 +59,7 @@ export function FloatingCard({
                     Object.assign(elements.floating.style, {
                         maxHeight: `${availableHeight}px`,
                         overflowY: "auto",
+                        zIndex:"50"
                         // height:"auto"
                     });
                 },

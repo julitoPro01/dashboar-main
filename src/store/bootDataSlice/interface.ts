@@ -1,8 +1,8 @@
 import { AuthRole } from "@/src/shared/domains/accessControl";
-import { RecordStatusDb } from "@/src/shared/domains/status";
+import { RecordStatusDb } from "@/src/shared/domains/recordStatus";
 
 type DataLoaded = "loading" | "loaded" | "loadingError"
-type User = {id?:number,name?:string}
+type User = {id:number,name:string}
 
 export interface StateBootData {
     // bootVerificationStatuses:VerificationStatus[];
@@ -11,7 +11,7 @@ export interface StateBootData {
     bootRecordStatuses: { name: RecordStatusDb, id: number }[];
     //....
     isBootDataLoaded: DataLoaded;
-    user: User
+    user?: User
 }
 
 export interface ActionBootData {

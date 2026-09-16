@@ -1,2 +1,2 @@
-export * from './inventory-status/inventoryStatus.constans';
-export * from './sale-status/saleStatus.constants';
+export * from './inventory-status/constans';
+export * from './sale-status/constants';

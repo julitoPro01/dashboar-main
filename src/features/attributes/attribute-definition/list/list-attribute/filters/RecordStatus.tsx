@@ -1,6 +1,6 @@
 import { FloatingWrapper } from "@/src/shared/components/floating";
 import { SelectableItem } from "@/src/shared/components/items";
-import { RECORD_STATUS_LABEL, RECORD_STATUS_STYLES, RecordStatusDb, serializeRecordStatus } from "@/src/shared/domains/status";
+import { RECORD_STATUS_LABEL, RECORD_STATUS_STYLE, RecordStatusDb, serializeRecordStatus } from "@/src/shared/domains/recordStatus";
 import { CellTitle } from "@/src/shared/table/core";
 import { OpenFilterButton, AppliedFilterLabel} from "@/src/shared/table/filters"
 import { createURLPaginationParams, parsePaginationParams } from "@/src/shared/table/pagination";
@@ -54,7 +54,6 @@ export const RecordStatus = () => {
               label={item.label}
               isSelected={item.value === status.value}
               activeBullet
-              bulletStyle={item.value !== undefined ? RECORD_STATUS_STYLES[item.value].colorBg400 : undefined}
               onClick={() => handleApply(item.value)} />
           ))}
         </div>

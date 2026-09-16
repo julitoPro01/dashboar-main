@@ -5,7 +5,7 @@ import { ExternalToast, toast } from "sonner";
 
 interface Props {
   title: string;
-  defaultSmgDesc?: boolean;
+  defaultMsgDesc?: boolean;
   description?: string;
   link?: {
     href: string;
@@ -19,7 +19,7 @@ interface Props {
 }
 
 export const ToastError = (value: Props, data?: ExternalToast) => {
-  const { title, description, link, acction, activeBtnClose, defaultSmgDesc } = value;
+  const { title, description, link, acction, activeBtnClose, defaultMsgDesc } = value;
 
   toast.custom(
     (t) => (
@@ -37,7 +37,7 @@ export const ToastError = (value: Props, data?: ExternalToast) => {
           <div className="flex-1 space-y-1">
             <h1 className="font-semibold text-red-400">{title}</h1>
 
-            {defaultSmgDesc
+            {defaultMsgDesc
               ? <p className="text-neutral-400 text-[13px] leading-tight">
                 Error interno del servidor, intente de nuevo mas tarde.
               </p>

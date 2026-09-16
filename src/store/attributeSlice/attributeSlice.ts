@@ -16,7 +16,7 @@ export const attributeSlice: StateCreator<Store, [], [], AttributeSlice> = (set)
     categoryAttrsFilters: { selection: { type: "all" }, actionType: "view" },
     categoryAttrsSelectedIds: [],
     categoryAttrStoreHistory: { prevActionType: undefined },
-    aategorySelectModal: { isOpen: false, paths: undefined, isParent: false },
+    categorySelectModal: { isOpen: false, paths: undefined, isParent: false },
 
     attributeCreateModal: false,
 
@@ -70,7 +70,7 @@ export const attributeSlice: StateCreator<Store, [], [], AttributeSlice> = (set)
             }
         })
     },
-    setCategorySelectModal: (val) => set((state) => ({ aategorySelectModal: { ...state.aategorySelectModal, ...val } })),
+    setCategorySelectModal: (val) => set((state) => ({ categorySelectModal: { ...state.categorySelectModal, ...val } })),
     setCategoryAttrsDeleteModal: val => set({ categoryAttrsDeleteModal: val }),
     setCategoryAttrsInvalidationReason: val => set({ categoryAttrsInvalidationReason: val }),
 

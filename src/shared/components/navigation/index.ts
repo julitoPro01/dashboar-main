@@ -1,3 +1,3 @@
 export * from './ListDropDown';
-export * from './NavItem';
-export * from './Breadcrumbs'
+export * from './SidebarLink';
+export * from './Breadcrumbs';

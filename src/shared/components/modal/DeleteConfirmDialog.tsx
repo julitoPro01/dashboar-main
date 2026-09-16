@@ -47,6 +47,8 @@ export const DeleteConfirmDialog = ({
             loading={loading}
             confirmDisabled={notAvailable}
             confirmText="Eliminar"
+            loadingText="Eliminando..."
+            
             onCancel={onCloseModal}
             onConfirm={onConfirm}
             details={

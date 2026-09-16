@@ -1,6 +1,4 @@
-import clsx from 'clsx'
 import { UseFormRegister } from 'react-hook-form';
-import { INPUT_FIELD_STYLE } from '@/src/shared/theme/inputField/inputFieldStyle';
 import { SupplierForm } from '../../../types';
 import { SUPPLIER_RELATION_MODE_LABEL } from '../../../constants';
 import { Select } from '@/src/shared/form';
@@ -17,15 +15,13 @@ export const RelacionModeSelect = ({ errorMsg, register, dirty }: Props) => {
 
         <Select
             label='Modo de Relación'
+            labelOption={{ type: "top", required: true }}
             isDirty={dirty}
             error={errorMsg}
-            isRequired
             {...register("relationMode")}
-        >
-            {Object.entries(rest).map(([value, label]) => (
+            options={Object.entries(rest).map(([value, label]) => (
                 <option key={value} value={value}>{label}</option>
             ))}
-        </Select>
-
+        />
     )
 }

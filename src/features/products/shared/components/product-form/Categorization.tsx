@@ -1,14 +1,75 @@
-import { CategorySelection } from "./categorization/CategorySelect"
-import { SupplierSelection } from "./categorization/SupplierSelect"
+import { FormCard } from "@/src/shared/form"
+import { CategorySelection } from "./categorization/CategorySelection"
+import { MdOutlineCategory, MdRestartAlt } from "react-icons/md"
+import { Button } from "@/src/shared/components/btn"
+import { FaCheck } from "react-icons/fa6"
+import { useFormContext, useFormState } from "react-hook-form"
+import { CategorizationForm } from "../../../types"
+import { SystemAttributes } from "./categorization/SystemAttributes"
+import { useRegisterSystemAttributes } from "../../hooks"
 
-export const Categorization = () => {
 
+type Props =
+    { isEdit?: false, isEditSuccess?: boolean, }
+    | { isEdit: true, isEditSuccess?: boolean, id: number }
+
+
+export const Categorization = (props: Props) => {
+
+    const { setValue, reset, control } = useFormContext<CategorizationForm>();
+
+    const { dirtyFields, isSubmitting } = useFormState({ control, name: "categorization" });
+
+    const { original } = useRegisterSystemAttributes({
+        entity: "product",
+        isEdit: props.isEdit,
+        id: props.isEdit ? props.id : undefined,
+    });
+
+    const handleReset = () => {
+        if (props.isEdit) {
+
+            reset();
+
+            //TODO: solo se ejecutara cuando no se ha realizado ningura actualización
+            // el "Reset" raíz aun no ha sido establecido por la actualización
+            // cuando se ejecute el "Reset" raíz, el valor "original" tendra un valor antiguo
+            if (!props.isEditSuccess) {
+
+                setValue("categorization.systemAttributes",
+                    original.current,
+                    { shouldDirty: false });
+            }
+        }
+    }
 
     return (
-        <>
-            <CategorySelection />
-            <SupplierSelection />
-        </>
+        <FormCard
+            title="Categorización"
+            titleIcon={<MdOutlineCategory />}
+            actionNode={props.isEdit && <>
+                <Button variant="basic" size="xs" padding="p-0" type="button"
+                    disabled={isSubmitting || !dirtyFields.categorization}
+                    onClick={handleReset}
+                >
+                    <MdRestartAlt size={20} />
+                </Button>
+                <Button
+                    variant="basic" size="xs" padding="p-0" type="submit"
+                    loading={isSubmitting}
+                    disabled={!dirtyFields.categorization}
+                >
+                    <FaCheck size={20} />
+                </Button>
+            </>}
+        >
+            <div className="flex flex-col md:flex-row gap-x-8 gap-y-5">
+                <CategorySelection />
+            </div>
+
+            <SystemAttributes />
+
+        </FormCard>
 
     )
 }

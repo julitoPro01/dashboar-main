@@ -24,5 +24,6 @@ export const QUERY_KEYS = {
         all: ['products'] as const,
         list:(pag:Object,fil:Object)=>[...QUERY_KEYS.products.all,'list',pag,fil] as const,
         detail: (id: string) => [...QUERY_KEYS.products.all, 'detail', id] as const,
+        categoryAttributes:(params:any[])=>[...QUERY_KEYS.products.all,"list", ...params] as const
     }
 } as const;

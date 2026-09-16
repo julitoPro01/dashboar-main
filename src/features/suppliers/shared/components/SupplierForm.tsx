@@ -32,34 +32,27 @@ export const SupplierForm = ({ register, errors, dirty }: Props) => {
 
                 <Input
                     label="Nombre del proveedor"
-                    isRequired
+                    labelOption={{ type: "top", required: true }}
                     isDirty={dirty?.name}
                     error={errors.name?.message}
                     placeholder="Ej: Industrias Globales S.A."
                     {...register("name")}
                 />
 
-                <div className="space-y-2">
-                    <label className={`${INPUT_FIELD_STYLE.label} ${INPUT_FIELD_STYLE.isRequired}`}>
-                        Dirección Fiscal
-                    </label>
-                    <div className="relative flex items-center">
-
-                        <Input className="w-full" 
-                            isDirty={dirty?.address}
-                            error={errors.address?.message}
-                            placeholder="Calle 123, Ciudad de Lima, CP 01000"
-                            {...register("address")}
-                            inputIcon={<FaLocationDot />}
-                        >
-                        </Input>
-                    </div>
-                </div>
+                <Input
+                    label="Dirección Fiscal"
+                    labelOption={{ type: "top", required: true }}
+                    isDirty={dirty?.address}
+                    error={errors.address?.message}
+                    placeholder="Calle 123, Ciudad de Lima, CP 01000"
+                    {...register("address")}
+                    fieldIcon={<FaLocationDot />}
+                />
                 {/* Description Section */}
                 <Textarea
                     label="Descripción"
+                    labelOption={{ type: "top", required: true }}
                     placeholder="Breve descripción de los productos o servicios ofrecidos por este proveedor..."
-                    isRequired
                     isDirty={dirty?.description}
                     error={errors.description?.message}
                     {...register("description")}

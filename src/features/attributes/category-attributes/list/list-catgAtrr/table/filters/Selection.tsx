@@ -1,5 +1,3 @@
-import { FloatingPanelOld } from "@/src/shared/components/floating"
-import { SelectableItem } from "@/src/shared/components/items";
 import { APP_ROUTES } from "@/src/shared/routes";
 import { AppliedFilterLabel, OpenFilterButton, SELECTION_FILTERS, SelectionFilter } from "@/src/shared/table/filters";
 import { updatePaginationParams } from "@/src/shared/table/pagination";
@@ -54,7 +52,8 @@ export const Selection = () => {
 
             {(!openPanel && selection !== "all") && <AppliedFilterLabel label={label} onClick={() => handleApply("all")} />}
 
-            <FloatingPanelOld panelType={FLOATING_PANEL_TYPE.CATG_ATTR_SELECTED_ROWS}
+            {/* REEMPLAZAR POR FloatingPanel */}
+            {/* <FloatingPanelOld panelType={FLOATING_PANEL_TYPE.CATG_ATTR_SELECTED_ROWS}
                 y={20}>
                 <div className="w-64 p-2 text-sm text-text">
                     {SELECTION_FILTERS.map(({ value, label }) => (
@@ -62,7 +61,7 @@ export const Selection = () => {
                             isSelected={value === selection} activeBullet />
                     ))}
                 </div>
-            </FloatingPanelOld>
+            </FloatingPanelOld> */}
         </>
     )
 }

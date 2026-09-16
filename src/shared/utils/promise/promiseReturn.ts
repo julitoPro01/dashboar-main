@@ -14,7 +14,7 @@ export const PromiseReturn =
             if (err instanceof z.ZodError) {
 
                 return ApiResponse.badRequest(
-                    undefined, "VALIDATION"
+                    undefined, "VALIDATION",err
                 ) 
             }
 

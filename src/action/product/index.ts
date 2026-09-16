@@ -1,14 +1,19 @@
-export * from './create/createProduct';
+
+export * from './list/getProducts';
 
 export * from './details/getPreviewProductDetails';
 export * from './details/getProductDetails';
 
-export * from './list/getProducts';
 
-export * from './variant/createVariant';
-export * from './variant/getVariants';
+// ACIONES Y DEPENDENCIAS PARA CREAR Y ACTUALIZAR
+export * from './form/createProduct';
 
-export * from './update/getProductForm';
-export * from './update/updateProduct';
+export * from './form/getProductForm';
 
-export * from './getCategoryAttributes'
+export * from './form/updateBasicInformation';
+export * from './form/updateGallery';
+export * from './form/updateCategorization';
+export * from './form/updateCustomAttrs';
+
+export * from './form/getCategoryAttributes';
+export * from './form/getCustomAttributes';

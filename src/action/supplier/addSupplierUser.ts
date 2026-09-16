@@ -5,7 +5,8 @@ import bcrypt from 'bcrypt';
 import { SupplierUserCreateSchema } from "./schema/upsertSupplierUserShema";
 import { RoleType } from "@/src/generated/prisma/enums";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
-import { RECORD_STATUS_ID, VERIFICATION_STATUS_ID } from "@/src/shared/domains/status";
+import { RECORD_STATUS_ID } from "@/src/shared/domains/recordStatus";
+import { VERIFICATION_STATUS_ID } from "@/src/shared/domains/verificationStatus";
 
 type Data = {
     supplierId: number;

@@ -1,4 +1,4 @@
-import { RECORD_STATUS_LABEL, RECORD_STATUS_STYLES } from "@/src/shared/domains/status";
+import { RecordStatusBadge } from "@/src/shared/domains/recordStatus";
 import { useStore } from "@/src/store/useStore";
 import { MdMoreVert, MdOutlineSubdirectoryArrowRight, MdPostAdd } from "react-icons/md";
 import { TbChevronDown } from "react-icons/tb";
@@ -41,10 +41,8 @@ export const ItemMainCategory = ({ mainCategory: main }: Props) => {
         select()
     }
 
-    const style = RECORD_STATUS_STYLES[main.recordStatus];
-
     return (
-        <div className="select-none">
+        <div className="select-none overflow-x-auto scrollbar-hide py-2.75 h-20">
             <div className={` flex items-center justify-between gap-3 py-4 px-3 rounded-lg`}
             >
                 <div className="flex items-center gap-3">
@@ -52,16 +50,14 @@ export const ItemMainCategory = ({ mainCategory: main }: Props) => {
                         ? <span className=" text-text-muted"> <TbChevronDown size={20} /></span>
                         : <span className=" text-text-muted"> <MdOutlineSubdirectoryArrowRight size={20} /></span>}
 
-                    <span className="text-sm text-text-muted whitespace-nowrap font-bold truncate">{main.name}</span>
-                    <span className={`text-[9px] ml-2 px-2 py-0.5 ${style.colorBg50} ${style.colorTxt500} rounded-full tracking-wider font-semibold uppercase`}>
-                        {RECORD_STATUS_LABEL[main.recordStatus]}
-                    </span>
+                    <span className="text-sm text-text-muted font-bold truncate">{main.name} helos plopasd</span>
+                    <RecordStatusBadge status={main.recordStatus} />
                 </div>
-                <div className={`flex items-center gap-3 `}>
-                    <Button variant="basic" onClick={handleAddDirty}>
+                <div className={`flex  justify-end gap-4`}>
+                    <Button variant="basic" padding="none" onClick={handleAddDirty}>
                         <MdPostAdd size={20} />
                     </Button>
-                    <Button variant="basic" onClick={({ clientX, clientY }) => onOpenFloating(clientX, clientY)}
+                    <Button variant="basic" padding="none" onClick={({ clientX, clientY }) => onOpenFloating(clientX, clientY)}
                     >
                         <MdMoreVert size={20} />
                     </Button>

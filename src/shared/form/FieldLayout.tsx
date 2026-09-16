@@ -29,6 +29,9 @@ export const FieldLayout = ({
     children,
     className,
     id,
+    iconPosition = "left",
+    maxLengthLabel,
+    currentLengthLabel
 }: Props) => {
 
 
@@ -36,33 +39,43 @@ export const FieldLayout = ({
         <div className={`flex flex-col ${className} gap-0.5`}>
 
             {(labelOption?.type === "top") &&
-                <div className="flex flex-col gap-1 mb-1.5">
+                <div className="flex flex-col gap-1 mb-1">
                     {label &&
-                        <label htmlFor={id} className={clsx(FIELD_STYLE.label, labelOption.required && FIELD_STYLE.validation["*"])} >
-                            {label}
-                        </label>
+                        <div className="flex justify-between gap-4">
+                            <label htmlFor={id} className={clsx(FIELD_STYLE.label, labelOption.required && FIELD_STYLE.validation["*"])} >
+                                {label}
+                            </label>
+                            {maxLengthLabel &&
+                                <span className="block text-xs text-text-muted"> {currentLengthLabel} / {maxLengthLabel} </span>
+                            }
+                        </div>
                     }
 
-                    {labelOption.description && (
+                    {(labelOption.description && labelOption.descrPosition === "top") && (
                         <p className="text-xs font-medium text-text-muted">
                             {labelOption.description}
                         </p>
                     )}
+
                 </div>
             }
+
             <div className="relative flex w-full">
-                <span className={FIELD_STYLE.icon}>{fieldIcon}</span>
+
+                {fieldIcon &&
+                    <span className={`${FIELD_STYLE.icon} ${iconPosition === "left" ? "left-3" : "right-3"}`}>{fieldIcon}</span>
+                }
 
                 {
                     (label && labelOption?.type === "left-join") &&
                     <label htmlFor={id} className={`
-                            inline-flex items-center bg-surface-light whitespace-nowrap
-                          ${labelOption.border ?? "border border-r-0 border-border-input"} 
-                          ${labelOption.rounded ?? "rounded-l-lg"}
-                          ${FIELD_STYLE.textSize[textSize]}
-                          ${FIELD_STYLE.size[fieldSize]}
-                          ${labelOption.required && FIELD_STYLE.validation["*"]}
-                              `}>
+                        inline-flex items-center bg-surface-light whitespace-nowrap
+                        ${labelOption.border ?? "border border-r-0 border-border-input"} 
+                        ${labelOption.rounded ?? "rounded-l-lg"}
+                        ${FIELD_STYLE.textSize[textSize]}
+                        ${FIELD_STYLE.size[fieldSize]}
+                        ${labelOption.required && FIELD_STYLE.validation["*"]}
+                        `}>
                         {label}
                     </label>
                 }
@@ -70,10 +83,10 @@ export const FieldLayout = ({
                 {
                     (label && labelOption?.type === "left") &&
                     <label htmlFor={id} className={`
-                         inline-flex items-center  whitespace-nowrap pr-3
-                          ${FIELD_STYLE.label}
-                          ${labelOption.required && FIELD_STYLE.validation["*"]}
-                              `}>
+                        inline-flex items-center  whitespace-nowrap pr-3
+                        ${FIELD_STYLE.label}
+                        ${labelOption.required && FIELD_STYLE.validation["*"]}
+                        `}>
                         {label}
                     </label>
                 }
@@ -83,12 +96,20 @@ export const FieldLayout = ({
                 {(label && labelOption?.type === "top-floating") && <>
                     <span className="absolute text-xs px-1 h-1 bg-surface-light top-0 left-2.25  text-transparent select-none">{label}</span>
                     <label htmlFor={id}
-                        className={`absolute text-xs -top-2 left-3 text-slate-600 dark:text-slate-300 block select-none ${labelOption.required && FIELD_STYLE.validation["*"]}`} >{label}</label>
+                        className={`absolute text-xs font-semibold  -top-2 left-3 text-text-muted block select-none ${labelOption.required && FIELD_STYLE.validation["*"]}`} >{label}</label>
                 </>}
 
                 {children}
 
             </div>
+
+            {
+                (labelOption?.type === "top-floating" || (labelOption?.type === "top" && labelOption.descrPosition === "bottom"))
+                &&
+                <p className="text-xs text-text-muted mt-1">
+                    {labelOption.description}
+                </p>
+            }
 
             {(error)
                 ? <span className={FIELD_STYLE.validation.errorMsg} >{error}</span>

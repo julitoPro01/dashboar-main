@@ -10,12 +10,11 @@ export const useProducts = (pag: PaginationState, fil: ProductFilters) => {
 
     const setFetchStatus = useStore(v => v.setFetchStatus);
 
-
     const { data, isFetching, isError } = useQuery({
         queryKey: QUERY_KEYS.products.list(pag, fil),
         queryFn: () => getProducts(pag, fil),
         staleTime: 60 * 1000,
-        refetchOnWindowFocus: true,
+        // refetchOnWindowFocus: true,
         placeholderData: keepPreviousData,
     });
 

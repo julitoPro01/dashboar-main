@@ -1,4 +1,4 @@
-import { normalizeRecordStatusFromURL, parseRecordStatus, RecordStatusDb, RecordStatusValue } from "@/src/shared/domains/status";
+import { normalizeRecordStatusFromURL, parseRecordStatus, RecordStatusDb, RecordStatusValue } from "@/src/shared/domains/recordStatus";
 import { DEFAULT_ORDER_DESC, DEFAULT_PAGE_1, DEFAULT_PAGE_SIZE_20, DEFAULT_SORTBY_CREATED_AT, MAX_PAGE_SIZE_100 } from "../constants";
 import { OptionNormalizePag, PaginationQuery, SortByType } from "../types";
 

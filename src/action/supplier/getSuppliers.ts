@@ -2,7 +2,7 @@
 
 import { Prisma } from "@/src/generated/prisma/client";
 import prisma from "@/lib/prisma";
-import { createDateRangeFilter } from "../utils/dateRanger.filter";
+import { createDateRangePrisma } from "../utils/dateRanger.filter";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
 import { PaginationState } from "@/src/shared/table/pagination";
 import { SuppliersResponse, SupplierFilters } from "@/src/features/suppliers/types";
@@ -29,7 +29,8 @@ export async function getSuppliers(query: QueryProps, filter: FilterProps) {
     if (state) filters.push({ recordStatus: { name: state } });
     if (capabilities) filters.push({ capabilities: { hasSome: [...capabilities] } });
     if (relationMode) filters.push({ relationMode });
-    const dateFilter = createDateRangeFilter(registeredFrom, registeredTo);
+    
+    const dateFilter = createDateRangePrisma(registeredFrom, registeredTo);
     if (dateFilter) filters.push({ createdAt: dateFilter });
 
     let orderBy: Prisma.SupplierOrderByWithAggregationInput[] = [];

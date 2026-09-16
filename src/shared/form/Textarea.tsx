@@ -1,11 +1,11 @@
 import clsx from "clsx"
 import { FieldStatusType, FormInputProps } from "./types";
-import { HTMLProps } from "react";
+import { TextareaHTMLAttributes } from "react";
 import { FIELD_STYLE } from "./style";
 import { FieldLayout } from "./FieldLayout";
 
 
-interface Props extends FormInputProps, HTMLProps<HTMLTextAreaElement> {
+interface Props extends FormInputProps, TextareaHTMLAttributes<HTMLTextAreaElement> {
 }
 
 /**
@@ -32,6 +32,11 @@ export const Textarea = (props: Props) => {
         error,
         isDirty,
         labelOption,
+        iconPosition,
+        maxLengthLabel,
+        currentLengthLabel,
+        
+
         ...rest
     } = props;
 
@@ -39,9 +44,11 @@ export const Textarea = (props: Props) => {
 
     const field = clsx(
         FIELD_STYLE.base,
+        FIELD_STYLE.text,
+        FIELD_STYLE.placeholder,
         fieldIcon && "ps-10",
         FIELD_STYLE.borderSize[border ?? 1],
-        FIELD_STYLE.roundedSize[roundedSize ?? "lg"],
+        FIELD_STYLE.roundedSize[roundedSize ?? "md"],
 
         FIELD_STYLE.textSize[textSize ?? "sm"],
         FIELD_STYLE.size[fieldSize ?? "md"],
@@ -51,7 +58,7 @@ export const Textarea = (props: Props) => {
 
     return (
         <FieldLayout {...props} >
-            <textarea className={field} {...rest} >
+            <textarea className={field+" scrollbar-thin"} {...rest} >
             </textarea>
         </FieldLayout>
     )

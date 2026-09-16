@@ -1,5 +1,5 @@
 import { Badge } from "@/src/shared/components/badge"
-import { RecordStatusBadge } from "@/src/shared/domains/status"
+import { RecordStatusBadge } from "@/src/shared/domains/recordStatus"
 import { DateColumn } from "@/src/shared/table/core"
 import { ATTRIBUTE_DATATYPE_LABEL } from "../../constants"
 import { AttributeDataTypeDb } from "../../types"

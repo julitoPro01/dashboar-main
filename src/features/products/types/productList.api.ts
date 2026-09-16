@@ -1,36 +1,38 @@
 
 //----------------------------------
 
+import { RecordStatusDb } from "@/src/shared/domains/recordStatus";
+import { VerificationStatusDb } from "@/src/shared/domains/verificationStatus";
 import { MetaPagination } from "@/src/shared/table/pagination";
 
-export type ProductItemResponse = {
+export type ProductListItemResponse = {
     // ------ VISUAL / TABLE --------
     // columna 1
-    image?: string; 
+    image?: { name: string, path: string };
     // columna 2
     name: string;
     // columna 3
     parentSku: string;
     // columna 4
-    category: string;
+    category: {id:number, name:string};
     // columna 5
     variantsCount: number;
     // columna 6
     // Price (range + discount)
-    minPrice: number;
-    maxPrice: number;
+    minPrice: string;
+    maxPrice: string;
+    maxDiscountPercent: string;
     hasDiscount: boolean;
-    maxDiscountPercent: number;
     isUniformDiscount: boolean;
     // columna 7
     // Stock
     totalStock: number;
     lowStockVariantsCount: number;
-    hasLowStock: boolean; 
+    hasLowStock: boolean;
     // columna 8
     // Status
-    productStatus: string;        // recordStatus / saleStatus merged
-    verificationStatus: string;
+    productStatus: RecordStatusDb;        // recordStatus
+    verificationStatus: VerificationStatusDb;
     // columna 9
     // Dates 
     createdAt: Date;
@@ -39,11 +41,10 @@ export type ProductItemResponse = {
     // ------ INTERNAL --------
     id: number;
     publicId: string;
-    lastCategoryId: number;
 }
 
 
 export type ProductListResponse = {
-    products: ProductItemResponse[];
+    products: ProductListItemResponse[];
     meta: MetaPagination;
 }

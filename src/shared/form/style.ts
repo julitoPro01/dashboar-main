@@ -27,9 +27,10 @@ const FIELD_BASE = `
     w-full transition-colors
     focus:shadow-sm focus:outline-none
     bg-surface-light disabled:bg-surface
-    text-base text-text-muted font-medium dark:text-white placeholder:text-text-subtle
+    text-base
     `;
-
+const FIELD_TEXT =" text-text-muted font-medium dark:text-white"
+const FIELD_PLACEHOLDER="placeholder:text-text-subtle";
 
 //------ ESKELETON--------
 
@@ -49,14 +50,16 @@ export const FIELD_STATUS = {
 //---- label ---- span
 export const FIELD_VALIDATION = {
     ["*"]: "after:content-['*'] after:ml-0.5 after:text-error",
-    errorMsg: "text-xs text-error-strong mt-1",
+    errorMsg: "text-xs text-error-strong mt-0.5",
     // warningMsg: "text-xs text-warning-strong mt-1" 
 }
 
-const FIELD_ICON = ` absolute top-1/2 -translate-y-1/2 left-3  text-gray-400 pointer-events-none`;
+const FIELD_ICON = ` absolute top-1/2 -translate-y-1/2  text-gray-400 pointer-events-none`;
 
 export const FIELD_STYLE = {
     base: FIELD_BASE,
+    text:FIELD_TEXT,
+    placeholder:FIELD_PLACEHOLDER,
     borderSize: BORDER_SIZE,
     roundedSize: ROUNDED_SIZE,
     textSize: TEXT_SIZE,

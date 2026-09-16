@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 
-type Values = { min: number, max: number };
+type Values = { min: string, max: string };
 type Errors = Partial<Record<keyof Values, string>>;
 type Init = { values: Values, isActive: boolean, errors: Errors, prev: Values, parsed: Partial<Values> };
 
-const init: Init = { values: { min: 0, max: 0 }, isActive: false, errors: {}, prev: { min: 0, max: 0 }, parsed: {} }
+const init: Init = { values: { min: "", max: "" }, isActive: false, errors: {}, prev: { min: "", max: "" }, parsed: {} }
 
 export const useMinMaxFilter = (val?: Values) => {
 
@@ -14,16 +14,16 @@ export const useMinMaxFilter = (val?: Values) => {
 
     const handleChange = (field: keyof Values, value: string) => {
 
-        const newValues = { ...state.values, [field]: +value };
+        const newValues = { ...state.values, [field]: value };
 
         let isMin = true;
         let isMax = true;
 
         if (newValues.min && newValues.max) {
             if (field === "min")
-                isMin = newValues.min <= newValues.max;
+                isMin = +newValues.min <= +newValues.max;
             if (field === "max")
-                isMax = newValues.max >= newValues.min;
+                isMax = +newValues.max >= +newValues.min;
         }
 
         let msgMin = undefined;
@@ -70,9 +70,9 @@ export const useMinMaxFilter = (val?: Values) => {
 
     const filter: Partial<Values> = Object.fromEntries(
         Object.entries(state.values).filter(([key, value]) =>
-            value > 0 && !state.errors[key as keyof Errors]
+            +value > 0 && !state.errors[key as keyof Errors]
         )
-    ) as Partial<Values>;
+    ) ;
 
     return {
         handleChange, handleOpen, handleClose, handleCancel, handleClean,

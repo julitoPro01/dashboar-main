@@ -1,18 +1,54 @@
 
 import { Name } from "./basic-Information/Name"
-import { Sku } from "./basic-Information/Sku"
 import { Slug } from "./basic-Information/Slug"
 import { ShortDescription } from "./basic-Information/ShortDescription"
+import { DetailedDescription } from "./basic-Information/DetailedDescription"
+import { FormCard } from "@/src/shared/form"
+import { IoInformationCircleOutline } from "react-icons/io5"
+import { Button } from "@/src/shared/components/btn"
+import { MdRestartAlt } from "react-icons/md"
+import { FaCheck } from "react-icons/fa6"
+import { useFormContext, useFormState } from "react-hook-form"
+import { BasicInformationForm } from "../../../types"
 
-export const BasicInformation = () => {
+interface Props {
+    isEdit?: boolean
+}
+
+export const BasicInformation = ({ isEdit }: Props) => {
+
+    const { resetField, control } = useFormContext<BasicInformationForm>();
+
+    const {dirtyFields, isSubmitting} = useFormState({control, name:"basicInfo"})
+
+    const handleReset = () => {
+        resetField("basicInfo")
+    }
+
     return (
-        <>
-            <Name />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5" >
-                <Sku />
+        <FormCard
+            title="Información Básica"
+            titleIcon={<IoInformationCircleOutline />}
+            actionNode={isEdit && <>
+                <Button variant="basic" size="xs" padding="p-0"
+                disabled={isSubmitting || !dirtyFields.basicInfo}
+                onClick={handleReset}>
+                    <MdRestartAlt size={20} />
+                </Button>
+
+                <Button variant="basic" size="xs" padding="p-0" type="submit"
+                loading={isSubmitting}
+                disabled={!dirtyFields.basicInfo}
+                >
+                    <FaCheck size={20} />
+                </Button>
+            </>
+            }
+        >
+                <Name />
                 <Slug />
-            </div>
-            <ShortDescription />
-        </>
+                <ShortDescription />
+                <DetailedDescription />
+        </FormCard>
     )
 }

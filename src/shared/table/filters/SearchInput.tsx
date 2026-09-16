@@ -26,7 +26,7 @@ export const SearchInput = ({onClear,onChange,value,minSearchChars=3,placeholder
 
             <input
                 id="f-company"
-                type="text"
+                type="search"
                 className={clsx(INPUT_FIELD_FILTER_STYLE.base, "pe-8", {
                     [INPUT_FIELD_FILTER_STYLE.states.normal]: valid,
                     [INPUT_FIELD_FILTER_STYLE.states.error]: !valid,

@@ -2,10 +2,10 @@
 import { capitalize } from "@/src/shared/utils";
 import { z } from "zod";
 
-export const CategoryCreateSchema = z.object({
+export const categoryCreateSchema = z.object({
     name: z.string().min(1, "El nombre es requerido").max(120).transform(capitalize),
     description: z.string().nullable().optional(),
-    recordStatudId: z.number().int().positive().nullable().optional(),
+    recordStatusId: z.number().int().positive(),
     slug: z
         .string()
         .min(1)

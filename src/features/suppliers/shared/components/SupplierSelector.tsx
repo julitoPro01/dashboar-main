@@ -10,7 +10,7 @@ import { TablePagination } from "@/src/shared/table/pagination";
 import { useScrollToIndexOnce } from "@/src/shared/hooks";
 
 interface Props {
-  onConfirm: (par: { id: number, name: string, relationMode: SupplierRelationModeDb }) => void;
+  onConfirm: (par: { id: number, name: string, relationMode: SupplierRelationModeDb, capabilities: any[] }) => void;
   filters?: SupplierFilters;
   id?: number;
 }
@@ -40,8 +40,8 @@ export const SupplierSelector = ({ onConfirm, filters = {}, id }: Props) => {
   }
 
   const handleConfirm = () => {
-    const { id, name, relationMode }: SupplierResponse = table.getSelectedRowModel().rows[0].original;
-    onConfirm({ id, name, relationMode })
+    const { id, name, relationMode,capabilities }: SupplierResponse = table.getSelectedRowModel().rows[0].original;
+    onConfirm({ id, name, relationMode,capabilities })
   }
 
   useScrollToIndexOnce({index:id})

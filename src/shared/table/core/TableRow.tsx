@@ -1,8 +1,7 @@
-import { flexRender, Header, HeaderGroup, Row, VisibilityState } from "@tanstack/react-table"
+import { flexRender, Header, HeaderGroup, Row } from "@tanstack/react-table"
 import clsx from "clsx"
 import { memo } from "react";
 import { useSortableItemContext } from "../../sortable";
-// import { useSortableItemContext } from "../../sortable";
 
 export const HeaderRow = <T extends Record<string, any>>({ group }: { group: HeaderGroup<T> }) => {
     return (

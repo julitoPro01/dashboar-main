@@ -1,4 +1,4 @@
-import { RecordStatusDb } from "@/src/shared/domains/status";
+import { RecordStatusDb } from "@/src/shared/domains/recordStatus";
 import { SupplierCapabilityDb } from "./supplierCapability";
 import { SupplierRelationModeDb } from "./supplierRelationMode";
 import { MetaPagination } from "@/src/shared/table/pagination";

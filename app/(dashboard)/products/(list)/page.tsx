@@ -1,4 +1,5 @@
 import { PRODUCT_SORTBY_ACCEPT_ONLY } from "@/src/features/products/constants";
+import { ListProducts } from "@/src/features/products/list";
 import { normalizePaginationParams, PaginationQuery } from "@/src/shared/table/pagination";
 
 
@@ -15,7 +16,7 @@ export default async function ProductsPage({ searchParams }: Props) {
   return (
     <div className="flex flex-col  h-full">
 
-      {/* <ProductList pagination={norPage} /> */}
+      <ListProducts pagination={norPage} />
 
       {/* <LoadingSupplier /> */}
 

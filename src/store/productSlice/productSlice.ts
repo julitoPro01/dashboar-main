@@ -5,27 +5,28 @@ import { ProductFilters } from "@/src/features/products/types";
 export const productSlice = combine<StateProduct, ActionProduct>(
     {
         productFilters: {},
-        loadingProductState: "loaded",
-        selectedProduct: {id:undefined, publicId:undefined, lastCategoryId:undefined, to:undefined , index:undefined},
-        modalTypeProductDetails: { type: undefined, open: false },
-        productDetailsData: undefined
+        productLoadingState: "loaded",
+        productSelected: undefined,
+        productModalTypeDetails: { type: undefined, open: false },
+        productDetailsData: undefined,
     },
     (set, get) => ({
-        setProductFilters:(fil,del)=>{
+        setProductFilters: (fil, del) => {
 
             set(state => {
-                        let currentFilters = state.productFilters ?? {};
-                        if (del && typeof del === "object") {
-                            const entries = Object.entries(del).filter(([_, v]) => v).map(([key]) => key as keyof ProductFilters);
-                            currentFilters = deleteProperties(currentFilters, entries)
-                        }
-                        return { productFilters: { ...currentFilters, ...fil } }
-                    })
+                let currentFilters = state.productFilters ?? {};
+                if (del && typeof del === "object") {
+                    const entries = Object.entries(del).filter(([_, v]) => v).map(([key]) => key as keyof ProductFilters);
+                    currentFilters = deleteProperties(currentFilters, entries)
+                }
+                return { productFilters: { ...currentFilters, ...fil } }
+            })
         },
-        setLoadingProductState: (state) => set({ loadingProductState: state }),
-        setSelectedProduct: (state) => set({ selectedProduct: state }),
+        setProductLoadingState: (state) => set({ productLoadingState: state }),
+        setProductSelect: (state) => set({ productSelected: state }),
 
-        setModalTypeProductDetails: (state) => set({ modalTypeProductDetails: { ...get().modalTypeProductDetails, ...state } }),
-        setProductDetailsData: (state) => set({ productDetailsData: state })
+        setProductModalTypeDetails: (state) => set({ productModalTypeDetails: { ...get().productModalTypeDetails, ...state } }),
+        setProductDetailsData: (state) => set({ productDetailsData: state }),
+
     })
 );
