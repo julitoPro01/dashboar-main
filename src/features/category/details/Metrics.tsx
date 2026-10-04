@@ -1,6 +1,6 @@
 "use client";
-import { AttributeMetrics } from "./ui/AttributeMetrics";
-import { SubCategoryMetrics } from "./ui/SubCategoryMetrics";
+import { AttributeMetrics } from "./metrics/AttributeMetrics";
+import { SubCategoryMetrics } from "./metrics/SubCategoryMetrics";
 
 interface Props {
     productsCount: number;

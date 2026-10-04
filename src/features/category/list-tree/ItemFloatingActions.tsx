@@ -2,7 +2,7 @@
 
 import { FloatingPanel, Tooltip } from "@/src/shared/components/floating";
 import { useStore } from "@/src/store/useStore";
-import { FLOATING_PANEL_TYPE } from "@/src/store/uiSlice/interface";
+import { FLOATING_PANEL_TYPE } from "@/src/store/uiSlice/type";
 import { Button } from "@/src/shared/components/btn";
 import { useItemFloatingAction } from "../shared/hooks";
 import { ActiveInput } from "./itemFloating-action/ActiveInput";
@@ -17,7 +17,7 @@ export const ItemFloatingActions = () => {
 
   const {
     handleDetails, handleEdit, handleDelete,
-    handleManageAttrs, handleNewCategory
+    handleManageCategoryAttrs, handleNewCategory
   } = useItemFloatingAction(mainCategoryPath);
 
   const parentStatus = selected?.paths.find(v => v.id === selected.parentId)?.recordStatus;
@@ -43,7 +43,7 @@ export const ItemFloatingActions = () => {
               onClick={() => handleNewCategory(selected.id)}>Nueva categoría</Button>
             {/* #4 */}
             <Tooltip text={selected?.hasChildren ? "No disponible" : ""} position="bottom">
-              <Button onClick={() => handleManageAttrs(selected.id, selected.paths)} variant="ghost" position="start" disabled={selected?.hasChildren} >
+              <Button onClick={() => handleManageCategoryAttrs(selected.id, selected.paths)} variant="ghost" position="start" disabled={selected?.hasChildren} >
                 Administrar atributos
               </Button>
             </Tooltip>

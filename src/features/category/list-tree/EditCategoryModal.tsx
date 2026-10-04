@@ -4,11 +4,10 @@ import { DynamicModal } from "@/src/shared/components/modal";
 
 import { getAvailableStatuses, RECORD_STATUS_ID, RECORD_STATUS_OPTIONS, serializeRecordStatusLabel } from "@/src/shared/domains/recordStatus";
 import { useCategory, useUpdateCategoryTree } from "../shared/hooks";
-import { Input, Select, Textarea, useBasicForm } from "@/src/shared/form";
+import { FIELD_STYLE, Input, Select, Textarea, useBasicForm } from "@/src/shared/form";
 import { inputMsg } from "@/src/shared/messages";
 import { generateSlug, getDirtyValues } from "@/src/shared/utils";
 import { useBootDataStore } from "@/src/store/useBootDataStore";
-import { INPUT_FIELD_STYLE } from "@/src/shared/theme/inputField";
 import { CiImageOn } from "react-icons/ci";
 import { Button } from "@/src/shared/components/btn";
 import { useEffect } from "react";
@@ -140,14 +139,12 @@ const Render = ({ id = 0, onClose }: { id?: number, name?: string, onClose: () =
           labelOption={{ type: "top", required: true }}
           isDirty={isDirty.recordStatusId} error={isError.recordStatusId}
           onChange={({ target }) => handleChange("recordStatusId", +target.value)}
-          options={statusTransitions.map(v =>
-            <option key={v.value} value={RECORD_STATUS_ID[v.value]} >{serializeRecordStatusLabel(v.value)}</option>
-          )}
+          options={statusTransitions.map(v=>({value:RECORD_STATUS_ID[v.value], label:serializeRecordStatusLabel(v.value) ?? ""}))}
         />
 
         {/* IMAGE */}
         <div className="flex flex-col md:col-span-2 ">
-          <span className={`${INPUT_FIELD_STYLE.label}`}>Imagen</span>
+          <span className={`${FIELD_STYLE.label}`}>Imagen</span>
           <div className="relative group cursor-pointer border-2  border-border-input rounded-xl p-4 flex flex-col items-center justify-center gap-2 hover:border-primary/50 transition-colors bg-surface-light">
             <div className="w-20 h-20 rounded-lg  shadow-sm flex items-center justify-center overflow-hidden border border-slate-100 dark:border-slate-700">
               <CiImageOn className="text-3xl" />

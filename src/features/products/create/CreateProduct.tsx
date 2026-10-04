@@ -3,7 +3,7 @@
 import { ProductFormData, productFormSchema, } from "../types";
 import { useCreateProduct } from "../shared/hooks";
 
-import { BasicInformation, CustomAttributes, Gallery, SupplierSelection, Categorization, RecordStatusInfo } from "../shared/components/product-form";
+import { BasicInformation, Gallery, SupplierSelection, Categorization, RecordStatusInfo, LongDescription } from "../shared/components/product-form";
 import { FormProvider } from "@/src/shared/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,19 +14,27 @@ import { VERIFICATION_STATUS_ID } from "@/src/shared/domains/verificationStatus"
 import { INVENTORY_STATUS_ID, SALES_STATUS_ID } from "@/src/shared/domains/catalog";
 import { ATTRIBUTE_INPUT_CONFIG } from "../constants";
 import { FormActions } from "./FormActions";
+import { useStore } from "@/src/store/useStore";
 
 
 export const CreateProduct = () => {
 
+  const refreshCustomOriginal = useStore(v => v.productRefreshOriginalLongDescriptionCreate);
+
+  const initLong = useStore.getState().productOriginalLongDescription.originalCreate;
+
   const user = useBootDataStore(v => v.user);
-  const form = useForm({
+  const form = useForm<ProductFormData>({
     resolver: zodResolver(productFormSchema),
     defaultValues: {
-      customAttributes: [],
       categorization: {
         systemAttributes: [],
       },
-      images: []
+      images: [],
+      longDescription: {
+        description: initLong.description,
+        customProperties: initLong.customProperties
+      }
     }
   })
 
@@ -83,13 +91,14 @@ export const CreateProduct = () => {
         else return undefined;
       }).filter(Boolean) as [];
     // ATRIBUTOS PERSONALIZADOS
-    const custom = val.customAttributes?.map(v => getHasValues(v)).filter(v => Object.keys(v).length > 0);
+    const json = val.longDescription ? JSON.stringify(val.longDescription) : undefined;
+    const longDescription = json ? JSON.parse(json) : undefined
 
     await mutateAsync({
       name: val.basicInfo.name,
       slug: val.basicInfo.slug,
       shortDescription: val.basicInfo.shortDescription,
-      longDescription: val.basicInfo.longDescription,
+      longDescription,
 
       categoryId: val.categorization.category.id,
       supplierId: val.supplier.id,
@@ -110,7 +119,6 @@ export const CreateProduct = () => {
       })),
 
       systemAttributes: system,
-      customAttributes: custom,
 
       createdBy: user.name,
       createdById: user.id
@@ -118,8 +126,12 @@ export const CreateProduct = () => {
     },
       {
         onSuccess(val) {
-          if (val.ok)
+          if (val.ok){
+            // Restablecemos el formulario
             form.reset();
+            // refrescamos la data original a otra version
+            refreshCustomOriginal()
+          }
         }
       }
     )
@@ -129,19 +141,18 @@ export const CreateProduct = () => {
   return (
     <FormProvider form={form} onSubmit={handleSubmit}>
 
-      <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-3">
+      <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-3">
         <div className="col-span-3 space-y-6 lg:col-span-2">
           <BasicInformation />
           <Gallery />
           <Categorization />
-          <CustomAttributes />
+          <LongDescription />
         </div>
 
         <div className="col-span-3 space-y-6 lg:col-span-1 lg:sticky lg:top-6">
           <SupplierSelection />
           <br />
-          {/* <CatalogVisibilitySettings /> */}
-          <RecordStatusInfo/>
+          <RecordStatusInfo />
         </div>
       </div>
       <FormActions />

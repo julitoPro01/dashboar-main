@@ -90,9 +90,9 @@ los nombres yendo de la acción general a la entidad específica - useRefreshSel
 
 
 ## EXPORTACION DE ARCHIVOS DE UNA CARPETA
-1. Si existe un archivo con el mismo nombre de  la carpeta, sera el unico que sera exportado.
-2. Si los archivos contienen nombres distintos a la carpeta, todos seran exportados.
-
+1. Toda exportación sera por medío del archivo index.js
+2. Si la carpeta contiene un archivo con su mismo nombre, sera el unico exportable.
+3. Los subcarpetas dentro de la carpeta entidad de features, hacen refente a las paginas. 
 <!-- -----------CRUD---------------------- -->
 ## DIFERENCIA ENTRE UPDATE Y EDIT
 # Edit -> cambio visual en pantalla editField, editName.

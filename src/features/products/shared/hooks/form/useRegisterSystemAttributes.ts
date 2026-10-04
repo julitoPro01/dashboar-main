@@ -1,6 +1,6 @@
 import { useFormContext, useWatch } from "react-hook-form";
 import { CategorizationForm } from "../../../types";
-import { useCategoryAttributes } from "./useCategoryAttributes";
+import { useSystemAttributes } from "./useSystemAttributes";
 import { useEffect, useRef } from "react";
 
 
@@ -14,7 +14,7 @@ export const useRegisterSystemAttributes = (props: Props) => {
 
     const categoryId = useWatch({ control, name: "categorization.category.id" });
 
-    const { getAttributes } = useCategoryAttributes({
+    const { getAttributes } = useSystemAttributes({
         categoryId: categoryId,
         entity: props.entity,
         id: props.id

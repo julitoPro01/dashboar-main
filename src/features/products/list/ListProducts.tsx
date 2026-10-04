@@ -2,8 +2,8 @@
 
 import { useStore } from "@/src/store/useStore";
 import { APP_ROUTES } from "@/src/shared/routes";
-import { columns } from "./table/Columns";
-import { Table } from "./table/Table";
+import { columns } from "./list-products/Columns";
+import { Table } from "./list-products/Table";
 import { PaginationState, useStableUrlPagination } from "@/src/shared/table/pagination";
 import { TableProvider } from "@/src/shared/table/core";
 import { useProducts } from "../shared/hooks";

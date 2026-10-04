@@ -1,2 +1,2 @@
 export * from './categorySlice';
-export * from './interface';
+export * from './type';

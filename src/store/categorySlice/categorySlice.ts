@@ -1,5 +1,5 @@
 import { combine } from "zustand/middleware";
-import { ActionCategory, StateCategory } from "./interface";
+import { ActionCategory, StateCategory } from "./type";
 
 const init: StateCategory = {
 

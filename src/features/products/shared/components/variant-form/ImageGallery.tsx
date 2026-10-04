@@ -2,8 +2,11 @@
 import { IoImagesOutline } from "react-icons/io5"
 import { useCrudImageGallery } from "../../hooks"
 import { DragDropProvider } from "@dnd-kit/react";
-import { SortableImageCard } from "../gallery/SortableImageCard";
-import { AddImageCard, FIELD_VALIDATION } from "@/src/shared/form";
+import { SortableImageCard } from "../SortableImageCard";
+import { AddImageCard, FIELD_STYLE, FIELD_VALIDATION } from "@/src/shared/form";
+import { Control, useWatch } from "react-hook-form";
+import { VariantForm } from "../../../types";
+import { mapSystemAttributesToView } from "../../helpers";
 
 export const ImageGallery = () => {
 
@@ -16,7 +19,8 @@ export const ImageGallery = () => {
         currentCount,
         error,
         images,
-        maxImages
+        maxImages,
+        control
     } = useCrudImageGallery();
 
     return (
@@ -38,7 +42,7 @@ export const ImageGallery = () => {
                 </span>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3  gap-5">
+            <div className="grid grid-cols-2 sm:grid-cols-3  gap-4">
 
                 <DragDropProvider onDragEnd={handleDragEnd} >
                     {images.map((v, i) => {
@@ -68,7 +72,13 @@ export const ImageGallery = () => {
                 }
             </div>
 
-            <span className="text-xs  text-text-muted block mb-1"> Variante: Negro / M </span>
+            {/* FOOTER */}
+            {
+                error && <span className={FIELD_STYLE.validation.errorMsg}> {error.message} </span>
+            }
+
+            <VariantSummary control={control} />
+
             <footer className="border-t border-border bg-surface-light px-6 py-4">
 
                 <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-text-muted">
@@ -87,3 +97,23 @@ export const ImageGallery = () => {
         </section>
     )
 }
+
+const VariantSummary = ({
+    control,
+}: {
+    control: Control<VariantForm>;
+}) => {
+    const systemProperties = useWatch({
+        control,
+        name: "categorization.systemAttributes",
+    });
+
+    const summary = mapSystemAttributesToView(systemProperties)
+        .map(v => v.value).join(" / ");
+
+    return (
+        <span className="block text-xs font-medium text-text-muted">
+            Variante: {summary || "Sin propiedades configuradas"}
+        </span>
+    );
+};

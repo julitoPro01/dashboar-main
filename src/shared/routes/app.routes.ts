@@ -19,7 +19,7 @@ export const APP_ROUTES = {
     EDIT: (publicId: string) => `/products/${publicId}/edit`,
     CATEGORIES: '/products/categories',
     INVENTORY: '/products/inventory',
-    VARIANT:(publicId:string)=>`/products/${publicId}/variant`
+    VARIANTS:(publicId:string)=>`/products/${publicId}/variants`
   },
 
   SUPPLIERS: {

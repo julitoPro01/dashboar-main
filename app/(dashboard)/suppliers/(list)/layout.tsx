@@ -1,4 +1,4 @@
-import { Details, RowFloatingActions, TopMenu } from "@/src/features/suppliers/list"
+import { SupplierDetailsModal, RowFloatingActions, TopMenu } from "@/src/features/suppliers/list"
 
 export default async function Layout({ children }: { children: React.ReactNode; }) {
 
@@ -10,7 +10,7 @@ export default async function Layout({ children }: { children: React.ReactNode; 
 
             <RowFloatingActions />
             {/* Modal */}
-            <Details />
+            <SupplierDetailsModal />
 
         </div>
     )

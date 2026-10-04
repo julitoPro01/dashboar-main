@@ -1,3 +1,4 @@
+"use client"
 import { createProduct } from "@/src/action/product";
 import { ToastError, ToastSuccess } from "@/src/shared/components/toaster";
 import { errorMessages, getErrorMessage, successMessage } from "@/src/shared/messages";

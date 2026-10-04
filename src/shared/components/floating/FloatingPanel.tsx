@@ -15,12 +15,12 @@ import {
 
     FloatingOverlay,
 } from "@floating-ui/react";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useFloatingPanel } from "./useFloatingPanel";
 import { FloatingPanelType } from "@/src/store/uiSlice";
 
-
+type FloatingSize = "sm" | "md" | "lg" | "xl";
 interface Props {
     panelType: FloatingPanelType;
     children: React.ReactNode;
@@ -29,8 +29,13 @@ interface Props {
     offsetDistance?: number;
     isVirtual?: boolean;
     overlay?: boolean;
+    className?: string;
+    size?: FloatingSize;
 }
-
+/**
+ * Aplica una apariencia predefinida.
+ * Cuando se especifica `variant`, `className` es ignorado.
+ */
 export const FloatingPanel = ({
     panelType,
     children,
@@ -38,7 +43,9 @@ export const FloatingPanel = ({
     placement = "bottom-start",
     offsetDistance = 8,
     isVirtual = true,
-    overlay = true
+    overlay = true,
+    className = "",
+    size = "sm",
 }: Props) => {
     const { isOpen, cx, cy, close } = useFloatingPanel(panelType);
     const pathname = usePathname();
@@ -102,7 +109,7 @@ export const FloatingPanel = ({
             close();
             onEffectClose?.();
         }
-    }, [pathname]); 
+    }, [pathname]);
 
     if (!isOpen) return null;
 
@@ -120,11 +127,21 @@ export const FloatingPanel = ({
                 ref={refs.setFloating}
                 style={floatingStyles}
                 {...getFloatingProps()}
-                className="z-50 shadow-dropdown border border-border rounded-lg overflow-hidden"
-
+                className={`z-50
+                    ${sizeClasses[size]}
+                    ${className}`}
             >
                 {children}
             </div>
         </FloatingPortal>
     );
 };
+
+
+const sizeClasses: Record<FloatingSize, string> = {
+    sm: "w-52",
+    md: "w-72",
+    lg: "w-96",
+    xl: "w-[32rem]",
+};
+

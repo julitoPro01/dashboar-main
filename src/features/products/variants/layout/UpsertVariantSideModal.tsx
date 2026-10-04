@@ -10,21 +10,18 @@ export const UpsertVariantSideModal = () => {
 
     if (!upsertVariant) return;
 
-    return (
-        <>
-            {
-                upsertVariant.type === "create"
-                    ? <CreateVariant />
-                    : upsertVariant.type === "edit"
-                        ? <EditVariant variantId={upsertVariant.variantId} />
-                        : null
-            }
-        </>
-    )
+    if(upsertVariant.type==="create")
+        return <CreateVariant />
+
+    if(upsertVariant.type==="edit")
+       return <EditVariant variantId={upsertVariant.variantId} />
+
+    return null;
 }
 
 
-const CreateVariant = () => {
+const CreateVariant = ({}) => {
+
 
     return (
         <SideModal

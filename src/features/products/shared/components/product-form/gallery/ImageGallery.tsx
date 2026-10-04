@@ -4,11 +4,11 @@ import { AddImageCard, FIELD_STYLE, FIELD_VALIDATION } from "@/src/shared/form";
 import { Button } from "@/src/shared/components/btn";
 import { MdRestartAlt } from "react-icons/md";
 import { FaCheck } from "react-icons/fa6";
-import { SortableImageCard } from "../../gallery/SortableImageCard";
+import { SortableImageCard } from "../../SortableImageCard";
 import { useCrudImageGallery } from "../../../hooks";
-type Props = { isEdit?: boolean }
+type Props = { isEdit?: boolean, isSubmitting?: boolean }
 
-export const ImageGallery = ({ isEdit }: Props) => {
+export const ImageGallery = ({ isEdit, isSubmitting }: Props) => {
 
     const {
         handleAdd,
@@ -17,7 +17,6 @@ export const ImageGallery = ({ isEdit }: Props) => {
         handleReset,
         handleSetPrimary,
         handleUpdate,
-        isSubmitting,
         error,
         dirty,
         currentCount,
@@ -27,7 +26,7 @@ export const ImageGallery = ({ isEdit }: Props) => {
 
 
     return (
-        <section className="px-8 py-6 rounded-2xl border border-border bg-surface">
+        <section className="px-8 py-6 rounded-2xl border border-border bg-surface-black">
 
             {/* HEADER */}
             <header className="pb-3 flex items-center justify-between border-b border-border">
@@ -107,8 +106,7 @@ export const ImageGallery = ({ isEdit }: Props) => {
             <div className="pb-6">
                 {error && <span className={FIELD_STYLE.validation.errorMsg}> {error.message} </span>}
             </div>
-
-            <footer className="border-t border-border bg-surface-light px-6 py-4">
+            <footer className="border-t border-border bg-bg-soft-blue px-6 py-4">
 
                 <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-text-muted">
 

@@ -3,7 +3,7 @@ import { CatalogRules } from "./CatalogoRules"
 import { CommercialInfo } from "./CommercialInfo"
 import { Inventory } from "./Inventory"
 import { OperationalStatus } from "./OperationStatus"
-import { Properties } from "./Properties"
+import { SystemProperties } from "./SystemProperties"
 import { FormActions } from "./FormActions"
 import { ImageGallery } from "./ImageGallery"
 import { FormProvider } from "@/src/shared/form"
@@ -11,23 +11,60 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { variantFormSchema } from "../../../types"
 import { useStore } from "@/src/store/useStore"
+import { useSystemAttributes } from "../../hooks"
 
-type Props = { isEdit?: false } | { isEdit: true, variantId: number }
+type Props =
+    { isEdit?: false }
+    | { isEdit: true, variantId: number }
 
 export const VariantForm = (props: Props) => {
 
     const { category } = useStore(v => v.variantBaseProduct)!;
 
+    const variantId = props.isEdit ? props.variantId : undefined
+    const { getAttributes } = useSystemAttributes({ categoryId: category.id, entity: "variant", id: variantId });
+
     const form = useForm({
         resolver: zodResolver(variantFormSchema),
-        defaultValues: {
-            categorization: { category }
+        mode: "onChange",
+        defaultValues: async () => {
+
+            const data = await getAttributes();
+
+            const mapped = data.map(v => ({
+                group: v.group,
+                attributes: v.attributes.map(v => ({
+                    attributeDefinitionId: v.attributeDefinitionId,
+                    dataType: v.dataType,
+                    name: v.name,
+                    systemAttributeValues: v.systemAttributeValues,
+
+                    valueText: v.valueText,
+                    valueNumber: v.valueNumber,
+                    valueBoolean: v.valueBoolean,
+                    valueDate: v.valueDate,
+                    valueOptionIds: v.valueOptionIds,
+
+                    isRequired: v.isRequired
+                }))
+            }))
+
+            return {
+                categorization: {
+                    category,
+                    systemAttributes: mapped
+                },
+                commercialInfo: undefined,
+                inventory: undefined,
+                images: []
+            }
         }
     });
 
     const handleSubmit = () => {
 
     }
+
 
     return (
 
@@ -39,8 +76,8 @@ export const VariantForm = (props: Props) => {
                 {/* 01 */}
                 {
                     props.isEdit
-                        ? <Properties isEdit id={props.variantId} />
-                        : <Properties />
+                        ? <SystemProperties />
+                        : <SystemProperties />
                 }
 
                 <div className="border-b border-border-subtle"></div>

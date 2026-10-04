@@ -7,22 +7,12 @@ import { Store } from "../store.type";
 
 
 export const attributeSlice: StateCreator<Store, [], [], AttributeSlice> = (set) => ({
-
+    
+    
     attributeFilters: {},
-    attributeSelected: undefined,
-    attributeDeleteModal: undefined,
-    attributeEditModal: undefined,
-
-    categoryAttrsFilters: { selection: { type: "all" }, actionType: "view" },
-    categoryAttrsSelectedIds: [],
-    categoryAttrStoreHistory: { prevActionType: undefined },
-    categorySelectModal: { isOpen: false, paths: undefined, isParent: false },
-
-    attributeCreateModal: false,
-
     setAttributeFilters: (fil, del) => {
         set(state => {
-
+            
             let currentFilters = state.attributeFilters ?? {};
             if (del && typeof del === "object") {
                 const entries = Object.entries(del).filter(([_, v]) => v).map(([key]) => key as keyof AttributeFilters);
@@ -31,11 +21,12 @@ export const attributeSlice: StateCreator<Store, [], [], AttributeSlice> = (set)
             return { attributeFilters: { ...currentFilters, ...fil } }
         })
     },
+    attributeSelected: undefined,
     setAttributeSelect: (value) => set({ attributeSelected: value }),
+    
+    attributeDeleteModal: undefined,
     setAttributeDeleteModal: val => set({ attributeDeleteModal: val }),
-    setAttributeEditModal: val => set({ attributeEditModal: val }),
-    // Despues de eliminar un atributo
-    AttributeResetStateAfterDelete() {
+    AttributeResetStateAfterDelete() { // Despues de eliminar un atributo
         set({
             attributeDeleteModal: undefined,
             attributeSelected: undefined,
@@ -43,36 +34,50 @@ export const attributeSlice: StateCreator<Store, [], [], AttributeSlice> = (set)
         })
     },
 
+    attributeEditModal: undefined,
+    setAttributeEditModal: val => set({ attributeEditModal: val }),
+
+    categoryAttrsSelectedIds: [],
     setCategoryAttrsSelectedIds: call => {
         set((state) => {
             const vals = typeof call === "function" ? call(state.categoryAttrsSelectedIds) : call
             return { categoryAttrsSelectedIds: vals }
         })
     },
+
+    categoryAttrStoreHistory: { prevActionType: undefined },
+    categoryAttrsFilters: { selection: { type: "all" }, actionType: "view" },
     setCategoryAttrsFilters: (obj) => {
         set(state => {
-
+            
             const rest = typeof obj === "function" ? obj(state.categoryAttrsFilters) : obj
-
+            
             let currentFilters = state.categoryAttrsFilters ?? { actionType: "view" };
             if (rest.del && typeof rest.del === "object") {
-
+                
                 const entries = Object.entries(rest.del).filter(([_, v]) => v).map(([key]) => key as keyof CategoryAttrFilters);
                 currentFilters = { ...deleteProperties(currentFilters, entries), actionType: currentFilters.actionType ?? "view" }
             }
             let prevActionType = state.categoryAttrStoreHistory.prevActionType;
             if (state.categoryAttrsFilters.actionType !== rest.fil?.actionType)
                 prevActionType = state.categoryAttrsFilters.actionType
-
+            
             return {
                 categoryAttrsFilters: { ...currentFilters, ...rest.fil },
                 categoryAttrStoreHistory: { ...state.categoryAttrStoreHistory, prevActionType }
             }
         })
     },
-    setCategorySelectModal: (val) => set((state) => ({ categorySelectModal: { ...state.categorySelectModal, ...val } })),
-    setCategoryAttrsDeleteModal: val => set({ categoryAttrsDeleteModal: val }),
-    setCategoryAttrsInvalidationReason: val => set({ categoryAttrsInvalidationReason: val }),
 
+    categorySelectModal: { isOpen: false, paths: undefined, isParent: false },
+    setCategorySelectModal: (val) => set((state) => ({ categorySelectModal: { ...state.categorySelectModal, ...val } })),
+
+    categoryAttrsDeleteModal:undefined,
+    setCategoryAttrsDeleteModal: val => set({ categoryAttrsDeleteModal: val }),
+
+    categoryAttrsInvalidationReason:undefined,
+    setCategoryAttrsInvalidationReason: val => set({ categoryAttrsInvalidationReason: val }),
+    
+    attributeCreateModal: false,
     setAttributeCreateModal: open => set({ attributeCreateModal: open })
 });

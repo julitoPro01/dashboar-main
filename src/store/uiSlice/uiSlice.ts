@@ -1,5 +1,5 @@
 import { StateCreator } from "zustand";
-import type { ControlsFloatingState, UiSlice } from './interface';
+import type { ControlsFloatingState, UiSlice } from './type';
 import { Store } from '../store.type';
 
 const initFP: ControlsFloatingState = { cx: 0, cy: 0, open: false, type: null, status: "success" };

@@ -3,7 +3,7 @@ import { auth } from "@/auth.config";
 import { LayoutPanel } from "./ui/LayoutPanel";
 import { getCategories } from "@/src/action/category";
 import { ErrorServer } from "@/src/shared/components/error";
-import { DeleteCategoryModal, ItemFloatingActions, InfoCategories, MainCategories, SubCategories, EditCategoryModal } from "@/src/features/category/list-tree";
+import { DeleteCategoryModal, ItemFloatingActions, CategoryStats, MainCategories, SubCategories, EditCategoryModal } from "@/src/features/category/list-tree";
 
 interface Props { searchParams: { order?: string } }
 
@@ -28,7 +28,7 @@ export default async function CategoriesPage({ searchParams }: Props) {
   return (
     <div className="flex flex-col gap-6 w-full h-full pt-6  text-black">
 
-      <InfoCategories />
+      <CategoryStats />
 
       <div className="h-full shadow-card border rounded-t-xl overflow-hidden border-border bg-surface">
 

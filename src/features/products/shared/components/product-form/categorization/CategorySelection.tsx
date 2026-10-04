@@ -1,15 +1,15 @@
 
 import { DynamicModal } from "@/src/shared/components/modal"
-import clsx from "clsx"
 import { useEffect, useState } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
-import { MdExpandMore } from "react-icons/md"
+import { MdOutlineCategory } from "react-icons/md"
 import { SearchInput, useSearchFilter } from "@/src/shared/table/filters"
 import { CategoryTreeSelector } from "@/src/features/category/shared/components"
 import { CatgTreeSelectorSelected } from "@/src/features/category/types"
 import { CategorizationForm } from "@/src/features/products/types"
 import { FIELD_STYLE } from "@/src/shared/form"
 import { CiWarning } from "react-icons/ci"
+import { LuArrowRightLeft } from "react-icons/lu"
 
 export const CategorySelection = () => {
 
@@ -18,7 +18,7 @@ export const CategorySelection = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const { setValue, control, register } = useFormContext<CategorizationForm>();
-    const { errors, dirtyFields } = useFormState({ control, name: "categorization.category" });
+    const { errors } = useFormState({ control, name: "categorization.category" });
     const selected = useWatch({ control, name: "categorization.category" });
 
     const handleOpenModal = () => {
@@ -49,62 +49,82 @@ export const CategorySelection = () => {
     return (
         <>
             <div className="w-full">
-                <div className="space-y-2">
 
-                    <div className="flex flex-wrap items-center">
-                        <span className={FIELD_STYLE.label + " " + FIELD_STYLE.validation["*"]}>Categoría asignado</span>
+                <div className="rounded-md">
+                    {/* Label */}
+                    <div className="mb-3 flex items-center gap-4">
+                        <span
+                            className={
+                                FIELD_STYLE.label +
+                                " " +
+                                FIELD_STYLE.validation["*"]
+                            }
+                        >
+                            Categoría asignada
+                        </span>
+               
                     </div>
 
-                    <button className={clsx(
-                        FIELD_STYLE.base,
-                        FIELD_STYLE.size["md"],
-                        FIELD_STYLE.borderSize[1],
-                        FIELD_STYLE.roundedSize.lg,
-                        errors.categorization?.category
-                            ? FIELD_STYLE.status.error
-                            : dirtyFields.categorization?.category ? FIELD_STYLE.status.dirty : FIELD_STYLE.status.normal,
-                        "text-start relative")}
-                        type="button"
-                        onClick={handleOpenModal}
-                    >
-                        <span className="text-text-muted text-sm"> {selected?.name ?? "Seleccionar"} </span>
-
-                        <div className=" absolute right-0 pr-1 top-0 flex items-center h-full text-text-muted">
-                            <MdExpandMore size={20} />
+                    {/* Category */}
+                    <div className=" flex items-center bg-bg-select gap-3 rounded-md border border-border-input px-3 py-3">
+                        <div className="mt-0.5 shrink-0 text-primary">
+                            <MdOutlineCategory size={21} />
                         </div>
-                    </button>
 
+                        <div className="min-w-0 flex-1">
+                            {selected?.path ? (
+                                <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-sm">
+                                    {selected.paths?.map(({ name, id }, index) => (
+                                        <div
+                                            key={id}
+                                            className="flex items-center gap-x-1.5"
+                                        >
+                                            <span
+                                                className={
+                                                    index === countpaths - 1
+                                                        ? "font-medium text-primary"
+                                                        : "text-text"
+                                                }
+                                            >
+                                                {name}
+                                            </span>
+
+                                            {index < countpaths - 1 && (
+                                                <span className="text-xs text-text-subtle">
+                                                    ›
+                                                </span>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <span className="text-sm text-text-muted">
+                                    Sin categoría asignada
+                                </span>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Action */}
+                    <div className="mt-3 flex justify-end">
+                        <button
+                            type="button"
+                            className=" inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary/10 focus:outline-none focus:ring-2 focus:ring-primary/20 "
+                            onClick={handleOpenModal}
+                        >
+                            <LuArrowRightLeft size={16} />
+                           {selected ? "Cambiar categoría":"Seleccionar"} 
+                        </button>
+                    </div>
                 </div>
+
                 {/* ERROR MSG */}
                 {errors.categorization?.category && <span className={FIELD_STYLE.validation.errorMsg}>{errors.categorization.category.message}</span>}
                 {/* CATEGORIAS SELECCIONADOS */}
 
-                {(selected?.paths) && (
-                    <div className="mt-2 flex flex-wrap items-center gap-x-1.5 rounded-md bg-bg-soft-blue px-4 py-1.5 text-sm">
-                        {selected.paths.map(({ name, id }, index) => {
-
-                            return <div key={id} className="flex items-center gap-x-1.5">
-                                <span
-                                    className={
-                                        index === countpaths - 1
-                                            ? "text-primary"
-                                            : "text-text"
-                                    }
-                                >
-                                    {name}
-                                </span>
-
-                                {index < countpaths - 1 && (
-                                    <span className="text-xs text-text-subtle">❯</span>
-                                )}
-                            </div>
-                        })}
-                    </div>
-                )}
 
                 {selected && <>
-                    <br />
-                    <div className="flex items-start gap-2.5 rounded-md border border-amber-200 bg-amber-50 px-3 py-2.5">
+                    <div className="flex my-4 items-start gap-2.5 rounded-md border border-amber-200 bg-amber-50 px-3 py-2.5">
                         <CiWarning
                             size={22}
                             className="mt-0.5 shrink-0 text-amber-600"
@@ -119,7 +139,6 @@ export const CategorySelection = () => {
                         </p>
                     </div>
                 </>}
-
 
             </div>
 

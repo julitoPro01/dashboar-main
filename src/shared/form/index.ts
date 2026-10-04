@@ -1,6 +1,5 @@
 export * from './CheckBox';
 export * from './FieldSkeleton';
-export * from './FilterInput';
 export * from './Input';
 export * from './ImageFileBtn';
 export * from './MultiSelect';
@@ -18,3 +17,5 @@ export * from './hooks/useBasicForm';
 export * from './hooks/useSearch';
 
 export * from './style'
+
+export * from './rich-text-editor/RichTextEditor';

@@ -1,8 +1,8 @@
 import clsx from "clsx";
-import { INPUT_FIELD_FILTER_STYLE } from "../../theme/inputField";
 import { FiSearch } from "react-icons/fi";
 import { Button } from "../../components/btn";
 import { IoClose } from "react-icons/io5";
+import { FIELD_STYLE } from "../../form";
 
 interface Props {
   value: string;
@@ -27,9 +27,16 @@ export const SearchInput = ({onClear,onChange,value,minSearchChars=3,placeholder
             <input
                 id="f-company"
                 type="search"
-                className={clsx(INPUT_FIELD_FILTER_STYLE.base, "pe-8", {
-                    [INPUT_FIELD_FILTER_STYLE.states.normal]: valid,
-                    [INPUT_FIELD_FILTER_STYLE.states.error]: !valid,
+                className={clsx(FIELD_STYLE.base, "pe-8 [&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-decoration]:appearance-none ", 
+                    FIELD_STYLE.borderSize[1],
+                    FIELD_STYLE.roundedSize.lg,
+                    FIELD_STYLE.text,
+                    FIELD_STYLE.textSize.sm,
+                    FIELD_STYLE.size.sm,
+                    FIELD_STYLE.placeholder,
+                    {
+                    [FIELD_STYLE.status.normal]: valid,
+                    [FIELD_STYLE.status.error]: !valid,
                 })}
                 placeholder={placeholder ?? "Buscar... (min. 3)"}
                 value={value}

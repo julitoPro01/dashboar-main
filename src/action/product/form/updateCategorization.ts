@@ -26,10 +26,7 @@ export const updateCategorization = async ({ productId, data }: PayloadProps) =>
 
             // Eliminar atributos del sistema actuales
             await tx.productAttributeValue.deleteMany({
-                where: {
-                    productId,
-                    customName: null
-                }
+                where: { productId}
             });
 
             // Crear los valores actuales

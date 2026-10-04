@@ -15,6 +15,7 @@ export const FormActions = () => {
 
             <Button
                 variant="confirm"
+                type="submit"
             >
                <FaCheck/> Crear variante
             </Button>

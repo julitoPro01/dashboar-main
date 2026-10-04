@@ -22,6 +22,11 @@ interface Props {
     className?: string;
 }
 
+/**
+ * Acciónes vertica flotante
+ * @param param0 
+ * @returns 
+ */
 export const FloatingActionBar = ({ children, position = "top-c", padding = "p-1.5", className,
     variant = "secondary"
 }: Props) => {

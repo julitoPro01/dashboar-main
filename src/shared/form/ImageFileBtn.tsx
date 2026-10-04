@@ -1,3 +1,4 @@
+"use client"
 import { ChangeEvent, useRef } from "react";
 
 interface Props {

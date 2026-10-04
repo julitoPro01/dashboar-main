@@ -36,7 +36,7 @@ export const FieldLayout = ({
 
 
     return (
-        <div className={`flex flex-col ${className} gap-0.5`}>
+        <div className={`flex flex-col w-full ${className} gap-0.5`}>
 
             {(labelOption?.type === "top") &&
                 <div className="flex flex-col gap-1 mb-1">
@@ -91,12 +91,9 @@ export const FieldLayout = ({
                     </label>
                 }
 
-
-
                 {(label && labelOption?.type === "top-floating") && <>
-                    <span className="absolute text-xs px-1 h-1 bg-surface-light top-0 left-2.25  text-transparent select-none">{label}</span>
-                    <label htmlFor={id}
-                        className={`absolute text-xs font-semibold  -top-2 left-3 text-text-muted block select-none ${labelOption.required && FIELD_STYLE.validation["*"]}`} >{label}</label>
+                    <label htmlFor={id} className={`absolute text-xs font-semibold bg-surface  -top-2 left-2 px-1 block select-none ${labelOption.required && FIELD_STYLE.validation["*"]
+                        }`}>{label}</label>
                 </>}
 
                 {children}
@@ -105,7 +102,7 @@ export const FieldLayout = ({
 
             {
                 (labelOption?.type === "top-floating" || (labelOption?.type === "top" && labelOption.descrPosition === "bottom"))
-                &&
+                && labelOption.description &&
                 <p className="text-xs text-text-muted mt-1">
                     {labelOption.description}
                 </p>

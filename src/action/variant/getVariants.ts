@@ -51,7 +51,6 @@ export const getVariants = async (props: Props) => {
                         varianAttributesValue: {
                             select: {
                                 id: true,
-                                customName: true,
                                 valueText: true,
                                 valueNumber: true,
                                 valueBoolean: true,

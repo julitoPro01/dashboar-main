@@ -35,7 +35,6 @@ export const Input = (props: Props) => {
         isDirty,
         labelOption,
         iconPosition = "left",
-        maxLength,
         maxLengthLabel,
         currentLengthLabel,
 
@@ -55,6 +54,9 @@ export const Input = (props: Props) => {
         FIELD_STYLE.textSize[textSize ?? "sm"],
         FIELD_STYLE.size[fieldSize ?? "md"],
         FIELD_STYLE.status[status],
+        rest.type === "number"
+            ? "[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+            : "",
         fieldClass
     )
 

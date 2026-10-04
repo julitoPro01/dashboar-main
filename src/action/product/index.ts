@@ -13,7 +13,5 @@ export * from './form/getProductForm';
 export * from './form/updateBasicInformation';
 export * from './form/updateGallery';
 export * from './form/updateCategorization';
-export * from './form/updateCustomAttrs';
 
-export * from './form/getCategoryAttributes';
-export * from './form/getCustomAttributes';
+export * from './form/getSystemAttributes';

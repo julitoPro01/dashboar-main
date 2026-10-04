@@ -1,14 +1,12 @@
 import { FieldErrors, FormState, UseFormRegister, } from "react-hook-form"
-import clsx from "clsx";
 import { FaLocationDot } from "react-icons/fa6";
-import { LogoUpload } from "./field-supplier/Logo.Upload";
-import { RelacionModeSelect } from "./field-supplier/RelacionMode.select";
-import { INPUT_FIELD_STYLE } from "@/src/shared/theme/inputField";
+import { LogoUpload } from "./supplier-form/LogoUpload";
+import { RelacionModeSelect } from "./supplier-form/RelacionModeSelect";
 import { IoInformationCircleOutline } from "react-icons/io5";
 import { MdOutlineStorefront } from "react-icons/md";
 import { SupplierForm as SupplierFormType } from "../../types";
 import { SUPPLIER_CAPABILITIES_LABELS } from "../../constants";
-import { FormCard, Input, Textarea } from "@/src/shared/form";
+import { FIELD_STYLE, FormCard, Input, Textarea } from "@/src/shared/form";
 
 interface Props {
     register: UseFormRegister<SupplierFormType>;
@@ -68,8 +66,8 @@ export const SupplierForm = ({ register, errors, dirty }: Props) => {
                 <RelacionModeSelect register={register} errorMsg={errors.relationMode?.message} dirty={dirty?.relationMode} />
 
                 <div className="space-y-2">
-                    <span className={`${INPUT_FIELD_STYLE.label} flex flex-col gap-1`}>
-                        <span className={`${INPUT_FIELD_STYLE.isRequired} text-slate-600 dark:text-slate-300`}>Capacidades</span>
+                    <span className={`${FIELD_STYLE.label} flex flex-col gap-1`}>
+                        <span className={`${FIELD_STYLE.validation["*"]} text-slate-600 dark:text-slate-300`}>Capacidades</span>
                         <span className="text-xs text-text-muted font-normal" >Seleccione las opciones que apliquen.</span>
                     </span>
 
@@ -89,7 +87,7 @@ export const SupplierForm = ({ register, errors, dirty }: Props) => {
                             </div>
                         ))}
                     </div>
-                    {errors.capabilities && <span className={INPUT_FIELD_STYLE.labelError} > {errors.capabilities.message} </span>}
+                    {errors.capabilities && <span className={FIELD_STYLE.validation.errorMsg} > {errors.capabilities.message} </span>}
 
                 </div>
             </FormCard>

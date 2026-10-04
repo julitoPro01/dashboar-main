@@ -2,7 +2,7 @@
 
 import { useStore } from "@/src/store/useStore";
 
-import { FLOATING_PANEL_TYPE } from "@/src/store/uiSlice/interface";
+import { FLOATING_PANEL_TYPE } from "@/src/store/uiSlice/type";
 import { ItemMainCategory } from "./sub-categories/ItemMainCategory";
 import { MainCategory } from "@/src/store/categorySlice";
 import type { CategoryTreeNode } from "../types";

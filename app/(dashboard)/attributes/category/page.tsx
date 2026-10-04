@@ -1,4 +1,4 @@
-import { DeleteCatgAttrModal, ListCatgAttr, SelectCategoryModal } from "@/src/features/attributes/category-attributes/list";
+import { DeleteCatgAttrModal, ListCatgAttrs, SelectCategoryModal } from "@/src/features/attributes/category-attributes/list";
 import { CATEGORY_ATTR_PAGINATION_OPTIONS } from "@/src/features/attributes/category-attributes/constants";
 import { normalizePaginationParams, PaginationQuery } from "@/src/shared/table/pagination";
 
@@ -17,7 +17,7 @@ export default async function AttributesCategoryPage({ searchParams }: Props) {
 
             {/* <ManagerAttribute/> */}
 
-            <ListCatgAttr pagination={pag} />
+            <ListCatgAttrs pagination={pag} />
 
             <SelectCategoryModal />
 

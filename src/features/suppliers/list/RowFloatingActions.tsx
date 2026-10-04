@@ -10,9 +10,9 @@ import Link from "next/link"
 
 export const RowFloatingActions = () => {
 
-  const selected = useStore(v => v.selectedSupplier);
-  const setDeselect = useStore(v => v.setSelectSupplier);
-  const setViewDetails = useStore(v => v.setViewSupplierDetails);
+  const selected = useStore(v => v.supplierSelected);
+  const setDeselect = useStore(v => v.setSupplierSelect);
+  const setViewDetails = useStore(v => v.setSupplierViewDetails);
 
 
   return (

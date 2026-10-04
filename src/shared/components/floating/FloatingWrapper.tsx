@@ -1,31 +1,36 @@
 const SIZE = {
-    sm:"max-w-sm",
-    md:"max-w-md",
-    lg:"max-w-lg",
-    xl:"max-w-xl",
-    ["4xl"]:"max-w-4xl"
-};
+    sm: "w-52",
+    md: "w-72",
+    lg: "w-96",
+    xl: "w-[32rem]",
+} as const;
+
 interface Props {
     children: React.ReactNode;
     open: boolean;
     onClose: () => void;
-    positionX?: "left-0" | "right-0";
-    positionY?: "top-full" | "bottom-full";
+    positionX?: "left-0" | "right-0" | "left-full";
+    positionY?: "top-full" | "bottom-full" | "top-0";
     size?: keyof typeof SIZE,
-
+    overlay?: boolean;
+    className?: string;
 }
 
 
-
-export const FloatingWrapper = ({ children, open, onClose, positionX = "left-0", positionY = "top-full", size="md" }: Props) => {
+export const FloatingWrapper = ({ children, open, onClose,
+    positionX = "left-0", positionY = "top-full", size = "md",
+    overlay = true, className=""
+}: Props) => {
     return open ? <>
-        <div className=" fixed inset-0 z-40" onClick={onClose} />
+        {overlay && <div className=" fixed inset-0 z-40" onClick={onClose} />}
 
         <div className={`overflow-auto absolute 
             ${positionY} 
-            ${positionX} z-100 mt-1 
+            ${positionX}
+             z-50
             ${SIZE[size]}
-             text-sm font-normal rounded-xl border border-border dark:border-border-strong bg-surface-overlay shadow-xl`}>
+             ${className}
+             `}>
             {children}
         </div>
     </> : null

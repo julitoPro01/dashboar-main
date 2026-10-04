@@ -1,7 +1,7 @@
 "use client";
 import { useStore } from "@/src/store/useStore";
-import { ManageAttrsButton } from "./ui/ManageAttrsButton";
-import { RefreshButton } from "./ui/RefreshButton";
+import { ManageAttrsButton } from "./attribute-config/ManageAttrsButton";
+import { RefreshButton } from "./attribute-config/RefreshButton";
 import { CategoryAttrDisplayGroupDb } from "../../attributes/category-attributes/types";
 import { CATEGORY_ATTR_GROUP_LABEL } from "../../attributes/category-attributes/constants";
 

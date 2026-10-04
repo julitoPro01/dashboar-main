@@ -31,8 +31,8 @@ export const useItemFloatingAction = (mainCategoryPath: string) => {
         })
 
     }
-    // Establecemos la categoría a la pagina "CATEGORY ATTRIBUTES"
-    const handleManageAttrs = (selectedId: number, paths: { name: string; id: number }[]) => {
+    // re-direccionamos la categoría a la pagina "CATEGORY ATTRIBUTES"
+    const handleManageCategoryAttrs = (selectedId: number, paths: { name: string; id: number }[]) => {
 
         useStore.getState().setCategoryAttrsFilters({ fil: { categoryId: selectedId } });
         useStore.getState().setCategorySelectModal({ paths: paths });
@@ -58,7 +58,7 @@ export const useItemFloatingAction = (mainCategoryPath: string) => {
 
     return {
         handleNewCategory,
-        handleManageAttrs,
+        handleManageCategoryAttrs,
         handleDetails,
         handleEdit,
         handleDelete

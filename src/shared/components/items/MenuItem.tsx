@@ -2,7 +2,7 @@ import clsx from "clsx";
 import Link from "next/link";
 
 interface MenuItemProps {
-    icon: React.ReactNode;
+    icon?: React.ReactNode;
     label: string;
     onClick?: () => void;
     danger?: boolean;
@@ -18,7 +18,7 @@ export const MenuItem = ({
 }: MenuItemProps) => {
 
     const style = clsx(
-        "flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm",
+        "flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm cursor-pointer",
         "transition-colors",
         danger
             ? "text-error hover:bg-error/10"
@@ -27,11 +27,13 @@ export const MenuItem = ({
 
     const content = (
         <>
-            <span className="flex size-4 items-center justify-center text-base">
-                {icon}
-            </span>
+            {icon &&
+                <span className="flex size-4 items-center justify-center text-base">
+                    {icon}
+                </span>
+            }
 
-            <span>{label}</span>
+            <span >{label}</span>
         </>
     );
 

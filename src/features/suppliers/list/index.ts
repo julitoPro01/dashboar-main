@@ -1,5 +1,5 @@
 export * from './ListSupplier';
-export * from './Details';
+export * from './SupplierDetailsModal';
 export * from './RowFloatingActions';
 export * from './TopMenu';
 

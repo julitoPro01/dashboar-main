@@ -2,21 +2,23 @@
 import { MenuItem } from "@/src/shared/components/items"
 import { APP_ROUTES } from "@/src/shared/routes"
 import { useStore } from "@/src/store/useStore"
+import { FiMoreHorizontal, FiMoreVertical } from "react-icons/fi"
 import { IoCopyOutline, IoCreateOutline, IoEyeOutline, IoTrashOutline } from "react-icons/io5"
-import { MdOutlineCategory, MdOutlineInventory2 } from "react-icons/md"
+import { MdCheckBoxOutlineBlank, MdOutlineCategory, MdOutlineInventory2 } from "react-icons/md"
+import { BtnToogleActiveInactive } from "./BtnToogleActiveInactive"
+import { MoreActions } from "./MoreActions"
 
 
 export const ItemActions = () => {
 
-    const selected = useStore(v=>v.productSelected);
+    const selected = useStore(v => v.productSelected);
 
-    if(!selected)
-        return <p className="text-text-muted"> Ninguna categoría seleccionada. </p>
+    if (!selected)
+        return <p className="text-text-muted"> Ninguna producto seleccionada. </p>
 
     return (
-        <div className="w-52 p-1  bg-surface-black">
+        <>
             <MenuItem
-
                 icon={<IoEyeOutline />}
                 label="Ver producto"
             // onClick={() => handleAction(onView)}
@@ -39,7 +41,7 @@ export const ItemActions = () => {
             <MenuItem
                 icon={<MdOutlineInventory2 />}
                 label="Gestionar variantes"
-                href={APP_ROUTES.PRODUCTS.VARIANT(selected.publicId)}
+                href={APP_ROUTES.PRODUCTS.VARIANTS(selected.publicId)}
             // onClick={() => handleAction(onVariants)}
             />
 
@@ -49,14 +51,12 @@ export const ItemActions = () => {
             // onClick={() => handleAction(onImages)}
             />
 
+
+            <div className="my-1 border-t border-border" />
+            <MoreActions/>
             <div className="my-1 border-t border-border" />
 
-            <MenuItem
-                icon={<IoTrashOutline />}
-                label="Eliminar producto"
-                danger
-            // onClick={() => handleAction(onDelete)}
-            />
-        </div>
+            <BtnToogleActiveInactive/>
+        </>
     )
 }

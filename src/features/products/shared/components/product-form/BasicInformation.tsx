@@ -2,7 +2,6 @@
 import { Name } from "./basic-Information/Name"
 import { Slug } from "./basic-Information/Slug"
 import { ShortDescription } from "./basic-Information/ShortDescription"
-import { DetailedDescription } from "./basic-Information/DetailedDescription"
 import { FormCard } from "@/src/shared/form"
 import { IoInformationCircleOutline } from "react-icons/io5"
 import { Button } from "@/src/shared/components/btn"
@@ -12,19 +11,20 @@ import { useFormContext, useFormState } from "react-hook-form"
 import { BasicInformationForm } from "../../../types"
 
 interface Props {
-    isEdit?: boolean
+    isEdit?: boolean;
+    isSubmitting?:boolean
 }
 
-export const BasicInformation = ({ isEdit }: Props) => {
+export const BasicInformation = ({ isEdit, isSubmitting }: Props) => {
 
     const { resetField, control } = useFormContext<BasicInformationForm>();
 
-    const {dirtyFields, isSubmitting} = useFormState({control, name:"basicInfo"})
+    const {dirtyFields} = useFormState({control, name:"basicInfo"})
 
     const handleReset = () => {
         resetField("basicInfo")
     }
-
+    
     return (
         <FormCard
             title="Información Básica"
@@ -48,7 +48,6 @@ export const BasicInformation = ({ isEdit }: Props) => {
                 <Name />
                 <Slug />
                 <ShortDescription />
-                <DetailedDescription />
         </FormCard>
     )
 }

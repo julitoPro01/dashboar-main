@@ -1,6 +1,5 @@
 "use client"
 import { Button } from "@/src/shared/components/btn"
-import { INPUT_FIELD_STYLE } from "@/src/shared/theme/inputField";
 import clsx from "clsx";
 import { inputMsg } from "@/src/shared/messages";
 import { IoClose } from "react-icons/io5";
@@ -10,7 +9,7 @@ import { RiDragMove2Fill } from "react-icons/ri";
 import { UpsertAttributeForm } from "../../../types";
 import { DATA_TYPE_OPTIONS } from "../../../constants/dataTypeLabel";
 import { FaUndo } from "react-icons/fa";
-import {type BasicFormReturn } from "@/src/shared/form";
+import {FIELD_STYLE, type BasicFormReturn } from "@/src/shared/form";
 import { DragDropProvider } from "@dnd-kit/react";
 import { moveDragEnd } from "@/src/shared/sortable";
 import { useSortable } from "@dnd-kit/react/sortable";
@@ -60,28 +59,28 @@ export const Fields = ({ form }: Props) => {
 
         <div className="flex flex-col gap-5 px-8 py-6" >
             <div>
-                <label className={clsx(INPUT_FIELD_STYLE.label, INPUT_FIELD_STYLE.isRequired)} >Atributo</label>
+                <label className={clsx(FIELD_STYLE.label, FIELD_STYLE.validation["*"])} >Atributo</label>
                 <input type="text"
-                    className={clsx(INPUT_FIELD_STYLE.base, {
-                        [INPUT_FIELD_STYLE.states.normal]: !isDirty.name && !isError.name,
-                        [INPUT_FIELD_STYLE.states.dirty]: isDirty.name && !isError.name,
-                        [INPUT_FIELD_STYLE.states.error]: isError.name
+                    className={clsx(FIELD_STYLE.base, {
+                        [FIELD_STYLE.status.normal]: !isDirty.name && !isError.name,
+                        [FIELD_STYLE.status.dirty]: isDirty.name && !isError.name,
+                        [FIELD_STYLE.status.error]: isError.name
                     }
                     )}
                     onChange={({ target: { value } }) => handleChange("name", value)}
                     value={state.name}
                     placeholder="Min. 3 caracteres"
                 />
-                {isError.name && <span className={INPUT_FIELD_STYLE.labelError} > {inputMsg.required()} </span>}
+                {isError.name && <span className={FIELD_STYLE.validation.errorMsg} > {inputMsg.required()} </span>}
             </div>
 
             <div>
-                <label className={clsx(INPUT_FIELD_STYLE.label)} >Descripción</label>
+                <label className={clsx(FIELD_STYLE.label)} >Descripción</label>
                 <textarea
-                    className={clsx(INPUT_FIELD_STYLE.base,
+                    className={clsx(FIELD_STYLE.base,
                         {
-                            [INPUT_FIELD_STYLE.states.normal]: !isDirty.description,
-                            [INPUT_FIELD_STYLE.states.dirty]: isDirty.description
+                            [FIELD_STYLE.status.normal]: !isDirty.description,
+                            [FIELD_STYLE.status.dirty]: isDirty.description
                         }
                     )}
                     rows={3}
@@ -92,23 +91,22 @@ export const Fields = ({ form }: Props) => {
             </div>
 
             <div>
-                <label className={clsx(INPUT_FIELD_STYLE.label, INPUT_FIELD_STYLE.isRequired)} >Tipo de dato</label>
+                <label className={clsx(FIELD_STYLE.label, FIELD_STYLE.validation["*"])} >Tipo de dato</label>
                 <select
-                    className={clsx(INPUT_FIELD_STYLE.baseSelect,
-                        !state.dataType ? INPUT_FIELD_STYLE.placeholder : INPUT_FIELD_STYLE.value,
+                    className={clsx(FIELD_STYLE.base,
                         {
-                            [INPUT_FIELD_STYLE.states.normal]: !isDirty.dataType && !isError.dataType,
-                            [INPUT_FIELD_STYLE.states.dirty]: isDirty.dataType && !isError.dataType,
-                            [INPUT_FIELD_STYLE.states.error]: isError.dataType
+                            [FIELD_STYLE.status.normal]: !isDirty.dataType && !isError.dataType,
+                            [FIELD_STYLE.status.dirty]: isDirty.dataType && !isError.dataType,
+                            [FIELD_STYLE.status.error]: isError.dataType
                         },
                     )}
                     onChange={({ target: { value } }) => { handleChange("dataType", value as any) }}
                     value={state.dataType ?? ""}
                 >
                     <option value={""} className="text-text-subtle" > Seleccionar </option>
-                    {DATA_TYPE_OPTIONS.map(v => (<option key={v.value} className={clsx(INPUT_FIELD_STYLE.value)} value={v.value} >{v.label}</option>))}
+                    {DATA_TYPE_OPTIONS.map(v => (<option key={v.value} value={v.value} >{v.label}</option>))}
                 </select>
-                {isError.dataType && <span className={INPUT_FIELD_STYLE.labelError} > {inputMsg.required()} </span>}
+                {isError.dataType && <span className={FIELD_STYLE.validation.errorMsg} > {inputMsg.required()} </span>}
 
             </div>
 
@@ -138,8 +136,8 @@ export const Fields = ({ form }: Props) => {
                     </div>
 
                     <div className="flex ">
-                        <input className={`${INPUT_FIELD_STYLE.basic}
-                         ${INPUT_FIELD_STYLE.states.normal} rounded-l-lg `}
+                        <input className={`${FIELD_STYLE.base}
+                         ${FIELD_STYLE.status.normal} rounded-l-lg `}
                             // disabled={!state.isSystemDefault}
                             type="text"
                             placeholder="Ej. Rojo"
@@ -181,7 +179,7 @@ export const Fields = ({ form }: Props) => {
                 </div>
             }
             <div className="space-x-5">
-                <span className={clsx(INPUT_FIELD_STYLE.label, INPUT_FIELD_STYLE.isRequired)} >Estado</span>
+                <span className={clsx(FIELD_STYLE.label, FIELD_STYLE.validation["*"])} >Estado</span>
 
                 <div className="flex gap-2">
                     <Button onClick={() => handleChange("isActive", true)}

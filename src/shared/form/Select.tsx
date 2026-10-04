@@ -1,3 +1,4 @@
+"use client"
 import clsx from "clsx";
 import { FormInputProps, FieldStatusType } from "./types"
 import { SelectHTMLAttributes, useState } from "react";
@@ -68,22 +69,22 @@ export const Select = (props: Props) => {
 
     return (
         <FieldLayout {...props} >
-            <div className=" w-full">
+            <div className="w-full">
                 <select className={field}  {...rest}
                     onChange={(e) => {
                         onChange?.(e);
                         setSelect(e.target.value)
                     }}
                 >
-                    <option value={defaultValue ?? ""} className="text-text-muted relative" > {props.placeholder ?? "Seleccionar"}</option>
+                    <option value={defaultValue ?? ""} className="text-text-muted relative bg-surface-light" > {props.placeholder ?? "Seleccionar"}</option>
                     {
                         props.options?.map(v => (
-                            <option key={v.value} value={v.value} className={FIELD_STYLE.text}  > {v.label} </option>
+                            <option key={v.value} value={v.value} className={`${FIELD_STYLE.text} bg-surface-light`}  > {v.label} </option>
                         ))
                     }
 
                 </select>
-                <div className=" absolute right-0 top-1/2 -translate-y-1/2 pr-1">
+                <div className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 pr-1">
                     <IoChevronDown
                         className={`${selected ? "text-text" : "text-text-subtle"} ml-auto shrink-0`}
                         size={16}

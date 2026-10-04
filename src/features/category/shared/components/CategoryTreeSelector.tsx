@@ -1,12 +1,11 @@
 "use client"
 import { useState } from "react";
+import { useSearchCategoryTrees } from "../hooks";
+import { CategoryTreeSkeleton } from "./CategoryTreeSkeleton";
 import { ItemTree } from "./categoryTree-selector/ItemTree";
 import { NodeTree } from "./categoryTree-selector/NodeTree";
 import { Button } from "@/src/shared/components/btn";
-import { useSearchCategoryTrees } from "../hooks";
-import { CategoryTreeSkeleton } from "./CategoryTreeSkeleton";
-import { CategoryTreeResponse, CatgTreeSelectorPath, CatgTreeSelectorSelect, CatgTreeSelectorSelected, } from "../../types";
-
+import { CategoryTreeResponse, CatgTreeSelectorPath, CatgTreeSelectorSelect, CatgTreeSelectorSelected } from "../../types";
 
 
 interface Props {

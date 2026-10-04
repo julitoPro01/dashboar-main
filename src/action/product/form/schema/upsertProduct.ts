@@ -1,5 +1,19 @@
 import { z } from "zod";
 
+
+export const longDescriptionSchema = z.object({
+    description: z.object({ // TiptapDocument
+        type: z.literal("doc"),
+        content: z.array(z.any()).optional(),
+    }),
+
+    customProperties: z.array(z.object({
+        id: z.number(),
+        label: z.string(),
+        value: z.string()
+    }))
+});
+
 export const createProductSchema = z.object({
 
     recordStatusId: z.number().int().positive(),
@@ -18,11 +32,7 @@ export const createProductSchema = z.object({
         .min(3, "El nombre debe tener al menos 3 caracteres")
         .max(150, "El nombre es muy largo"),
 
-    longDescription: z
-        .string().trim()
-        .max(500, "Máximo 500 caracteres")
-        .nullable()
-        .optional(),
+    longDescription: longDescriptionSchema.nullable().optional(),
 
     shortDescription: z
         .string()
@@ -44,13 +54,9 @@ export const createProductSchema = z.object({
         })
     })).min(1, "Agrega al menos una imagen"),
 
-    customAttributes: z.array(z.object({
-        customName: z.string().nullable().optional(),
-        valueText: z.string().nullable().optional(),
-    })).optional(),
 
     systemAttributes: z.array(z.object({
-        attributeDefinitionId: z.number().int().nullable().optional(),
+        attributeDefinitionId: z.number().int(),
         valueText: z.string().trim().nullable().optional(),
         valueNumber: z.number().nullable().optional(),
         valueBoolean: z.boolean().nullable().optional(),
@@ -69,11 +75,7 @@ export const updateBasicInformationSchema = z.object({
         .min(3)
         .max(150).optional(),
 
-    longDescription: z
-        .string().trim()
-        .max(500)
-        .nullable()
-        .optional(),
+    longDescription: longDescriptionSchema.optional(),
 
     shortDescription: z
         .string()
@@ -109,7 +111,7 @@ export const updateCategorizationSchema = z.object({
     categoryId: z.number().optional(),
     attributes: z.array(
         z.object({
-            attributeDefinitionId: z.number().int().nullable().optional(),
+            attributeDefinitionId: z.number().int(),
             valueText: z.string().trim().nullable().optional(),
             valueNumber: z.number().nullable().optional(),
             valueBoolean: z.boolean().nullable().optional(),

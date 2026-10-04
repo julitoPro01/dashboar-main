@@ -3,7 +3,6 @@ import { CgCalendar } from "react-icons/cg";
 
 import { AppliedFilterLabel, OpenFilterButton, useSortOrderFilter, SortOrderButton, useDateFilter } from "@/src/shared/table/filters";
 import { FloatingWrapper } from "@/src/shared/components/floating";
-import { FilterInput } from "@/src/shared/form";
 import { ATTRIBUTE_SORTBY_ACCEPT_ONLY } from "../../../constants/filters";
 import { CellTitle } from "@/src/shared/table/core";
 
@@ -54,7 +53,7 @@ export const Date = () => {
 
                 {/* Options */}
                 <div className="max-h-60 space-y-2 gap-2 px-5 py-4 text-start">
-                    <FilterInput onChange={({ target }) => handleChange("registeredFrom", target.value)}
+                    {/* <FilterInput onChange={({ target }) => handleChange("registeredFrom", target.value)}
                         label="Registrado desde"
                         value={values.registeredFrom}
                         type="date"
@@ -66,7 +65,7 @@ export const Date = () => {
                         value={values.registeredTo}
                         type="date"
                         isError={errors.registeredTo}
-                        />
+                        /> */}
 
                 </div>
             </FloatingWrapper>

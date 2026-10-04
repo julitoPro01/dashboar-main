@@ -7,7 +7,7 @@ const MAX_IMAGES = 4;
 export const useCrudImageGallery = () => {
 
     const { control, getValues, reset } = useFormContext<GalleryForm>();
-    const { errors, dirtyFields, isSubmitting } = useFormState({ control, name: "images" });
+    const { errors, dirtyFields } = useFormState({ control, name: "images" });
 
     const { append, fields, remove, move, update } = useFieldArray({ control, name: "images", keyName: "customId" });
 
@@ -97,7 +97,7 @@ export const useCrudImageGallery = () => {
 
         return () => {
             const imgs = getValues("images");
-            imgs.forEach(v => {
+            imgs?.forEach(v => {
                 URL.revokeObjectURL(v.mediaFile.filePath)
             });
         }
@@ -105,9 +105,9 @@ export const useCrudImageGallery = () => {
     }, [])
 
     return {
+        control,
         error:errors.images,
         dirty:dirtyFields.images,
-        isSubmitting,
         currentCount,
         images:fields,
         handleDragEnd,
@@ -116,6 +116,6 @@ export const useCrudImageGallery = () => {
         handleSetPrimary,
         handleDelete,
         handleReset,
-        maxImages:MAX_IMAGES
+        maxImages:MAX_IMAGES,
     }
 }

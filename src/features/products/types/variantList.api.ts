@@ -17,7 +17,6 @@ export type VariantListItemResponse = {
     tags: any[]; // ProductTag
     varianAttributesValue: {
         id: number;
-        customName: string | null;
         valueText: string | null;
         valueNumber: number | null;
         valueBoolean: boolean | null;

@@ -1,6 +1,6 @@
+"use client"
 import { useState } from "react";
 import { IoChevronDown } from "react-icons/io5";
-import { IoClose } from "react-icons/io5";
 import { FIELD_STYLE } from "./style";
 import { FieldStatusType, FormInputProps } from "./types";
 import clsx from "clsx";
@@ -123,7 +123,7 @@ export const MultiSelect = (props: MultiSelectProps) => {
                     </div>
                 </div>
 
-                <div className={`absolute left-0 z-50 mt-3 max-h-60 w-full overflow-auto rounded-md border border-border bg-surface-light shadow-lg
+                <div className={`absolute left-0 z-50 mt-3 max-h-60 w-full overflow-auto rounded-md border border-border-strong bg-surface-light shadow-lg
                     ${!open && "hidden"}
                     `}>
 

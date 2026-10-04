@@ -3,7 +3,7 @@ import { Checkbox, Input, Select } from "@/src/shared/form"
 import { IoGlobeOutline, IoPhonePortraitOutline, IoStorefrontOutline, IoToggleOutline } from "react-icons/io5"
 
 
-//TODO: CAMBIAR DE NOMBRE Y MOVER A OTRA CARPETA
+//TODO: no se esta usando - CAMBIAR DE NOMBRE Y MOVER A OTRA CARPETA
 export const CatalogVisibilitySettings = () => {
     return (
 

@@ -26,11 +26,11 @@ const FIELD_LABEL = "text-sm font-semibold text-slate-600 tracking-wide dark:tex
 const FIELD_BASE = `
     w-full transition-colors
     focus:shadow-sm focus:outline-none
-    bg-surface-light disabled:bg-surface
+     disabled:bg-surface
     text-base
     `;
-const FIELD_TEXT =" text-text-muted font-medium dark:text-white"
-const FIELD_PLACEHOLDER="placeholder:text-text-subtle";
+const FIELD_TEXT = " text-text-muted font-medium dark:text-white"
+const FIELD_PLACEHOLDER = "placeholder:text-text-subtle";
 
 //------ ESKELETON--------
 
@@ -55,11 +55,13 @@ export const FIELD_VALIDATION = {
 }
 
 const FIELD_ICON = ` absolute top-1/2 -translate-y-1/2  text-gray-400 pointer-events-none`;
+const SHIMMER = " absolute inset-0 animate-[shimmer_1.5s_infinite] bg-linear-to-r from-transparent via-white dark:via-white/5 to-transparent";
+
 
 export const FIELD_STYLE = {
     base: FIELD_BASE,
-    text:FIELD_TEXT,
-    placeholder:FIELD_PLACEHOLDER,
+    text: FIELD_TEXT,
+    placeholder: FIELD_PLACEHOLDER,
     borderSize: BORDER_SIZE,
     roundedSize: ROUNDED_SIZE,
     textSize: TEXT_SIZE,
@@ -67,5 +69,8 @@ export const FIELD_STYLE = {
     label: FIELD_LABEL,
     icon: FIELD_ICON,
     status: FIELD_STATUS,
-    validation: FIELD_VALIDATION
+    validation: FIELD_VALIDATION,
+    shimmer: SHIMMER,
+    skeleton: "w-full rounded-lg px-4 py-3 text-sm relative overflow-hidden bg-slate-100/80 dark:bg-surface-light border border-border-input text-transparent select-none",
+    skeletonLabel: "text-sm font-normal text-text-subtle mb-2 block select-none text-transparent",
 }

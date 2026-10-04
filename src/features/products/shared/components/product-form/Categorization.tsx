@@ -1,24 +1,25 @@
+"use client"
 import { FormCard } from "@/src/shared/form"
 import { CategorySelection } from "./categorization/CategorySelection"
-import { MdOutlineCategory, MdRestartAlt } from "react-icons/md"
+import { MdOutlineAccountTree, MdRestartAlt } from "react-icons/md"
 import { Button } from "@/src/shared/components/btn"
 import { FaCheck } from "react-icons/fa6"
 import { useFormContext, useFormState } from "react-hook-form"
 import { CategorizationForm } from "../../../types"
-import { SystemAttributes } from "./categorization/SystemAttributes"
+import { SystemProperties } from "./categorization/SystemProperties"
 import { useRegisterSystemAttributes } from "../../hooks"
 
 
 type Props =
     { isEdit?: false, isEditSuccess?: boolean, }
-    | { isEdit: true, isEditSuccess?: boolean, id: number }
+    | { isEdit: true, isEditSuccess?: boolean, id: number, isSubmitting?:boolean }
 
 
 export const Categorization = (props: Props) => {
 
     const { setValue, reset, control } = useFormContext<CategorizationForm>();
 
-    const { dirtyFields, isSubmitting } = useFormState({ control, name: "categorization" });
+    const { dirtyFields } = useFormState({ control, name: "categorization" });
 
     const { original } = useRegisterSystemAttributes({
         entity: "product",
@@ -45,18 +46,18 @@ export const Categorization = (props: Props) => {
 
     return (
         <FormCard
-            title="Categorización"
-            titleIcon={<MdOutlineCategory />}
+            title="Categorización y Atributos del Sistema"
+            titleIcon={<MdOutlineAccountTree />}
             actionNode={props.isEdit && <>
                 <Button variant="basic" size="xs" padding="p-0" type="button"
-                    disabled={isSubmitting || !dirtyFields.categorization}
+                    disabled={props.isSubmitting || !dirtyFields.categorization}
                     onClick={handleReset}
                 >
                     <MdRestartAlt size={20} />
                 </Button>
                 <Button
                     variant="basic" size="xs" padding="p-0" type="submit"
-                    loading={isSubmitting}
+                    loading={props.isSubmitting}
                     disabled={!dirtyFields.categorization}
                 >
                     <FaCheck size={20} />
@@ -67,7 +68,7 @@ export const Categorization = (props: Props) => {
                 <CategorySelection />
             </div>
 
-            <SystemAttributes />
+            <SystemProperties />
 
         </FormCard>
 

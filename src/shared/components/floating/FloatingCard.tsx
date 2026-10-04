@@ -6,17 +6,16 @@ import {
     FloatingPortal,
     offset,
     Placement,
+    safePolygon,
     shift,
     size,
     useClick,
     useDismiss,
     useFloating,
+    useHover,
     useInteractions,
     useRole,
 } from "@floating-ui/react";
-
-import { useFloatingPanel } from "./useFloatingPanel";
-import { FLOATING_PANEL_TYPE } from "@/src/store/uiSlice";
 
 interface Props {
     trigger: React.ReactNode;
@@ -25,25 +24,35 @@ interface Props {
     fallbackPlacements?: Placement[];
     offsetDistance?: number;
     className?: string;
-    openChange?: boolean;
-}
 
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
+    outClose?: boolean;
+    interaction?: "click" | "hover" | "both"
+}
+/**
+ * Componente carta flotante
+ * @param param0 
+ * @returns 
+ */
 export function FloatingCard({
     trigger,
     children,
-    placement = "bottom-end",
+    placement,
     fallbackPlacements,
     offsetDistance = 8,
-    className, openChange = true
+    className,
+    outClose = true, interaction = "click", open, onOpenChange
 }: Props) {
 
-    const { isOpen, close } = useFloatingPanel(FLOATING_PANEL_TYPE.PRODUCT_STAT_CARD)
 
     const { refs, floatingStyles, context } = useFloating({
-        open: isOpen,
-        onOpenChange: (open) => {
-            if (openChange && !open)
-                close()
+        open,
+        onOpenChange(open) {
+            if ((interaction === "click" || interaction==="both") && !outClose){
+                onOpenChange?.(true)
+            }else
+            onOpenChange?.(open)
         },
         placement,
         middleware: [
@@ -59,7 +68,7 @@ export function FloatingCard({
                     Object.assign(elements.floating.style, {
                         maxHeight: `${availableHeight}px`,
                         overflowY: "auto",
-                        zIndex:"50"
+                        zIndex: "50"
                         // height:"auto"
                     });
                 },
@@ -68,12 +77,20 @@ export function FloatingCard({
         whileElementsMounted: autoUpdate,
     });
 
-    const click = useClick(context);
+    const hover = useHover(context, {
+        move: false, handleClose: safePolygon(),
+        enabled: interaction === "hover" || interaction === "both"
+    });
+
+    const click = useClick(context, {
+        enabled: interaction === "click" || interaction === "both"
+    });
     const dismiss = useDismiss(context);
     const role = useRole(context);
 
     const { getReferenceProps, getFloatingProps } = useInteractions([
         click,
+        hover,
         dismiss,
         role,
     ]);
@@ -83,7 +100,7 @@ export function FloatingCard({
             <div ref={refs.setReference} {...getReferenceProps()}>
                 {trigger}
             </div>
-            {isOpen && (
+            {open && (
                 <FloatingPortal>
                     <div
                         ref={refs.setFloating}

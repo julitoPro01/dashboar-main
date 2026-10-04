@@ -1,3 +1,4 @@
+"use client"
 import { FormEvent, useRef, useState } from "react";
 
 interface Modif<T> {

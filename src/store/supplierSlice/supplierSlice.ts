@@ -1,26 +1,29 @@
-import { combine } from "zustand/middleware";
-import { SupplierAction, SupplierState } from "./interface";
+import { SupplierSlice } from "./type";
 import { deleteProperties } from "@/src/shared/utils";
 import { SupplierFilters } from "@/src/features/suppliers/types";
+import { StateCreator } from "zustand";
+import { Store } from "../store.type";
 
-export const supplierSlice = combine<SupplierState, SupplierAction>({
+
+
+export const supplierSlice: StateCreator<Store, [], [], SupplierSlice> = (set) => ({
+    
+    supplierSelected: { id: undefined, publicId: undefined },
+    setSupplierSelect: (id, publicId) => set({ supplierSelected: { id, publicId } }),
+
+    supplierViewDetails: { modalOpen: false, id: undefined },
+    setSupplierViewDetails: (open, id) => set((state) => ({ supplierViewDetails: { ...state.supplierViewDetails, modalOpen: open, ...(id ? { id } : {}) } })),
+    
     supplierFilter: {},
-    viewSupplierDetails: { modalOpen: false, id: undefined },
-    selectedSupplier: { id: undefined, publicId: undefined }
-},
-    (set) => ({
-        setSelectSupplier: (id, publicId) => set({ selectedSupplier: { id, publicId } }),
-        setViewSupplierDetails: (open, id) => set((state) => ({ viewSupplierDetails: { ...state.viewSupplierDetails, modalOpen: open, ...(id ? { id } : {}) } })),
+    setSupplierFilter: (fil, del) => {
+        set(state => {
+            let currentFilters = state.supplierFilter ?? {};
+            if (del && typeof del === "object") {
+                const entries = Object.entries(del).filter(([_, v]) => v).map(([key]) => key as keyof SupplierFilters);
+                currentFilters = deleteProperties(currentFilters, entries)
+            }
+            return { supplierFilter: { ...currentFilters, ...fil } }
+        })
+    },
 
-        setSupplierFilter: (fil, del) => {
-            set(state => {
-                let currentFilters = state.supplierFilter ?? {};
-                if (del && typeof del === "object") {
-                    const entries = Object.entries(del).filter(([_, v]) => v).map(([key]) => key as keyof SupplierFilters);
-                    currentFilters = deleteProperties(currentFilters, entries)
-                }
-                return { supplierFilter: { ...currentFilters, ...fil } }
-            })
-        },
-
-    }))
+})

@@ -1,20 +1,20 @@
 "use client";
 
 
-import { BasicInformationForm, basicInformationSchema, CategorizationForm, categorizationSchema, CustomAttributeForm, customAttributesSchema, GalleryForm, gallerySchema, ProductFormDataResponse, SupplierForm, supplierSchema } from "../types"
+import { BasicInformationForm, basicInformationSchema, CategorizationForm, categorizationSchema, longDescriptionForm, longDescriptionSchema, GalleryForm, gallerySchema, ProductFormDataResponse, SupplierForm, supplierSchema } from "../types"
 
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 import { useBootDataStore } from "@/src/store/useBootDataStore";
 import { FormProvider } from "@/src/shared/form";
-import { BasicInformation, Categorization, CustomAttributes, Gallery, RecordStatusInfo, SupplierSelection } from "../shared/components/product-form";
-import { useUpdateBasicInfo, useUpdateCategorization, useUpdateCustomAttrs, useUpdateGallery } from "../shared/hooks";
+import { BasicInformation, Categorization, LongDescription, Gallery, RecordStatusInfo, SupplierSelection } from "../shared/components/product-form";
+import { useUpdateBasicInfo, useUpdateCategorization, useUpdateGallery } from "../shared/hooks";
 import { getDirtyValues } from "@/src/shared/utils";
 import { ATTRIBUTE_INPUT_CONFIG } from "../constants";
 import { getHasValues } from "@/src/shared/utils/getHasValues";
+import { useEffect, useState } from "react";
 import { useStore } from "@/src/store/useStore";
-import { useState } from "react";
 
 interface Props {
     data: ProductFormDataResponse
@@ -28,8 +28,8 @@ export const EditProduct = ({ data }: Props) => {
 
         <>
 
-            <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-3">
-                <div className="col-span-3 space-y-6 lg:col-span-2">
+            <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-3">
+                <div className="col-span-3 space-y-12 lg:col-span-2">
 
                     <Basic basicInfo={data.basicInfo} id={id} />
 
@@ -37,7 +37,8 @@ export const EditProduct = ({ data }: Props) => {
 
                     <Cat categorization={data.categorization} id={id} />
 
-                    <Custom id={id} />
+                    <Long longDescription={data.longDescription} id={id} />
+
                 </div>
 
                 <div className="col-span-3 space-y-8 lg:col-span-1 lg:sticky lg:top-6">
@@ -86,14 +87,13 @@ const Supplier = ({ supplier, id }: SupplierForm & { id: number }) => {
 
     return (
         <FormProvider form={form} onSubmit={handleSubmit}>
-            <SupplierSelection isEdit entity="product" id={id} />
+            <SupplierSelection isEdit entity="product" id={id} isSubmitting={form.formState.isSubmitting} />
         </FormProvider>)
 }
 
 const Basic = ({ basicInfo, id }: BasicInformationForm & { id: number }) => {
 
     const user = useBootDataStore(v => v.user);
-
     const form = useForm({
         resolver: zodResolver(basicInformationSchema),
         defaultValues: {
@@ -101,7 +101,6 @@ const Basic = ({ basicInfo, id }: BasicInformationForm & { id: number }) => {
                 name: basicInfo.name,
                 slug: basicInfo.slug,
                 shortDescription: basicInfo.shortDescription,
-                longDescription: basicInfo.longDescription
             }
         }
     });
@@ -111,7 +110,6 @@ const Basic = ({ basicInfo, id }: BasicInformationForm & { id: number }) => {
     const handleSubmit = async ({ basicInfo: val }: BasicInformationForm) => {
 
         if (!user) return;
-
 
         const dirties = getDirtyValues(basicInfo, val)
 
@@ -131,7 +129,7 @@ const Basic = ({ basicInfo, id }: BasicInformationForm & { id: number }) => {
     }
     return (
         <FormProvider form={form} onSubmit={handleSubmit}>
-            <BasicInformation isEdit />
+            <BasicInformation isEdit isSubmitting={form.formState.isSubmitting} />
         </FormProvider>
     )
 }
@@ -174,11 +172,12 @@ const Gal = ({ id, images }: GalleryForm & { id: number }) => {
     return (
 
         <FormProvider form={form} onSubmit={handleSubmit}>
-            <Gallery isEdit />
+            <Gallery isEdit isSubmitting={form.formState.isSubmitting} />
         </FormProvider>
 
     )
 }
+
 
 const Cat = ({ categorization, id }: CategorizationForm & { id: number }) => {
 
@@ -192,7 +191,8 @@ const Cat = ({ categorization, id }: CategorizationForm & { id: number }) => {
             categorization: {
                 category: categorization.category,
                 systemAttributes: []
-            }
+            },
+
         }
     })
 
@@ -267,36 +267,62 @@ const Cat = ({ categorization, id }: CategorizationForm & { id: number }) => {
 
     return (
         <FormProvider form={form} onSubmit={handleSubmit}>
-            <Categorization isEdit id={id} isEditSuccess={isSuccess} />
+            <Categorization isEdit id={id} isEditSuccess={isSuccess} isSubmitting={form.formState.isSubmitting} />
         </FormProvider>
     )
 }
 
-const Custom = (data: { id: number }) => {
+
+const Long = ({ longDescription, id }: longDescriptionForm & { id: number }) => {
+
+    const user = useBootDataStore(v => v.user);
+
+    const setOriginalLongDescription = useStore(v => v.setProductOriginalLongDescriptionEdit);
 
     const form = useForm({
-        resolver: zodResolver(customAttributesSchema),
+        resolver: zodResolver(longDescriptionSchema),
+        defaultValues: { longDescription }
     })
 
-    const { mutateAsync } = useUpdateCustomAttrs();
-    const handleSubmit = async (val: CustomAttributeForm) => {
+    const { mutateAsync } = useUpdateBasicInfo();
+
+
+    const handleSubmit = async (val: longDescriptionForm) => {
+
+        if (!user) return;
+
+        const json = JSON.stringify(val.longDescription);
+        const longDescription = JSON.parse(json)
+
         await mutateAsync({
-            productId: data.id,
-            attributes: val.customAttributes ?? []
+            id,
+            updatedBy: user.name,
+            updatedById: user.id,
+            data: { longDescription }
         }, {
             onSuccess(res) {
-                if (res.ok)
-                    form.reset(form.getValues())
+                if (res.ok) {
+
+                    // Actualizamos el formulario
+                    form.reset(form.getValues());
+                    // Actualizamos la data original
+                    setOriginalLongDescription(res.data.longDescription)
+
+                }
             }
         })
     }
 
+    // Inicializamos el objeto data original - DESCRIPCIÓN DETALLADA
+    useEffect(() => {
+        if (longDescription)
+            setOriginalLongDescription(longDescription)
+    }, [longDescription])
+
+
     return (
-
         <FormProvider form={form} onSubmit={handleSubmit}>
-            <CustomAttributes isEdit id={data.id} entity="product" />
+            <LongDescription isEdit />
         </FormProvider>
-
-
     )
 }

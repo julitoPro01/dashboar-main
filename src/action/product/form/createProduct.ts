@@ -21,8 +21,8 @@ export const createProduct = async (dataProduct: CreateProductPayload) => {
     return await PromiseReturn(async () => {
 
         const { createdBy, createdById, ...rest } = dataProduct;
-        const parse = createProductSchema.parse(rest);
 
+        const parse = createProductSchema.parse(rest);
         const res = await prisma.$transaction(async () => {
             //#1
             const product = await prisma.product.create({
@@ -37,7 +37,7 @@ export const createProduct = async (dataProduct: CreateProductPayload) => {
 
                     name: parse.name,
                     shortDescription: parse.shortDescription,
-                    longDescription: parse.longDescription,
+                    longDescription: parse.longDescription ?? {},
                     slug: parse.slug,
                     parentSku: generateSku(),
 
@@ -69,16 +69,7 @@ export const createProduct = async (dataProduct: CreateProductPayload) => {
                     }
                 });
             }
-            //#5 ATRIBUTOS PERSONALIZADOS
-            if (parse.customAttributes?.length) {
-                await prisma.productAttributeValue.createMany({
-                    data: parse.customAttributes.map<ProductAttributeValueCreateManyInput>(v => ({
-                        productId: product.id,
-                        customName: v.customName,
-                        valueText: v.valueText
-                    }))
-                })
-            }
+           
             //#6 ATRIBUTOS DEL SISTEMA
             if (parse.systemAttributes?.length) {
                 await prisma.productAttributeValue.createMany({

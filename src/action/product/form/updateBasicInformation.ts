@@ -5,7 +5,7 @@ import { z } from "zod";
 
 import prisma from "@/lib/prisma";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
-import { updateBasicInformationSchema } from "./schema/upsertProduct";
+import { longDescriptionSchema, updateBasicInformationSchema } from "./schema/upsertProduct";
 
 interface PayloadProps {
     id: number;
@@ -30,13 +30,16 @@ export const updateBasicInformation = async ({
             data: {
                 ...parse,
                 updatedBy,
-                updatedById
+                updatedById,
             }
         });
 
         return ApiResponse.success(
             "Producto actualizado correctamente.",
-            product
+            {
+                ...product,
+                longDescription: longDescriptionSchema.parse(product.longDescription)
+            }
         );
     });
 };

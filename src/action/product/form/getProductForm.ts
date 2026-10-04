@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { sortCategoriesByParent } from "@/src/features/category/shared/utils";
 import { ProductFormDataResponse } from "@/src/features/products/types";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
+import { longDescriptionSchema } from "./schema/upsertProduct";
 
 interface Props {
     publicId: string
@@ -73,16 +74,21 @@ export const getProductForm = async ({ publicId }: Props) => {
                 parentId: true
             }
         });
+        
         const buildTreePaths = sortCategoriesByParent(resTree);
 
-        return ApiResponse.success<ProductFormDataResponse>("Consulta exitosa.", {
+        const longDescription = res.longDescription
+            ? longDescriptionSchema.parse(res.longDescription)
+            : null;
+
+            return ApiResponse.success<ProductFormDataResponse>("Consulta exitosa.", {
             id: res.id,
             basicInfo: {
                 name: res.name,
-                longDescription: res.longDescription,
                 shortDescription: res.shortDescription,
                 slug: res.slug
             },
+            longDescription,
             images: res.images.sort((a, b) => a.displayOrder - b.displayOrder),
             categorization: {
                 category: {

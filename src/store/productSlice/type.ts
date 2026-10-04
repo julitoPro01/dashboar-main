@@ -1,48 +1,46 @@
-import { CategorizationForm, ProductDetailsResponse, ProductFilters } from "@/src/features/products/types";
+import { ProductFilters } from "@/src/features/products/types";
 
-// page -> Product Details
-export type TYPE_PRODUCT_DETAILS =
-    "product-details" |
-    "image-details" |
-    "category-details" |
-    "attribute-details"
-
-interface ModalProductDetails {
-    type?: TYPE_PRODUCT_DETAILS,
-    open: boolean,
-    id?: number
-}
-//-----------
-
-export type STATE_LOADING_PRODUCT = "loaded" | "loading";
 
 type TYPE_SELECTED = { id: number, publicId: string }
 
 // PAGE - INDEX 
 type Delete = Partial<Record<keyof ProductFilters, true>>;
 
-export interface StateProduct {
-    // PAGE - INDEX
-    productFilters: ProductFilters;
+//------------
+export interface ProductProperty {
+    id: number;
+    label: string;
+    value: string;
+    isCustom?:boolean;
+}
+// ----------
+export type OriginalLongDescription = {
+    description: Record<string, any>,// Contendio de tiptap
+    customProperties: ProductProperty[],
+    version: number
+}
 
-    productLoadingState: STATE_LOADING_PRODUCT;
+export interface StateProduct {
+    // PAGE - INDEX - LISTAS DE PRODUCTOS
+    productFilters: ProductFilters;
     productSelected?: TYPE_SELECTED;
 
-    productDetailsData?: ProductDetailsResponse;
-    productModalTypeDetails: ModalProductDetails
-
- 
+    //PAGE - CREAR, EDITAR
+    productProperties: ProductProperty[];
+    productOriginalLongDescription: {
+        originalCreate: OriginalLongDescription,
+        originalEdit: OriginalLongDescription
+    }
 }
 
 export interface ActionProduct {
+    //
     setProductFilters: (_: Partial<ProductFilters>, del?: Delete) => void;
-
-    setProductLoadingState: (_: STATE_LOADING_PRODUCT) => void;
     setProductSelect: (_?: TYPE_SELECTED) => void;
-
-    setProductModalTypeDetails: (_: ModalProductDetails) => void;
-    setProductDetailsData: (_?: ProductDetailsResponse) => void;
-
+    //
+    setProductProperties: (properties: ProductProperty[]) => void;
+    setProductOriginalLongDescriptionEdit: (longDescription:Omit<OriginalLongDescription,"version">) => void
+    productRefreshOriginalLongDescriptionCreate: () => void
 
 }
 

@@ -2,7 +2,7 @@ import { AttributeDataTypeDb } from "../../attributes/attribute-definition/types
 import { CategoryAttrDisplayGroupDb } from "../../attributes/category-attributes/types";
 
 
-export type CategoryAttributeResponse = {
+export type SystemAttributeResponse = {
     attributeDefinitionId: number;
     name: string;
     description: string | null;
@@ -27,7 +27,7 @@ export type CategoryAttributeResponse = {
     valueOptionIds: number[];
 };
 
-export type CategoryAttributeGroupResponse = {
+export type SystemAttributeGroupResponse = {
     group: CategoryAttrDisplayGroupDb;
-    attributes: CategoryAttributeResponse[]
+    attributes: SystemAttributeResponse[]
 }

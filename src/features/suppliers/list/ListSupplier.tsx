@@ -46,8 +46,8 @@ const Render = () => {
     const table = useTableContext().table!;
 
     const { selected, setSelect, setFloatMenu } = useStore(useShallow((v) => ({
-        selected: v.selectedSupplier,
-        setSelect: v.setSelectSupplier,
+        selected: v.supplierSelected,
+        setSelect: v.setSupplierSelect,
         setFloatMenu: v.setFloatingPanel
     })))
 
