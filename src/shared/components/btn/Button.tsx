@@ -14,6 +14,7 @@ disabled:cursor-not-allowed
 const variants = {
   dynamic: "",
   primary: `bg-primary text-white font-medium`,
+  info:"text-sky-500 dark:text-sky-400 font-medium",
   secondary: `border border-border-strong text-text font-medium`,
   ghost: `text-text font-medium`,
   ghostDanger: 'text-red-500 font-medium',
@@ -35,6 +36,7 @@ const active = "active:text-text/70";
 const hover = {
   dynamic: "",
   primary: `hover:bg-primary/80 active:text-white/70`,
+  info:" hover:text-sky-400 dark:hover:text-sky-300",
   secondary: ` hover:bg-hover ${active}`,
   ghost: `hover:bg-hover ${active}`,
   ghostDanger: `hover:bg-hover ${active}`,

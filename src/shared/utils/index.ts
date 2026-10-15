@@ -15,3 +15,5 @@ export * from './date/dateFormatter';
 export * from './date/parseLocalDate';
 
 export * from './transform/capitalize';
+
+export * from './formatPrice';

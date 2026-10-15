@@ -18,6 +18,13 @@ export const RECORD_STATUS_LABEL: Record<RecordStatusDb, RecordStatusLabel> = {
     DELETED: "Eliminado",
 } as const;
 
+export const RECORD_STATUS_VALUE: Record<RecordStatusDb, RecordStatusDb> = {
+    DRAFT: "DRAFT",
+    ACTIVE: "ACTIVE",
+    INACTIVE: "INACTIVE",
+    ARCHIVED: "ARCHIVED",
+    DELETED: "DELETED",
+} as const;
 
 export const RECORD_STATUS_STYLE: Record<RecordStatusDb, string> = {
     DRAFT:
@@ -36,9 +43,6 @@ export const RECORD_STATUS_STYLE: Record<RecordStatusDb, string> = {
         "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
 };
 
-
-export const RECORD_STATUS_OPTIONS = Object.entries(RECORD_STATUS_LABEL).map(([value, label]) => ({ value, label })) as { value: RecordStatusDb, label: RecordStatusLabel }[];
-
 //-----------------------
 /**
  * POR DEFECTO Y EN DB
@@ -50,6 +54,11 @@ export const RECORD_STATUS_ID: Record<RecordStatusDb, number> = {
     ARCHIVED: 4,
     DELETED: 5
 } as const;
+
+export const RECORD_STATUS_OPTIONS = Object.entries(RECORD_STATUS_LABEL).map(([value, label]) => ({
+    value, label, id: RECORD_STATUS_ID[value as RecordStatusDb]
+})) as { value: RecordStatusDb, label: RecordStatusLabel, id: number }[];
+
 
 //--------------------------
 

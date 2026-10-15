@@ -24,7 +24,8 @@ export const getVariants = async (props: Props) => {
             select: {
                 id: true,
                 publicId: true,
-
+                name:true,
+                parentSku:true,
                 category: {
                     select: {
                         id: true,
@@ -100,6 +101,8 @@ export const getVariants = async (props: Props) => {
             product: {
                 id: res.id,
                 publicId: res.publicId,
+                name:res.name,
+                sku:res.parentSku,
                 category: {
                     ...res.category,
                     paths: buildTreePaths

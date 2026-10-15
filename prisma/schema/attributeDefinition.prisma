@@ -1,0 +1,56 @@
+
+model AttributeDefinition {
+  id           Int          @id @default(autoincrement())
+  name         String @unique
+  dataType    AttributeDataType
+  description  String?
+  isActive    Boolean      @default(false)
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime?    @updatedAt
+
+  createdBy String
+  createdById Int?
+  updatedBy String?
+  updatedById Int?
+
+  creator UserAuthentication? @relation(fields: [createdById], references: [id],name: "AttrDefinitionCreatedBy")
+  updater UserAuthentication? @relation(fields: [updatedById], references: [id],name: "AttrDefinitionUpdatedBy")
+
+  categoryAttributes CategoryAttribute[]
+  systemAttributeValue SystemAttributeValue[]
+  variantAttributeValues VariantAttributeValue[]
+  productAttributeValues ProductAttributeValue[] 
+
+  @@map("attribute_definitions")
+}
+
+model SystemAttributeValue{
+  id Int @id @default(autoincrement())
+  attributeDefinitionId Int
+  value String
+  displayOrder Int?
+
+
+  attributeDefinition AttributeDefinition @relation(fields: [attributeDefinitionId], references: [id], onDelete:Cascade)
+
+  @@unique([attributeDefinitionId,value])
+
+  @@map("system_attribute_values")
+}
+
+
+enum AttributeDataType {
+  TEXT
+  LONG_TEXT
+  NUMBER
+  DECIMAL
+  BOOLEAN
+  DATE
+  SELECT
+  MULTISELECT
+  COLOR
+  URL
+  EMAIL
+  PHONE
+}

@@ -17,7 +17,7 @@ export const FloatingActions = () => {
                 placement="left-start"
                 fallbackPlacements={["bottom", "left"]}
                 offsetDistance={15}
-                openChange={false}
+                open={false}
                 trigger={<StatCardButton />} >
 
                 <StatCard />

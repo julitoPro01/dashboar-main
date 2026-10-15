@@ -1,6 +1,6 @@
 export const SURFACE_VARIANTS = {
-    default:
-        "rounded-lg border border-border bg-surface shadow-dropdown",
+    default:   "rounded-lg border border-border bg-surface shadow-card",
+    card:   "rounded-lg border border-border bg-surface-black shadow-card",
     // para componentes de filtros
     filter:
         "mt-1 rounded-xl border border-border bg-surface-overlay text-sm font-normal shadow-xl",

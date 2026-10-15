@@ -1,13 +1,13 @@
-export * from './CheckBox';
+export * from './fields/CheckBox';
 export * from './FieldSkeleton';
-export * from './Input';
-export * from './ImageFileBtn';
-export * from './MultiSelect';
-export * from './Select';
-export * from './ToogleSwitch';
-export * from './Textarea';
+export * from './fields/Input';
+export * from './fields/ImageFileBtn';
+export * from './fields/MultiSelect';
+export * from './fields/Select';
+export * from './fields/ToogleSwitch';
+export * from './fields/Textarea';
 
-export * from './FieldLayout';
+export * from './fields/FieldLayout';
 export * from './AddImageCard';
 export * from './FormCard';
 export * from './FormProvider';
@@ -18,4 +18,3 @@ export * from './hooks/useSearch';
 
 export * from './style'
 
-export * from './rich-text-editor/RichTextEditor';

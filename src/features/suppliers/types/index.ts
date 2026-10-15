@@ -7,4 +7,4 @@ export type * from './supplierFilters';
 export type * from './supplierList.api';
 
 export type * from './supplierCapability';
-export type * from './supplierRelationMode';
+export type * from './supplierRelationModeDb';

@@ -1,5 +1,5 @@
-// PARA MOSTRAR EN EL INPUT
 
+// PARA MOSTRAR LA FECHA EN EL CAMPO INPUT
 export const formatInputDate = (date: Date): string => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");

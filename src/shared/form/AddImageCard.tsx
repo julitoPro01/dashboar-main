@@ -1,5 +1,5 @@
 import { BiImageAdd } from "react-icons/bi"
-import { ImageFileBtn } from "./ImageFileBtn"
+import { ImageFileBtn } from "./fields/ImageFileBtn"
 import { ChangeEvent } from "react";
 
 interface Props {

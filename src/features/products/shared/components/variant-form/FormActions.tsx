@@ -3,7 +3,7 @@ import { FaCheck } from "react-icons/fa6"
 
 export const FormActions = () => {
     return (
-        <div className="py-4 px-6 flex justify-between ">
+        <div className="py-4 px-6 flex justify-between bg-background">
 
             <Button
                 variant="basic"

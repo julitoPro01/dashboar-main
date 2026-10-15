@@ -1,5 +1,5 @@
 import { SupplierCapabilityDb } from "./supplierCapability";
-import { SupplierRelationModeDb } from "./supplierRelationMode";
+import { SupplierRelationModeDb } from "./supplierRelationModeDb";
 
 export type SupplierFormDataResponse ={
     id:number;

@@ -1,0 +1,150 @@
+model ProductVariant {
+  id        Int     @id @default(autoincrement())
+  productId Int
+  sku       String  @unique
+  barcode   String? @unique
+
+  stockQuantity Int              @default(0)
+  minStock      Int?
+  
+  price         Decimal          @db.Decimal(10, 2)
+  discount      Int          @default(0)
+  discountStartsAt DateTime?
+  discountEndsAt   DateTime?
+
+  isMainVariant Boolean          @default(false)
+  displayOrder  Int
+  tags          ProductTagType[] @default([])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  deletedAt DateTime?
+
+
+  recordStatusId Int
+  recordStatus   RecordStatus @relation(fields: [recordStatusId], references: [id])
+
+  saleStatus SaleStatusType @default(COMING_SOON)
+  inventoryPolicy InventoryPolicyType @default(AUTO_DECREMENT)
+  inventoryStatus InventoryStatusType
+  // saleStatus SaleStatus @relation(fields: [saleStatusId], references: [id])
+  // inventoryStatus InventoryStatus @relation(fields: [inventoryStatusId], references: [id])
+
+  createdBy   String
+  createdById Int
+  updatedBy   String?
+  updatedById Int?
+
+  creator UserAuthentication? @relation(fields: [createdById], references: [id], name: "VariantCreatedBy")
+  updater UserAuthentication? @relation(fields: [updatedById], references: [id], name: "VariantUpdatedBy")
+
+  supplierProducts      SupplierProduct[]
+  varianAttributesValue VariantAttributeValue[]
+  cartItems             CartItem[]
+  invoiceItems          InvoiceItem[]
+  orderItems            OrderItem[]
+  images                ProductImage[]
+  movies                ProductMovie[]
+  product               Product                 @relation(fields: [productId], references: [id])
+  stockMovements        StockMovement[]
+  variantChannel        VariantChannel[]
+  reservations          InventoryReservation[]
+
+  @@index([productId, deletedAt])
+  @@index([productId, price])
+  @@index([productId, stockQuantity])
+  @@index([productId])
+  @@index([productId, recordStatusId])
+  @@index([recordStatusId])
+  // @@index([saleStatusId])
+  // @@index([inventoryStatusId])
+  @@index([productId, isMainVariant])
+  @@map("product_variants")
+}
+
+model VariantChannel {
+  id                Int                   @id @default(autoincrement())
+  variantId         Int
+  channel           DistributionChannel
+  publicationStatus PublicationStatusType @default(DRAFT)
+
+  variant ProductVariant @relation(fields: [variantId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([variantId, channel])
+}
+
+enum DistributionChannel {
+  STOREFRONT // Tienda online propia
+  MARKETPLACE // Marketplaces externos
+  PHYSICAL_STORE // Tienda física
+  WHOLESALE // Venta mayorista
+}
+
+model InventoryReservation {
+  id Int @id @default(autoincrement())
+
+  variantId Int
+  variant   ProductVariant @relation(fields: [variantId], references: [id])
+
+  quantity Int
+
+  status    ReservationStatusType
+  expiresAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ReservationStatusType {
+  ACTIVE
+  RELEASED
+  CONSUMED
+  EXPIRED
+}
+
+enum PublicationStatusType {
+  DRAFT
+  ACTIVE
+  INACTIVE
+}
+
+enum InventoryPolicyType {
+  AUTO_DECREMENT
+  UNLIMITED
+  ON_DEMAND
+}
+
+enum ProductTagType {
+  ON_SALE
+  NEW
+  POPULAR
+  LOW_STOCK
+  IN_STORE_ONLY
+}
+
+model VariantAttributeValue {
+  id        Int @id @default(autoincrement())
+  variantId Int
+
+  productVariant ProductVariant @relation(fields: [variantId], references: [id])
+
+  attributeDefinitionId Int
+  attributeDefinition   AttributeDefinition? @relation(fields: [attributeDefinitionId], references: [id])
+
+  // Para valores libres
+  valueText      String?
+  valueNumber    Float?
+  valueBoolean   Boolean?
+  valueDate      DateTime?
+  valueOptionIds Int[]     @default([]) // IDs de system attribute value
+
+  @@unique([variantId, attributeDefinitionId])
+  @@index([attributeDefinitionId, valueText])
+  @@index([attributeDefinitionId, valueNumber])
+  @@index([attributeDefinitionId, valueBoolean])
+  @@index([attributeDefinitionId, valueDate])
+  @@map("variant_attribute_values")
+}

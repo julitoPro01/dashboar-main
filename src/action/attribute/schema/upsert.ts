@@ -1,10 +1,10 @@
-import { AttributeDataTypeDb } from "@/src/features/attributes/attribute-definition/types";
+import { AttributeDataType } from "@/src/generated/prisma/enums";
 import { capitalize } from "@/src/shared/utils";
 import { z } from "zod";
 
 export const createAttrDefinitionSchema = z.object({
     name: z.string().min(1).transform(capitalize),
-    dataType: z.string<AttributeDataTypeDb>(),
+    dataType: z.string<AttributeDataType>(),
     description: z.string().optional(),
     isActive: z.boolean(),
 
@@ -19,7 +19,7 @@ export const createAttrDefinitionSchema = z.object({
 
 export const editAttrDefinitionSchema = z.object({
     name: z.string().min(1).transform(capitalize).optional(),
-    dataType: z.custom<AttributeDataTypeDb>().optional(),
+    dataType: z.custom<AttributeDataType>().optional(),
     description: z.string().optional(),
     isActive: z.boolean().optional(),
 

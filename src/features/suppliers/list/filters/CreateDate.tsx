@@ -3,10 +3,10 @@ import clsx from "clsx";
 import { CgCalendar } from "react-icons/cg";
 
 import { AppliedFilterLabel, OpenFilterButton, useDateFilter, useSortOrderFilter, SortOrderButton } from "@/src/shared/table/filters";
-import { INPUT_FIELD_FILTER_STYLE } from "@/src/shared/theme/inputField/inputFieldStyle";
 import { FloatingWrapper } from "@/src/shared/components/floating";
 import { CellTitle } from "@/src/shared/table/core";
 import { SORTBY_ACCEPT_ONLY } from "../../constants";
+import { FIELD_STYLE } from "@/src/shared/form";
 
 const defSortBy = "created_at";
 export const CreateDate = () => {
@@ -52,29 +52,29 @@ export const CreateDate = () => {
                 {/* Options */}
                 <div className="max-h-60 space-y-2 gap-2 p-2 text-start">
                     <div className="px-3 pt-2">
-                        <label className={INPUT_FIELD_FILTER_STYLE.label}>
+                        <label className={FIELD_STYLE.label}>
                             <span className="block mb-1">Registrado desde</span>
                             <input
                                 value={val.registeredFrom}
                                 type="date"
                                 onChange={({ target }) => handleChange("registeredFrom", target.value)}
-                                className={clsx(INPUT_FIELD_FILTER_STYLE.base, {
-                                    [INPUT_FIELD_FILTER_STYLE.states.normal]: !errors.registeredFrom,
-                                    [INPUT_FIELD_FILTER_STYLE.states.error]: errors.registeredFrom
+                                className={clsx(FIELD_STYLE.base, {
+                                    [FIELD_STYLE.status.normal]: !errors.registeredFrom,
+                                    [FIELD_STYLE.status.error]: errors.registeredFrom
                                 })} />
                         </label>
                     </div>
                     <div className="px-3 pb-2">
-                        <label className={INPUT_FIELD_FILTER_STYLE.label}>
+                        <label className={FIELD_STYLE.label}>
                             <span className="block mb-1">Registrado hasta</span>
                             <input
                                 value={val.registeredTo}
                                 type="date"
                                 onChange={({ target }) => handleChange("registeredTo", target.value)}
-                                className={clsx(INPUT_FIELD_FILTER_STYLE.base,
+                                className={clsx(FIELD_STYLE.base,
                                     {
-                                        [INPUT_FIELD_FILTER_STYLE.states.normal]: !errors.registeredTo,
-                                        [INPUT_FIELD_FILTER_STYLE.states.error]: errors.registeredTo
+                                        [FIELD_STYLE.status.normal]: !errors.registeredTo,
+                                        [FIELD_STYLE.status.error]: errors.registeredTo
                                     })} />
                         </label>
                     </div>

@@ -28,7 +28,9 @@ interface Props {
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
     outClose?: boolean;
-    interaction?: "click" | "hover" | "both"
+    interaction?: "click" | "hover" | "both";
+    zIndex?: number
+    portalRoot?: HTMLElement | null;
 }
 /**
  * Componente carta flotante
@@ -42,17 +44,18 @@ export function FloatingCard({
     fallbackPlacements,
     offsetDistance = 8,
     className,
-    outClose = true, interaction = "click", open, onOpenChange
+    outClose = true, interaction = "click",
+    open, onOpenChange, zIndex = 50, portalRoot
 }: Props) {
 
 
     const { refs, floatingStyles, context } = useFloating({
         open,
         onOpenChange(open) {
-            if ((interaction === "click" || interaction==="both") && !outClose){
+            if ((interaction === "click" || interaction === "both") && !outClose) {
                 onOpenChange?.(true)
-            }else
-            onOpenChange?.(open)
+            } else
+                onOpenChange?.(open)
         },
         placement,
         middleware: [
@@ -68,7 +71,6 @@ export function FloatingCard({
                     Object.assign(elements.floating.style, {
                         maxHeight: `${availableHeight}px`,
                         overflowY: "auto",
-                        zIndex: "50"
                         // height:"auto"
                     });
                 },
@@ -95,18 +97,20 @@ export function FloatingCard({
         role,
     ]);
 
+
+
     return (
         <>
             <div ref={refs.setReference} {...getReferenceProps()}>
                 {trigger}
             </div>
             {open && (
-                <FloatingPortal>
+                <FloatingPortal root={portalRoot}>
                     <div
                         ref={refs.setFloating}
-                        style={floatingStyles}
+                        style={{...floatingStyles, zIndex}}
                         {...getFloatingProps()}
-                        className={className}
+                        className={`${className}`}
                     >
                         {children}
                     </div>

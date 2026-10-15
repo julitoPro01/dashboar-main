@@ -1,6 +1,6 @@
 import { RecordStatusDb } from "@/src/shared/domains/recordStatus";
 import { SupplierCapabilityDb } from "./supplierCapability";
-import { SupplierRelationModeDb } from "./supplierRelationMode";
+import { SupplierRelationModeDb } from "./supplierRelationModeDb";
 import { MetaPagination } from "@/src/shared/table/pagination";
 
 export type SupplierResponse = {

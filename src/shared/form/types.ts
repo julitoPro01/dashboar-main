@@ -26,15 +26,19 @@ export interface FormInputProps {
 
     error?: string | boolean | undefined;
     isDirty?: boolean;
+    positionError?:"floating" | "relative"
 
     labelOption?: LabelOption;
-    label?: string
+    label?: string;
+    labelBg?:string;
 
     fieldIcon?: React.ReactNode;
     iconPosition?: "left" | "right"
 
     maxLengthLabel?: number
     currentLengthLabel?: number
+
+    disabledLabel?:boolean
 }
 
 export type FieldStatusType = "error" | "normal" | "dirty";

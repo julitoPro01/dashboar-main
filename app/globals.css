@@ -18,10 +18,10 @@
   --color-surface-light: #ffffff;
   --color-surface-elevated: #f8fafc;
   --color-surface-overlay: #ffffff;
-  --color-surface-black:#ffffff;
+  --color-surface-black: #ffffff;
   --color-primary: #0d7ff2;
   --color-primary-light: #59a7f5;
-   --color-bg-soft-blue: #EFF4FF;
+  --color-bg-soft-blue: #EFF4FF;
 
   /* default cards */
   --color-border: #e2e8f0;
@@ -29,7 +29,7 @@
   --color-border-subtle: #edf2f7;
   /*alto*/
   --color-border-strong: #cad5e2;
-  --color-border-input:#d1d5dc;
+  --color-border-input: #d1d5dc;
 
   /* Texto principal fuerte.
      Usar en:
@@ -49,7 +49,7 @@
   */
   --color-text: #1f2937;
 
-  /* Texto secundario / metadata.
+  /* Texto secundario / importante.
      Usar en:
      - Fechas
      - Subtítulos
@@ -57,6 +57,9 @@
      - Labels secundarios
   */
   --color-text-muted: #4b5563;
+
+  /* Texto secundario tenue */
+  --color-text-secondary: #6b7280;
 
   /* Texto muy sutil.
      Usar en:
@@ -103,7 +106,7 @@
   --color-surface-light: #ffffff;
   --color-surface-elevated: #f8fafc;
   --color-surface-overlay: #ffffff;
-  --color-surface-black:#ffffff;
+  --color-surface-black: #ffffff;
   --color-primary: #0d7ff2;
   --color-primary-light: #59a7f5;
   --color-bg-soft-blue: #EFF4FF;
@@ -111,11 +114,12 @@
   --color-border: #e2e8f0;
   --color-border-subtle: #edf2f7;
   --color-border-strong: #cad5e2;
-  --color-border-input:#d1d5dc;
+  --color-border-input: #d1d5dc;
 
   --color-text-strong: #111827;
   --color-text: #1f2937;
   --color-text-muted: #4b5563;
+  --color-text-secondary: #6b7280;
   --color-text-subtle: #9ca3af;
   --color-text-inverse: #ffffff;
 
@@ -148,19 +152,21 @@
     --color-surface-light: #1e2939;
     --color-surface-elevated: #22303c;
     --color-surface-overlay: #263645;
-  --color-surface-black:#0F172A;
+    --color-surface-black: #0F172A;
     --color-primary: #63b3ed;
-  --color-primary-light: #63b3ed;
-  --color-bg-soft-blue: #60a5fa25; /* azul translúcido */
+    --color-primary-light: #93C5FD;
+    --color-bg-soft-blue: #60a5fa25;
+    /* azul translúcido */
 
     --color-border: #2d3947;
     --color-border-subtle: #24303d;
     --color-border-strong: #45556c;
-  --color-border-input:#364153;
+    --color-border-input: #364153;
 
     --color-text-strong: #ffffff;
     --color-text: #e5e7eb;
     --color-text-muted: #aeb7c7;
+    --color-text-secondary: #8795a8;
     --color-text-subtle: #64748b;
     --color-text-inverse: #0f172a;
 
@@ -180,9 +186,12 @@
     --shadow-modal: 0 10px 15px -3px rgba(0, 0, 0, 0.3),
       0 4px 6px -2px rgba(0, 0, 0, 0.2);
 
-     --color-border-select: #60a5fa;      /* azul 400 */
-  --color-bg-select: #60a5fa25;        /* azul translúcido */
-  --color-text-select: #ffffff;        /* blanco */
+    --color-border-select: #60a5fa;
+    /* azul 400 */
+    --color-bg-select: #60a5fa25;
+    /* azul translúcido */
+    --color-text-select: #ffffff;
+    /* blanco */
   }
 }
 
@@ -192,19 +201,21 @@
   --color-surface-light: #1e2939;
   --color-surface-elevated: #22303c;
   --color-surface-overlay: #263645;
-  --color-surface-black:#0F172A;
+  --color-surface-black: #0F172A;
   --color-primary: #63b3ed;
-  --color-primary-light: #63b3ed;
-  --color-bg-soft-blue: #60a5fa25; /* azul translúcido */
+  --color-primary-light: #93C5FD;
+  --color-bg-soft-blue: #60a5fa25;
+  /* azul translúcido */
 
   --color-border: #2d3947;
   --color-border-subtle: #24303d;
   --color-border-strong: #45556c;
-  --color-border-input:#364153;
+  --color-border-input: #364153;
 
   --color-text-strong: #ffffff;
   --color-text: #e5e7eb;
   --color-text-muted: #aeb7c7;
+  --color-text-secondary: #8795a8;
   --color-text-subtle: #64748b;
   --color-text-inverse: #0f172a;
 
@@ -223,9 +234,12 @@
   --shadow-modal: 0 10px 15px -3px rgba(0, 0, 0, 0.3),
     0 4px 6px -2px rgba(0, 0, 0, 0.2);
 
-     --color-border-select: #60a5fa;      /* azul 400 */
-  --color-bg-select: #60a5fa25;        /* azul translúcido */
-  --color-text-select: #ffffff;        /* blanco */
+  --color-border-select: #60a5fa;
+  /* azul 400 */
+  --color-bg-select: #60a5fa25;
+  /* azul translúcido */
+  --color-text-select: #ffffff;
+  /* blanco */
 }
 
 /* @utility container { } */
@@ -239,10 +253,10 @@
   --color-surface-light: var(--color-surface-light);
   --color-surface-elevated: var(--color-surface-elevated);
   --color-surface-overlay: var(--color-surface-overlay);
-  --color-surface-black:var(--color-surface-black);
+  --color-surface-black: var(--color-surface-black);
   --color-primary: var(--color-primary);
   --color-primary-light: var(--color-primary-light);
-  --color-bg-soft-blue:var(--color-bg-soft-blue);
+  --color-bg-soft-blue: var(--color-bg-soft-blue);
 
   --color-border: var(--color-border);
   --color-border-subtle: var(--color-border-subtle);
@@ -252,6 +266,7 @@
   --color-text-strong: var(--color-text-strong);
   --color-text: var(--color-text);
   --color-text-muted: var(--color-text-muted);
+  --color-text-secondary:var(--color-text-secondary);
   --color-text-subtle: var(--color-text-subtle);
   --color-text-inverse: var(--color-text-inverse);
 
@@ -313,9 +328,9 @@ body {
 
 /* globals.css */
 .masonry-column {
-    background-clip: padding-box;
+  background-clip: padding-box;
 }
 
-.masonry-column > div {
-    margin-bottom: 106px
+.masonry-column>div {
+  margin-bottom: 106px
 }

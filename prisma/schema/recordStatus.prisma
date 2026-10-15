@@ -1,0 +1,21 @@
+
+model RecordStatus{
+  id Int @id 
+  name RecordStatusType
+
+  productVariants ProductVariant[]
+  products Product[]
+  Categories Category[]
+  suppliers  Supplier[]
+  supplierUsers   SupplierUser[]
+  userAuthenticatios UserAuthentication[]
+  @@map("record_status")
+}
+
+enum RecordStatusType {
+  DRAFT
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+  DELETED
+}

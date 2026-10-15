@@ -11,10 +11,10 @@ import { useBootDataStore } from "@/src/store/useBootDataStore";
 import { getHasValues } from "@/src/shared/utils/getHasValues";
 import { RECORD_STATUS_ID } from "@/src/shared/domains/recordStatus";
 import { VERIFICATION_STATUS_ID } from "@/src/shared/domains/verificationStatus";
-import { INVENTORY_STATUS_ID, SALES_STATUS_ID } from "@/src/shared/domains/catalog";
-import { ATTRIBUTE_INPUT_CONFIG } from "../constants";
+import { ATTRIBUTE_INPUT_CONFIG, INVENTORY_STATUS, SALE_STATUS } from "../constants";
 import { FormActions } from "./FormActions";
 import { useStore } from "@/src/store/useStore";
+import { mapImagesToDb, mapSystemAttributesToDb } from "../shared/helpers";
 
 
 export const CreateProduct = () => {
@@ -44,52 +44,6 @@ export const CreateProduct = () => {
 
     if (!user) return;
 
-    // ATRIBUTOS DEL SISTEMA
-    const system = val.categorization.systemAttributes
-      ?.flatMap(v => v.attributes)
-      .map(curr => {
-        const { field } = ATTRIBUTE_INPUT_CONFIG[curr.dataType];
-
-        const value: Record<string, any> = {
-          valueText: undefined,
-          valueNumber: undefined,
-          valueBoolean: undefined,
-          valueDate: undefined,
-          valueOptionIds: undefined,
-        };
-
-        switch (field) {
-          case "valueText":
-            value.valueText = curr.valueText?.trim() || undefined;
-            break;
-
-          case "valueNumber":
-            value.valueNumber = curr.valueNumber ?? undefined;
-            break;
-
-          case "valueBoolean":
-            value.valueBoolean = curr.valueBoolean ?? undefined;
-            break;
-
-          case "valueDate":
-            value.valueDate = curr.valueDate?.trim() || undefined;
-            break;
-
-          case "valueOptionIds":
-            value.valueOptionIds = curr.valueOptionIds?.length
-              ? curr.valueOptionIds
-              : undefined;
-            break;
-        }
-
-        const data = {
-          attributeDefinitionId: Object.values(getHasValues(value)).length ? curr.attributeDefinitionId : undefined,
-          ...value,
-        };
-        if (data.attributeDefinitionId)
-          return data;
-        else return undefined;
-      }).filter(Boolean) as [];
     // ATRIBUTOS PERSONALIZADOS
     const json = val.longDescription ? JSON.stringify(val.longDescription) : undefined;
     const longDescription = json ? JSON.parse(json) : undefined
@@ -105,20 +59,12 @@ export const CreateProduct = () => {
 
       recordStatusId: RECORD_STATUS_ID.DRAFT,
       verificationStatusId: VERIFICATION_STATUS_ID.DRAFT,
-      inventoryStatusId: INVENTORY_STATUS_ID.OUT_OF_STOCK,
-      saleStatusId: SALES_STATUS_ID.COMING_SOON,
+      inventoryStatus: INVENTORY_STATUS.OUT_OF_STOCK,
+      saleStatus: SALE_STATUS.COMING_SOON,
 
-      images: val.images.map(({ mediaFile, isPrimary }, i) => ({
-        mediaFile: {
-          fileName: mediaFile.fileName,
-          filePath: mediaFile.filePath,
-          mimeType: mediaFile.mimeType,
-          fileSize: mediaFile.fileSize,
-        },
-        isPrimary, displayOrder: i + 1
-      })),
+      images: mapImagesToDb(val.images),
 
-      systemAttributes: system,
+      systemAttributes: mapSystemAttributesToDb(val.categorization.systemAttributes),
 
       createdBy: user.name,
       createdById: user.id
@@ -126,7 +72,7 @@ export const CreateProduct = () => {
     },
       {
         onSuccess(val) {
-          if (val.ok){
+          if (val.ok) {
             // Restablecemos el formulario
             form.reset();
             // refrescamos la data original a otra version

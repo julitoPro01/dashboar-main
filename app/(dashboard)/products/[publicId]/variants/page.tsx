@@ -19,7 +19,7 @@ export default async function VariantPage({ params }: Props) {
 
 
   return (
-    <div>
+    <div className="py-8">
 
       <ListVariants variants={res.data.variants} />
         

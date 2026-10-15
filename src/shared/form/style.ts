@@ -26,10 +26,9 @@ const FIELD_LABEL = "text-sm font-semibold text-slate-600 tracking-wide dark:tex
 const FIELD_BASE = `
     w-full transition-colors
     focus:shadow-sm focus:outline-none
-     disabled:bg-surface
     text-base
     `;
-const FIELD_TEXT = " text-text-muted font-medium dark:text-white"
+const FIELD_TEXT = "disabled:text-text-secondary text-text font-medium"
 const FIELD_PLACEHOLDER = "placeholder:text-text-subtle";
 
 //------ ESKELETON--------

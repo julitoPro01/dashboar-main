@@ -15,6 +15,8 @@ export const SyncBaseProductStore = ({ product }: Props) => {
         setBaseProduct({
             id: product.id,
             category: product.category,
+            name:product.name,
+            sku:product.sku
         });
 
         return () => {

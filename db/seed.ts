@@ -73,23 +73,13 @@ async function main() {
   //   }
   // })
 
-  // await prisma.inventoryStatus.deleteMany();
-  // await prisma.inventoryStatus.createMany({
-  //   data: [{ id: 1, name: "IN_STOCK" }, { id: 4, name: "IN_TRANSIT" }, { id: 2, name: "OUT_OF_STOCK" }, { id: 3, name: "PENDING_RESTOCK" }, { id: 5, name: "RESERVED" }]
-  // })
-
-  // await prisma.saleStatus.deleteMany();
-  // await prisma.saleStatus.createMany({
-  //   data: [{ id: 1, name: "AVAILABLE" }, { id: 2, name: "COMING_SOON" }, { id: 3, name: "DISCONTINUED" }, { id: 4, name: "MADE_TO_ORDER" }]
-  // })
-
   // await prisma.currency.deleteMany();
   // await prisma.currency.createMany({
   //   data: [{ id: 1, code: "PEN", name: "Soles", symbol: "S/" }, { id: 2, code: "USD", name: "Dolar", symbol: "$" }, { id: 3, code: "EUR", name: "Euro", symbol: "..." }]
   // })
 
-  await prisma.productAttributeValue.deleteMany()
-  await prisma.product.deleteMany()
+  // await prisma.productAttributeValue.deleteMany()
+  // await prisma.product.deleteMany()
 
 }
 

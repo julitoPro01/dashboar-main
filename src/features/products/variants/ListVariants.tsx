@@ -1,12 +1,8 @@
-import { VariantListItemResponse } from "../types"
+import { VariantListItemResponse } from "../types";
+import { ListVariant } from "./ListVariant";
 
-interface Props{
-  variants:VariantListItemResponse[]
+interface Props {
+    variants: VariantListItemResponse[];
 }
 
-export const ListVariants = ({variants}:Props) => {
-
-  return (
-    <div>listVariants</div>
-  )
-}
+export const ListVariants = ({ variants }: Props) => <ListVariant variants={variants} />;

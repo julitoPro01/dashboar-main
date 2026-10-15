@@ -1,0 +1,125 @@
+
+model Product {
+  id                   Int       @id @default(autoincrement())
+  supplierId          Int
+  categoryId          Int
+  verificationStatusId Int
+  name                 String
+  publicId            String    @unique @default(uuid())
+  parentSku           String @unique
+  longDescription     Json?
+  shortDescription    String  @db.VarChar(300)
+  slug                 String    @unique
+  currencyId          Int       @default(1) // Default Currency
+
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime? @updatedAt
+  deletedAt           DateTime?
+
+  extraAttributes        Json?
+
+  recordStatusId Int  
+  recordStatus RecordStatus @relation(fields: [recordStatusId], references: [id])
+
+  saleStatus SaleStatusType @default(COMING_SOON)
+  inventoryStatus InventoryStatusType
+  // saleStatus SaleStatus @relation(fields: [saleStatusId], references: [id])
+  // inventoryStatus InventoryStatus @relation(fields: [inventoryStatusId], references: [id])
+  
+  createdBy String
+  createdById Int
+  updatedBy String?
+  updatedById Int?
+
+  creator UserAuthentication? @relation(fields: [createdById], references: [id],name: "ProductCreatedBy")
+  updater UserAuthentication? @relation(fields: [updatedById], references: [id],name: "ProductUpdatedBy")
+  // Relations
+  attributeValues        ProductAttributeValue[]
+  wishlistItems          WishlistItem[]
+  featuredAds            FeaturedAdItem[]
+  reviews                 ProductReview[]
+  supplier                Supplier              @relation(fields: [supplierId], references: [id])
+  verificationStatus     VerificationStatus      @relation(fields: [verificationStatusId], references: [id])
+  category              Category @relation(fields: [categoryId],references: [id])
+  images                  ProductImage[]
+  movies                  ProductMovie[]
+  productVariants                ProductVariant[]
+  shippingTimes          ProductShippingTime[]
+  statistics              ProductStatistics[]
+  promotions              Promotion[]
+  supplierProducts       SupplierProduct[]
+
+  currency                Currency                 @relation(fields: [currencyId], references: [id])
+  productSearchIndex ProductSearchIndex?
+
+@@index([supplierId, recordStatusId])
+
+// @@index([saleStatusId])
+// @@index([inventoryStatusId])
+
+
+@@index([deletedAt])
+@@index([recordStatusId])
+@@index([supplierId])
+@@index([verificationStatusId])
+
+
+  @@map("products")
+}
+
+
+// model SaleStatus{
+//   id Int @id
+//   name SaleStatusType
+//   productVariants ProductVariant[]
+//   products Product[]
+//   @@map("sales_status")
+// }
+
+enum SaleStatusType {
+  AVAILABLE
+  COMING_SOON
+  DISCONTINUED
+  MADE_TO_ORDER
+}
+
+// model InventoryStatus{
+//   id Int @id
+//   name InventoryStatusType
+//   productVariants ProductVariant[]
+//   products Product[]
+//   @@map("inventory_status") 
+// }
+
+enum InventoryStatusType {
+  IN_STOCK
+  OUT_OF_STOCK
+  PENDING_RESTOCK
+  IN_TRANSIT
+}
+
+model ProductAttributeValue {
+  id  Int @id @default(autoincrement())
+  productId             Int
+  product            Product            @relation(fields: [productId], references: [id])
+
+ // Atributo definido por el sistema
+  attributeDefinitionId Int
+  attributeDefinition AttributeDefinition? @relation(fields: [attributeDefinitionId], references: [id])
+
+ // Para valores libres
+  valueText     String?
+  valueNumber   Float?
+  valueBoolean  Boolean?
+  valueDate     DateTime?
+  valueOptionIds      Int[] @default([])
+
+  @@unique([productId, attributeDefinitionId])
+
+  @@index([attributeDefinitionId, valueText])
+  @@index([attributeDefinitionId, valueNumber])
+  @@index([attributeDefinitionId, valueBoolean])
+  @@index([attributeDefinitionId, valueDate])
+
+  @@map("product_attribute_values")
+}

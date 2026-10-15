@@ -1,4 +1,4 @@
-import { RecordStatusDb } from "@/src/shared/domains/recordStatus";
+import { RECORD_STATUS_OPTIONS, RecordStatusDb } from "@/src/shared/domains/recordStatus";
 import { useBootDataStore } from "@/src/store/useBootDataStore";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -15,7 +15,6 @@ export const ActiveInput = ({ status, id, isParent }: Props) => {
 
     const isValidToActive = !(status === "DELETED" || status === "DRAFT")
 
-    const rStatus = useBootDataStore(v => v.bootRecordStatuses);
     const user = useBootDataStore(v => v.user);
     const mainPath = useStore(v => v.selectedMainCategory?.path) ?? "";
 
@@ -28,8 +27,7 @@ export const ActiveInput = ({ status, id, isParent }: Props) => {
 
         const activeChange = !active;
 
-        const status = rStatus.find(v => v.name === (activeChange ? "ACTIVE" : "INACTIVE"));
-
+        const status = RECORD_STATUS_OPTIONS.map(v => v.value === (activeChange ? "ACTIVE" : "INACTIVE"));
         // const res = await updateCategory(id, {
         //     recordStatusId: status!.id
         // }, { updateById: user.id!, updateBy: user.name! })

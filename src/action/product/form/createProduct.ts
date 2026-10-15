@@ -23,16 +23,16 @@ export const createProduct = async (dataProduct: CreateProductPayload) => {
         const { createdBy, createdById, ...rest } = dataProduct;
 
         const parse = createProductSchema.parse(rest);
-        const res = await prisma.$transaction(async () => {
+        const res = await prisma.$transaction(async (tx) => {
             //#1
-            const product = await prisma.product.create({
+            const product = await tx.product.create({
                 data: {
                     supplierId: parse.supplierId,
                     categoryId: parse.categoryId,
-
+                    
                     recordStatusId: parse.recordStatusId,
-                    inventoryStatusId: parse.inventoryStatusId,
-                    saleStatusId: parse.saleStatusId,
+                    inventoryStatus: parse.inventoryStatus,
+                    saleStatus: parse.saleStatus,
                     verificationStatusId: parse.verificationStatusId,
 
                     name: parse.name,
@@ -46,14 +46,14 @@ export const createProduct = async (dataProduct: CreateProductPayload) => {
                 }
             });
             //#2 ACTUALIAMOS EL SLUG
-            await prisma.product.update({
+            await tx.product.update({
                 where: { id: product.id },
                 data: { slug: product.slug + "-" + generateSlugSuffix() }
             });
 
             //#4 IMAGENES
             for (const image of parse.images) {
-                await prisma.mediaFile.create({
+                await tx.mediaFile.create({
                     data: {
                         fileName: image.mediaFile.fileName,
                         filePath: image.mediaFile.filePath,
@@ -72,7 +72,7 @@ export const createProduct = async (dataProduct: CreateProductPayload) => {
            
             //#6 ATRIBUTOS DEL SISTEMA
             if (parse.systemAttributes?.length) {
-                await prisma.productAttributeValue.createMany({
+                await tx.productAttributeValue.createMany({
                     data: parse.systemAttributes.map<ProductAttributeValueCreateManyInput>(v => ({
                         productId: product.id,
                         attributeDefinitionId: v.attributeDefinitionId,
@@ -88,7 +88,7 @@ export const createProduct = async (dataProduct: CreateProductPayload) => {
 
             return { id: product.id, name: product.name, publicId: product.publicId }
         });
-        return ApiResponse.success("Producto añadido exitosamente.", res);
+        return ApiResponse.success("Producto creado exitosamente.", res);
     });
 
 

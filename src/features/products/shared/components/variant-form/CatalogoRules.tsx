@@ -2,37 +2,25 @@
 "use client";
 
 import { Checkbox } from "@/src/shared/form";
-import { useState } from "react";
+import { useEffect } from "react";
+import { CiWarning } from "react-icons/ci";
 import { IoToggleOutline } from "react-icons/io5";
 
-interface VariantCatalogRulesProps {
-    isPrimary?: boolean;
-    blockAdditionalCombinations?: boolean;
-    onPrimaryChange?: (value: boolean) => void;
-    onBlockCombinationsChange?: (value: boolean) => void;
-}
+export const CatalogRules = () => {
 
-export const CatalogRules = ({
-    isPrimary = true,
-    blockAdditionalCombinations = false,
-    onPrimaryChange,
-    onBlockCombinationsChange,
-}: VariantCatalogRulesProps) => {
 
-    const [primary, setPrimary] = useState(isPrimary);
-    const [blockCombinations, setBlockCombinations] = useState(
-        blockAdditionalCombinations
-    );
+    const hasOtherVariants = false;
 
-    const handlePrimaryChange = (value: boolean) => {
-        setPrimary(value);
-        onPrimaryChange?.(value);
-    };
+    useEffect(() => {
 
-    const handleBlockCombinationsChange = (value: boolean) => {
-        setBlockCombinations(value);
-        onBlockCombinationsChange?.(value);
-    };
+        // Establecer isPrimary= true
+
+    }, [hasOtherVariants])
+
+
+
+    if (!hasOtherVariants)
+        return null
 
     return (
         <section className="space-y-3">
@@ -41,27 +29,37 @@ export const CatalogRules = ({
                     size={18}
                     className="text-primary"
                 />
-                <span>6. Reglas de visualización del catálogo</span>
+                <span>6. Configuración de variantes</span>
             </h3>
 
             {/* Variante principal */}
-            <label className="flex cursor-pointer items-start justify-between gap-4 rounded-md border border-border-subtle bg-bg-soft-blue px-3 py-2.5">
-                <div className="min-w-0">
+            <div className="flex  items-start justify-between gap-4 rounded-md border border-border-subtle bg-bg-soft-blue px-3 py-2.5">
+                <div className="min-w-0 ">
                     <span className="block text-sm font-semibold text-primary">
                         Variante principal del producto
                     </span>
 
                     <span className="mt-0.5 block text-xs text-text-muted">
-                        Define esta variante como la principal para mostrar su imagen y
-                        precio predeterminados en resultados de búsqueda y landings.
+                        Define esta variante como referencia predeterminada del producto en el catálogo,
+                        utilizando su imagen y precio.
                     </span>
+
+                    <div className="text-amber-500 text-xs inline-flex gap-1 items-center mt-1">
+                        <CiWarning size={18} className=" shrink-0" />
+                        <span> Ya existe otra variante principal. Al seleccionar esta opción,
+                            será reemplazada.
+                        </span>
+                    </div>
+
+                    <span className=" block text-xs text-text-muted">Solo una variante puede ser la principal por producto.</span>
                 </div>
 
-                <Checkbox />
-            </label>
+                <Checkbox aria-label="Definir variante principal" />
+            </div>
 
+            {/* TODO: Desarrollar en una sección independiente */}
             {/* Bloquear combinaciones */}
-            <label className="flex cursor-pointer items-start justify-between gap-4 rounded-md border border-border-subtle bg-bg-soft-blue px-3 py-2.5">
+            {/* <label className="flex cursor-pointer items-start justify-between gap-4 rounded-md border border-border-subtle bg-bg-soft-blue px-3 py-2.5">
                 <div className="min-w-0">
                     <span className="block text-sm font-semibold text-primary">
                         Bloquear combinaciones adicionales
@@ -74,7 +72,7 @@ export const CatalogRules = ({
                 </div>
 
                 <Checkbox />
-            </label>
+            </label> */}
         </section>
     );
 };

@@ -22,7 +22,6 @@ export const Categorization = (props: Props) => {
     const { dirtyFields } = useFormState({ control, name: "categorization" });
 
     const { original } = useRegisterSystemAttributes({
-        entity: "product",
         isEdit: props.isEdit,
         id: props.isEdit ? props.id : undefined,
     });

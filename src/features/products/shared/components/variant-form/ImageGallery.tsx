@@ -4,8 +4,7 @@ import { useCrudImageGallery } from "../../hooks"
 import { DragDropProvider } from "@dnd-kit/react";
 import { SortableImageCard } from "../SortableImageCard";
 import { AddImageCard, FIELD_STYLE, FIELD_VALIDATION } from "@/src/shared/form";
-import { Control, useWatch } from "react-hook-form";
-import { VariantForm } from "../../../types";
+import { useWatch } from "react-hook-form";
 import { mapSystemAttributesToView } from "../../helpers";
 
 export const ImageGallery = () => {
@@ -19,8 +18,7 @@ export const ImageGallery = () => {
         currentCount,
         error,
         images,
-        maxImages,
-        control
+        maxImages
     } = useCrudImageGallery();
 
     return (
@@ -33,7 +31,7 @@ export const ImageGallery = () => {
                     <IoImagesOutline size={18} className="text-primary" />
 
                     <span className={FIELD_VALIDATION["*"]}>
-                        4. Galería de imagenes
+                        3. Galería de imagenes
                     </span>
                 </h3>
 
@@ -77,7 +75,7 @@ export const ImageGallery = () => {
                 error && <span className={FIELD_STYLE.validation.errorMsg}> {error.message} </span>
             }
 
-            <VariantSummary control={control} />
+            <VariantSummary />
 
             <footer className="border-t border-border bg-surface-light px-6 py-4">
 
@@ -98,13 +96,8 @@ export const ImageGallery = () => {
     )
 }
 
-const VariantSummary = ({
-    control,
-}: {
-    control: Control<VariantForm>;
-}) => {
+const VariantSummary = () => {
     const systemProperties = useWatch({
-        control,
         name: "categorization.systemAttributes",
     });
 

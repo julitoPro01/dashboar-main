@@ -1,6 +1,6 @@
-import { AttributeDataType } from "@/src/generated/prisma/enums";
+import { AttributeDataType as AttributeDataTypeDb} from "@/src/generated/prisma/enums";
 
-export type AttributeDataTypeDb = AttributeDataType;
+export {AttributeDataTypeDb};
 
 // Tipo para crear/actualizar
 export type UpsertAttributeForm = {

@@ -1,3 +1,4 @@
+import { InventoryStatusType, SaleStatusType } from "@/src/generated/prisma/enums";
 import { z } from "zod";
 
 
@@ -17,8 +18,8 @@ export const longDescriptionSchema = z.object({
 export const createProductSchema = z.object({
 
     recordStatusId: z.number().int().positive(),
-    inventoryStatusId: z.number().int().positive(),
-    saleStatusId: z.number().int().positive(),
+    inventoryStatus: z.enum(InventoryStatusType),
+    saleStatus:z.enum(SaleStatusType),
     verificationStatusId: z.number().int().positive(),
 
     supplierId: z.number().int().positive({

@@ -1,0 +1,70 @@
+
+model Category {
+  id                  Int        @id @default(autoincrement())
+  publicId           String     @default(uuid())
+  name                String
+  description         String?
+  slug                String
+  imageUrl           String?
+
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime?  @updatedAt
+
+  path String
+  level Int
+
+  parentId           Int?
+  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryTree")  
+
+  recordStatusId Int
+  recordStatus RecordStatus @relation(fields: [recordStatusId], references: [id]) 
+
+  createdBy String
+  createdById Int
+  updatedBy String?
+  updatedById Int?
+
+  creator UserAuthentication? @relation(fields: [createdById], references: [id],name: "CategoryCreatedBy")
+  updater UserAuthentication? @relation(fields: [updatedById], references: [id],name: "CategoryUpdatedBy")
+
+  // productCategories ProductCategory[]
+  products Product[]
+  promotions         Promotion[]
+  categoryAttributes CategoryAttribute[]
+
+  @@index([slug])
+  @@index([recordStatusId])
+  @@index([path])
+  @@index([level])
+  @@map("categories")
+}
+
+model CategoryAttribute {
+  id                     Int @id @default(autoincrement())
+  categoryId            Int
+  attributeDefinitionId Int
+
+  isRequired        Boolean // True = mandatory
+  isFilter          Boolean @default(false)
+  isVariant Boolean @default(false)
+  displayOrder      Int?
+  displayGroup           DisplayGroup @default(GENERAL)
+
+  category           Category           @relation(fields: [categoryId], references: [id], onDelete:Cascade)
+  attributeDefinition AttributeDefinition @relation(fields: [attributeDefinitionId], references: [id])
+
+  @@unique([categoryId, attributeDefinitionId])
+  @@map("category_attributes")
+}
+
+enum DisplayGroup {
+    GENERAL 
+    FEATURES
+    DIMENSIONS
+    TECHNICAL
+    COMPATIBILITY
+    PACKAGE_CONTENT
+    WARRANTY
+    ADDITIONAL
+}

@@ -72,7 +72,6 @@ export const Date = () => {
                         value={values.registeredFrom}
                         error={errors.registeredFrom}
                         onChange={({ target }) => handleChange("registeredFrom", target.value)}
-                        fieldClass="dark:[color-scheme:dark]"
                     />
 
                     <span className="text-text-muted font-semibold tracking-wider text-xs">Registrado hasta</span>
@@ -82,7 +81,6 @@ export const Date = () => {
                         value={values.registeredTo}
                         error={errors.registeredTo}
                         onChange={({ target }) => handleChange("registeredTo", target.value)}
-                        fieldClass="dark:[color-scheme:dark]"
                     />
 
                 </div>
