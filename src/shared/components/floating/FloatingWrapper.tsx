@@ -5,12 +5,15 @@ const SIZE = {
     xl: "w-[32rem]",
 } as const;
 
-interface Props {
+export type FloatingWrapperPoition = {
+    positionX?: "left-0" | "right-0" | "left-full" | { custom: string };
+    positionY?: "top-full" | "bottom-full" | "top-0" | { custom: string };
+}
+
+interface FloatingWrapperProps extends FloatingWrapperPoition {
     children: React.ReactNode;
     open: boolean;
     onClose?: () => void;
-    positionX?: "left-0" | "right-0" | "left-full" | { custom: string };
-    positionY?: "top-full" | "bottom-full" | "top-0" | { custom: string };
     size?: keyof typeof SIZE,
     overlay?: boolean;
     className?: string;
@@ -20,7 +23,7 @@ interface Props {
 export const FloatingWrapper = ({ children, open, onClose,
     positionX = "left-0", positionY = "top-full", size = "md",
     overlay = true, className = ""
-}: Props) => {
+}: FloatingWrapperProps) => {
 
     const y = typeof positionY === "object" ? positionY.custom : positionY;
     const x = typeof positionX === "object" ? positionX.custom : positionX;

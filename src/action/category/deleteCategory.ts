@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { ApiEntityInUseData, ApiResponse, PromiseReturn } from "@/src/shared/utils";
+import {  ApiResponse, PromiseReturn } from "@/src/shared/utils";
 
 interface Props {
     id: number;
@@ -43,17 +43,18 @@ export const deleteCategory = async ({ id, parentId }: Props) => {
 
     if(!res.ok && res.errorCode==="ENTITY_IN_USE"){
 
+        //TODO:....
         return await PromiseReturn(async()=>{
 
-            const products = prisma.productCategory.count({where:{categoryId:id}});
-            const promotions = prisma.promotion.count({where:{categoryId:id}});
+            // const products = prisma.productCategory.count({where:{categoryId:id}});
+            // const promotions = prisma.promotion.count({where:{categoryId:id}});
 
-            const [one,two] = await prisma.$transaction([products,promotions]);
+            // const [one,two] = await prisma.$transaction([products,promotions]);
 
-            return ApiResponse.badRequest("","ENTITY_IN_USE",undefined,[
-                {entity:"Producto / Categoría",count:one},
-                {entity:"Promoción",count:two}
-            ])
+            // return ApiResponse.badRequest("","ENTITY_IN_USE",undefined,[
+            //     {entity:"Producto / Categoría",count:one},
+            //     {entity:"Promoción",count:two}
+            // ])
         })
     }
 

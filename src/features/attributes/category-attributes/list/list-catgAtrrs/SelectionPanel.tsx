@@ -27,7 +27,7 @@ export const SelectionPanel = ({ actionType, invalidationReason, items, resetSta
     if (actionType === "view") return null;
 
     return (
-        <div className="px-2 py-2 bg-surface border border-t-0 border-border shadow-card">
+        <div className="px-2 py-2 bg-surface border border-t-0 border-border ">
             <div className="bg-background rounded-lg px-4 py-4 flex flex-wrap justify-between  gap-4">
                 {actionType === "assign" && <Assign {...{ selectedCount, items, resetState }} />}
                 {actionType === "edit" && <Edit {...{ selectedCount, items, resetState, invalidationReason }} />}

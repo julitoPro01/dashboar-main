@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { IoChevronDown } from "react-icons/io5";
 import { FIELD_STYLE } from "../style";
-import { FieldStatusType, FormInputProps } from "../types";
+import { FieldStatusType, FormInputCustomProps } from "../types";
 import clsx from "clsx";
 import { FieldLayout } from "./FieldLayout";
 
@@ -11,7 +11,8 @@ interface Option {
     label: string;
 }
 
-interface MultiSelectProps extends FormInputProps {
+interface MultiSelectProps extends FormInputCustomProps {
+    
     id?: string;
     label?: string;
     options: Option[];
@@ -36,6 +37,7 @@ export const MultiSelect = (props: MultiSelectProps) => {
         textSize = "sm",
         fieldSize = "md", fieldClass,
         labelBg = "bg-surface",
+        
     } = props
 
     const status: FieldStatusType = error ? "error" : isDirty ? "dirty" : "normal";

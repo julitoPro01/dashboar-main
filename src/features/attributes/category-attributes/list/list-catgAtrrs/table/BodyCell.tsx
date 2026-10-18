@@ -1,10 +1,10 @@
 import { useSortableItemContext } from "@/src/shared/sortable";
 import { FaCheck } from "react-icons/fa6";
 import { GrClose } from "react-icons/gr";
-import { RxDragHandleDots2 } from "react-icons/rx";
 import { CategoryAttrDisplayGroupDb } from "../../../types";
 import { CATEGORY_ATTR_GROUP_LABEL, CATEGORY_ATTR_GROUP_OPTIONS } from "../../../constants/displayGroup";
 import { Checkbox, ToggleSwitch } from "@/src/shared/form";
+import { LuArrowDownUp } from "react-icons/lu";
 
 export const BodyCells = {
     Selection: (checked: boolean, disabled: boolean, indeterminate: boolean, onChange: () => void) =>
@@ -26,7 +26,7 @@ export const BodyCells = {
             className={`flex items-center justify-center gap-2 not-disabled:cursor-grab active:cursor-grabbing disabled:cursor-no-drop not-disabled:hover:text-text-strong w-full h-full`}
             ref={ handleRef}
         >
-            <RxDragHandleDots2 size={20} /> <span>{order}</span>
+            <LuArrowDownUp size={20} /> <span>{order}</span>
         </button>)
     },
     Order: (order: number) => <div className="w-full text-center">{order}</div>,

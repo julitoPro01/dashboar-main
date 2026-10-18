@@ -1,11 +1,12 @@
 import clsx from "clsx"
-import { FieldStatusType, FormInputProps } from "../types";
+import { FieldStatusType, FormInputCustomProps } from "../types";
 import { TextareaHTMLAttributes } from "react";
 import { FIELD_STYLE } from "../style";
 import { FieldLayout } from "./FieldLayout";
 
 
-interface Props extends FormInputProps, TextareaHTMLAttributes<HTMLTextAreaElement> {
+interface Props extends  TextareaHTMLAttributes<HTMLTextAreaElement> {
+    custom:FormInputCustomProps
 }
 
 /**
@@ -20,45 +21,27 @@ interface Props extends FormInputProps, TextareaHTMLAttributes<HTMLTextAreaEleme
  * @returns 
  */
 
-export const Textarea = (props: Props) => {
+export const Textarea = ({custom, ...rest}: Props) => {
 
-    const {
-        roundedSize,
-        border,
-        fieldSize,
-        textSize,
-        fieldIcon,
-        fieldClass,
-        error,
-        isDirty,
-        labelOption,
-        iconPosition,
-        maxLengthLabel,
-        currentLengthLabel,
-        positionError,
-        labelBg,
-        disabledLabel,
-        ...rest
-    } = props;
 
-    const status: FieldStatusType = error ? "error" : isDirty ? "dirty" : "normal";
+    const status: FieldStatusType = custom.error ? "error" : custom.isDirty ? "dirty" : "normal";
 
     const field = clsx(
         FIELD_STYLE.base,
         FIELD_STYLE.text,
         FIELD_STYLE.placeholder,
-        fieldIcon && "ps-10",
-        FIELD_STYLE.borderSize[border ?? 1],
-        FIELD_STYLE.roundedSize[roundedSize ?? "md"],
+        custom.fieldIcon && "ps-10",
+        FIELD_STYLE.borderSize[custom.border ?? 1],
+        FIELD_STYLE.roundedSize[custom.roundedSize ?? "md"],
 
-        FIELD_STYLE.textSize[textSize ?? "sm"],
-        FIELD_STYLE.size[fieldSize ?? "md"],
+        FIELD_STYLE.textSize[custom.textSize ?? "sm"],
+        FIELD_STYLE.size[custom.fieldSize ?? "md"],
         FIELD_STYLE.status[status],
-        fieldClass
+        custom.fieldClass
     )
 
     return (
-        <FieldLayout {...props} >
+        <FieldLayout {...custom} id={rest.id} required={rest.required} >
             <textarea className={field+" scrollbar-thin"} {...rest} >
             </textarea>
         </FieldLayout>

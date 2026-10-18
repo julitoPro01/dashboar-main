@@ -72,28 +72,22 @@ export const Price = () => {
                     <div className="max-h-60 space-y-2 p-4 text-start">
 
                         <span className="text-text-muted font-semibold text-xs tracking-wider">Mínimo</span>
-                        <Input fieldClass="ps-7"
+                        <Input custom={{ fieldClass: "ps-7", fieldSize: "sm", error: errors.min, fieldIcon: "S/" }}
                             type="number"
-                            fieldSize="sm"
                             placeholder="0.00"
                             value={values.min}
-                            error={errors.min}
                             min={0}
                             step="0.01"
-                            fieldIcon={"S/"}
                             onChange={({ target }) => handleChange("min", target.value)}
                         />
 
                         <span className="text-text-muted font-semibold text-xs tracking-wider">Máximo</span>
-                        <Input fieldClass="ps-7"
+                        <Input custom={{ fieldClass: "ps-7", fieldSize: "sm", error: errors.max, fieldIcon: "S/" }}
                             type="number"
-                            fieldSize="sm"
                             placeholder="0.00"
                             min={0}
                             step="0.01"
                             value={values.max}
-                            error={errors.max}
-                            fieldIcon={"S/"}
                             onChange={({ target }) => handleChange("max", target.value)}
                         />
 

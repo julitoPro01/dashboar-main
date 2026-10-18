@@ -1,4 +1,4 @@
-import { PUBLICATION_STATUS_OPTIONS } from "@/src/features/products/constants";
+import { PUBLICATION_STATUS_OPTIONS } from "@/src/features/products/shared/catalog";
 import { VariantForm } from "@/src/features/products/types";
 import { Select } from "@/src/shared/form";
 import { useFormContext, useFormState } from "react-hook-form";
@@ -44,21 +44,17 @@ export const ChannelItem = ({
                     <span className="block p-0.5 text-end text-xs text-text-secondary" >No disponible</span>
                 }
                 <Select
+                    custom={{
+                        fieldSize: "sm",
+                        isValueSelected: true,
+                        options: PUBLICATION_STATUS_OPTIONS,
+                        roundedSize: "sm",
+                        fieldClass: "bg-surface-black",
+                        positionError: "floating",
+                        error: errors.distributionChannels?.[name]?.publicationStatus?.message,
+                        isDirty: dirtyFields.distributionChannels?.[name]?.publicationStatus,
+                    }}
                     disabled={disabled}
-                    fieldSize="sm"
-                    isValueSelected
-                    options={PUBLICATION_STATUS_OPTIONS}
-                    roundedSize="sm"
-                    fieldClass="bg-surface-black"
-                    positionError="floating"
-                    error={
-                        errors.distributionChannels?.[name]
-                            ?.publicationStatus?.message
-                    }
-                    isDirty={
-                        dirtyFields.distributionChannels?.[name]
-                            ?.publicationStatus
-                    }
                     {...register(
                         `distributionChannels.${name}.publicationStatus`
                     )}

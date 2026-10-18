@@ -1,12 +1,18 @@
 "use client"
 import { useEffect, useRef, useState } from "react";
 import { IoInformationCircleOutline } from "react-icons/io5";
-import { FloatingWrapper } from "./FloatingWrapper";
+import { FloatingWrapper, type FloatingWrapperPoition } from "./FloatingWrapper";
 import { SURFACE_VARIANTS } from "../../theme/surface-variant";
+import { Checkbox } from "../../form";
 
+interface Props extends FloatingWrapperPoition {
+    initBoot?: { localStoreName: string };
+    children: React.ReactNode;
+}
 
-export const InfoPopover = ({ children }: { children: React.ReactNode }) => {
+export const InfoPopover = ({ children, initBoot, positionX, positionY }: Props) => {
     const [open, setOpen] = useState(false);
+    const [hasStoredPreference, setHasStoredPreference] = useState(false);
 
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -28,6 +34,40 @@ export const InfoPopover = ({ children }: { children: React.ReactNode }) => {
         };
     }, [open]);
 
+    const localStoreName = initBoot?.localStoreName;
+
+    useEffect(() => {
+        if (!localStoreName) {
+            setHasStoredPreference(false);
+            return;
+        }
+
+        try {
+            const preferenceExists = localStorage.getItem(localStoreName) !== null;
+            setHasStoredPreference(preferenceExists);
+            setOpen(!preferenceExists);
+        } catch {
+            // Si el navegador bloquea localStorage, dejamos disponible la información.
+            setHasStoredPreference(false);
+            setOpen(true);
+        }
+    }, [localStoreName]);
+
+    const handleDoNotShowAgain = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (!localStoreName) return;
+
+        try {
+
+            if (event.target.checked) {
+                localStorage.setItem(localStoreName, "yes");
+            } else {
+                localStorage.removeItem(localStoreName)
+            }
+        } catch {
+            // El popover permanece abierto si no se pudo guardar la preferencia.
+        }
+    };
+
 
     return (
         <div ref={containerRef} className="relative">
@@ -43,11 +83,24 @@ export const InfoPopover = ({ children }: { children: React.ReactNode }) => {
             </button>
 
             <FloatingWrapper open={open}
-                positionX="right-0"
-                positionY={{ custom: "top-9" }}
+                positionX={positionX ?? "right-0"}
+                positionY={positionY ?? { custom: "top-9" }}
                 overlay={false}
                 className={`${SURFACE_VARIANTS.default} p-4`}>
                 {children}
+
+                {localStoreName && !hasStoredPreference && (
+                    <label className="mt-3 text-xs flex cursor-pointer items-center gap-2 text-text-muted">
+                        <Checkbox
+                            aria-label="No volver a mostrar"
+                            default={false}
+                            size="sm"
+                            // checked={false}
+                            onChange={handleDoNotShowAgain}
+                        />
+                        <span>No volver a mostrar</span>
+                    </label>
+                )}
             </FloatingWrapper>
         </div>
     );

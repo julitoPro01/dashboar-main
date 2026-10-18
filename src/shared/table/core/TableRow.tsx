@@ -115,8 +115,10 @@ export const SortableRow = memo(({ row, isSelected = false, canSelect = false, o
         <>
 
             <tr
-                className={`group relative ${isDragging ? "z-50 opacity-50" : "opacity-100"} cursor-pointer border-b border-border transition-colors duration-200
-                ${isSelected ? selectedStyle : "hover:bg-slate-100  hover:dark:bg-slate-800/95 "}`}
+                className={`group relative ${isDragging ? "z-50 opacity-50" : "opacity-100"} border-b border-border transition-colors duration-200
+                ${isSelected ? selectedStyle : "hover:bg-slate-100  hover:dark:bg-slate-800/95 "}
+                ${canSelect ? "cursor-pointer":""}
+                `}
                 onClick={({ clientX, clientY }) => {
 
                     onOpenPanel && onOpenPanel({ cx: clientX, cy: clientY, original: row.original })

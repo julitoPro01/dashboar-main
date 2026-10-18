@@ -41,7 +41,7 @@ export const BodyCells = {
 
     Name: (val: string) => <p className="font-semibold line-clamp-3 wrap-break-word">{val}</p>,
 
-    Sku: (val: string) => <span >{val}</span>,
+    Sku: (val: string) => <span className="font-mono" >{val}</span>,
 
     Category: (val: { id: number, name: string }) => <p className=" line-clamp-3 wrap-break-word" > {val.name} </p>,
 

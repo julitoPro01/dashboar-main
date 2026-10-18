@@ -21,11 +21,9 @@ export const Slug = () => {
 
     return (
         <Input
-            label="Slug canónico (URL)"
-            labelOption={{ type: "top" }}
+            custom={{ label: "Slug canónico (URL)", labelPosition: "top", isDirty: dirtyFields.basicInfo?.name }}
             placeholder="premium-watch"
             value={slug}
-            isDirty={dirtyFields.basicInfo?.name}
             readOnly
         />
 

@@ -67,19 +67,17 @@ export const Date = () => {
 
                     <span className="text-text-muted font-semibold tracking-wider  text-xs">Registrado desde</span>
                     <Input
+                        custom={{ fieldSize: "sm", error: errors.registeredFrom }}
                         type="date"
-                        fieldSize="sm"
                         value={values.registeredFrom}
-                        error={errors.registeredFrom}
                         onChange={({ target }) => handleChange("registeredFrom", target.value)}
                     />
 
                     <span className="text-text-muted font-semibold tracking-wider text-xs">Registrado hasta</span>
                     <Input
+                        custom={{ fieldSize: "sm", error: errors.registeredTo }}
                         type="date"
-                        fieldSize="sm"
                         value={values.registeredTo}
-                        error={errors.registeredTo}
                         onChange={({ target }) => handleChange("registeredTo", target.value)}
                     />
 

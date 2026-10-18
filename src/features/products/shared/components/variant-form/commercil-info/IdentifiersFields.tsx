@@ -9,23 +9,33 @@ export const IdentifiersFields = () => {
     return (
         <>
             <Input
+                custom={{
+                    label: "SKU",
+                    roundedSize: "sm",
+                    labelPosition: "top-floating",
+                    description: "Identificador universal único",
+                    descrPosition:"bottom",
+                    labelBg:"bg-surface"
+                }}
                 readOnly
                 // placeholder="PRD-8KL783"
                 placeholder=" "
-                label="SKU"
-                roundedSize="sm"
-                labelOption={{ type: "top-floating", description: "Identificador universal único" }}
                 {...register("commercialInfo.sku")}
             />
 
             <Input
+                custom={{
+                    label: "Código de barras",
+                    disabledLabel: true,
+                    roundedSize: "sm",
+                    labelPosition: "top-floating",
+                    description: "Opcional · EAN / UPC / GTIN ",
+                    labelBg:"bg-surface",
+                    descrPosition:"bottom"
+                }}
                 readOnly
-                disabledLabel
                 placeholder=" "
-                label="Código de barras"
                 id="codigo-de-barras"
-                roundedSize="sm"
-                labelOption={{ type: "top-floating", description: "Opcional · EAN / UPC / GTIN " }}
                 {...register("commercialInfo.barCode")}
             />
         </>

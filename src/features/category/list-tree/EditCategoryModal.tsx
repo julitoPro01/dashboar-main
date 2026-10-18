@@ -106,11 +106,14 @@ const Render = ({ id = 0, onClose }: { id?: number, name?: string, onClose: () =
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 px-8 py-6 relative">
 
         <Input
-          label="Nombre"
-          labelOption={{ type: "top", required: true }}
+          custom={{
+            label: "Nombre",
+            labelPosition: "top",
+            isDirty: isDirty.name,
+            error: isError.name,
+          }}
+          required
           value={state.name}
-          isDirty={isDirty.name}
-          error={isError.name}
           placeholder="Nombre... (min.3)"
           onChange={({ target }) => {
             handleChange("name", target.value)
@@ -119,28 +122,36 @@ const Render = ({ id = 0, onClose }: { id?: number, name?: string, onClose: () =
         />
 
         <Input
-          label="Slug"
+          custom={{ label: "Slug" }}
           value={state.slug}
           disabled
           placeholder="Slug..."
         />
 
-        <Textarea className="md:col-span-2"
-          label="Descripción"
-          value={state.description}
-          isDirty={isDirty.description}
-          placeholder="Introduzca una descripción detallada de la categoría."
-          rows={3}
-          onChange={({ target }) => handleChange("description", target.value)}
-        />
+        <div className="md:col-span-2">
+          <Textarea
+            custom={{ label: "Descripción", isDirty: isDirty.description }}
+            value={state.description}
+            placeholder="Introduzca una descripción detallada de la categoría."
+            rows={3}
+            onChange={({ target }) => handleChange("description", target.value)}
+          />
+        </div>
 
-        <Select className="md:col-span-2"
-          label="Estado" value={state.recordStatusId.toString()}
-          labelOption={{ type: "top", required: true }}
-          isDirty={isDirty.recordStatusId} error={isError.recordStatusId}
-          onChange={({ target }) => handleChange("recordStatusId", +target.value)}
-          options={statusTransitions.map(v=>({value:RECORD_STATUS_ID[v.value], label:serializeRecordStatusLabel(v.value) ?? ""}))}
-        />
+        <div className="md:col-span-2">
+          <Select
+            custom={{
+              label: "Estado",
+              labelPosition: "top",
+              isDirty: isDirty.recordStatusId,
+              error: isError.recordStatusId,
+              options: statusTransitions.map(v => ({ value: RECORD_STATUS_ID[v.value], label: serializeRecordStatusLabel(v.value) ?? "" })),
+            }}
+            required
+            value={state.recordStatusId.toString()}
+            onChange={({ target }) => handleChange("recordStatusId", +target.value)}
+          />
+        </div>
 
         {/* IMAGE */}
         <div className="flex flex-col md:col-span-2 ">

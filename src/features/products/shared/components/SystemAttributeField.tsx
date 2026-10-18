@@ -27,16 +27,12 @@ export const TextField = ({ label, isRequired, id, dataType, error, isDirty, ...
         {label}
       </span>
       <Input
-        {...{
-          id,
-          type: dataType === "DATE" ? "date" : "text",
-          placeholder: `${label}...`,
-          border: 1,
-          fieldSize: "sm",
-          error,
-          isDirty,
-          ...register
-        }}
+        id={id}
+        type={dataType === "DATE" ? "date" : "text"}
+        placeholder={`${label}...`}
+        custom={{ border: 1, fieldSize: "sm", error, isDirty }}
+        required={isRequired}
+        {...register}
       >
       </Input>
     </div>
@@ -48,21 +44,19 @@ export const NumberField = ({ id, label, isRequired, error, dataType, isDirty, .
 
   return (
     <Input
-      {...{
-        id,
-        type: "number",
-        label: label,
-        placeholder: `${label}...`,
-        labelOption: {
-          type: "top",
-          required: isRequired,
-        },
+      id={id}
+      type="number"
+      placeholder={`${label}...`}
+      custom={{
+        label,
+        labelPosition: "top",
         border: 1,
         fieldSize: "sm",
         error,
         isDirty,
-        ...register
       }}
+      required={isRequired}
+      {...register}
     />
 
   );
@@ -83,15 +77,11 @@ export const TextareaField = ({ isRequired, label, id, error,dataType, isDirty, 
         {label}
       </span>
       <Textarea
-        {...{
-          id,
-          placeholder: `${label}...`,
-          border: 1,
-          fieldSize: "sm",
-          error,
-          isDirty,
-          ...register
-        }}
+        id={id}
+        placeholder={`${label}...`}
+        custom={{ border: 1, fieldSize: "sm", error, isDirty }}
+        required={isRequired}
+        {...register}
       >
       </Textarea>
     </div>
@@ -138,14 +128,17 @@ export const SelectField = ({isDirty,isRequired, label, dataType,error, id, syst
             {label}
           </span>
           <Select
+            custom={{
+              border: 1,
+              fieldSize: "sm",
+              options: systemAttributeValues,
+              isValueSelected: !!valueNumber,
+              error,
+              isDirty,
+            }}
+            required={isRequired}
             id={id}
-            border={1}
-            fieldSize="sm"
-            options={systemAttributeValues}
-            isValueSelected={valueNumber}
             defaultValue={0}
-            error={error}
-            isDirty={isDirty}
             {...register}
           />
         </div>

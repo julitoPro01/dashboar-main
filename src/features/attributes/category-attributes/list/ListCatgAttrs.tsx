@@ -47,7 +47,7 @@ export const ListCatgAttrs = ({ pagination }: Props) => {
                 metaPagination: meta,
                 updateData,
                 // custom
-                actionType,invalidationReason
+                actionType, invalidationReason
             }}
             stateOptions={{
                 columnResizeMode: "onChange",
@@ -56,7 +56,8 @@ export const ListCatgAttrs = ({ pagination }: Props) => {
             }}
             state={{
                 columnVisibility: visibilityByAction[actionType],
-                rowSelection, columnSizing
+                rowSelection,
+                columnSizing
             }}
             stateAction={{ setRowSelection, setColumnSizing }}
         >

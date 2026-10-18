@@ -10,13 +10,10 @@ type Label = {
     required?: boolean,
 }
 
-type LabelOption =
-    | { type: "left" } & Label
-    | { type: "left-join", border?: string, rounded?: string } & Label
-    | { type: "top", description?: string, descrPosition?: "top" | "bottom" } & Label
-    | { type: "top-floating", description?: string } & Label
+export interface FormInputCustomProps {
 
-export interface FormInputProps {
+    description?:string;
+    descrPosition?:"top" | "bottom";
 
     roundedSize?: RoundedSize;
     border?: 0 | 1 | 2;
@@ -28,7 +25,7 @@ export interface FormInputProps {
     isDirty?: boolean;
     positionError?:"floating" | "relative"
 
-    labelOption?: LabelOption;
+    labelPosition?:"left"|"left-join"|"top"|"top-floating"
     label?: string;
     labelBg?:string;
 

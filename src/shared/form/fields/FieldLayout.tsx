@@ -1,9 +1,12 @@
 import clsx from "clsx"
-import { FormInputProps } from "../types";
+import { FormInputCustomProps } from "../types";
 import { FIELD_STYLE } from "../style";
 
-interface Props extends FormInputProps {
-    id?: string; children: React.ReactElement; className?: string
+interface Props extends FormInputCustomProps {
+    id?: string;
+    children: React.ReactElement;
+    className?: string;
+    required?: boolean;
 }
 
 /**
@@ -20,9 +23,9 @@ interface Props extends FormInputProps {
 
 export const FieldLayout = ({
     error = false,
-    labelOption,
+    labelPosition = "top",
     label,
-    labelBg = "bg-surface",
+    labelBg,
 
     fieldIcon,
     textSize = "sm",
@@ -34,18 +37,22 @@ export const FieldLayout = ({
     maxLengthLabel,
     currentLengthLabel,
     positionError = "relative",
-    disabledLabel
+    disabledLabel,
+    description,
+    descrPosition = "top",
+    required
 }: Props) => {
 
 
     return (
-        <div className={`relative flex flex-col w-full ${className} gap-0.5`}>
+        <div className={`relative  flex flex-col w-full ${className} gap-0.5`}>
 
-            {(labelOption?.type === "top") &&
+            {
+                ((label && labelPosition === "top") || (description && descrPosition === "top")) &&
                 <div className="flex flex-col gap-1 mb-1">
-                    {label &&
+                    {label && labelPosition === "top" &&
                         <div className="flex justify-between gap-4">
-                            <label htmlFor={id} className={clsx(FIELD_STYLE.label, labelBg, labelOption.required && FIELD_STYLE.validation["*"])} >
+                            <label htmlFor={id} className={clsx(FIELD_STYLE.label, labelBg, required && FIELD_STYLE.validation["*"])} >
                                 {label}
                             </label>
                             {maxLengthLabel &&
@@ -54,14 +61,15 @@ export const FieldLayout = ({
                         </div>
                     }
 
-                    {(labelOption.description && labelOption.descrPosition === "top") && (
+                    {(description && descrPosition === "top") &&
                         <p className="text-xs font-medium text-text-muted">
-                            {labelOption.description}
+                            {description}
                         </p>
-                    )}
+                    }
 
                 </div>
             }
+
 
             <div className="relative flex w-full">
 
@@ -76,27 +84,27 @@ export const FieldLayout = ({
                 }
 
                 {
-                    (label && labelOption?.type === "left-join") &&
+                    (label && labelPosition === "left-join") &&
                     <label htmlFor={id} className={`
                         inline-flex items-center  whitespace-nowrap
                         ${labelBg}
-                        ${labelOption.border ?? "border border-r-0 border-border-input"} 
-                        ${labelOption.rounded ?? "rounded-l-lg"}
+                        border border-r-0 border-border-input
+                        rounded-l-lg
                         ${FIELD_STYLE.textSize[textSize]}
                         ${FIELD_STYLE.size[fieldSize]}
-                        ${labelOption.required && FIELD_STYLE.validation["*"]}
+                        ${required && FIELD_STYLE.validation["*"]}
                         `}>
                         {label}
                     </label>
                 }
 
                 {
-                    (label && labelOption?.type === "left") &&
+                    (label && labelPosition === "left") &&
                     <label htmlFor={id} className={`
                         inline-flex items-center  whitespace-nowrap pr-3
                         ${labelBg}
                         ${FIELD_STYLE.label}
-                        ${labelOption.required && FIELD_STYLE.validation["*"]}
+                        ${required && FIELD_STYLE.validation["*"]}
                         `}>
                         {label}
                     </label>
@@ -104,16 +112,16 @@ export const FieldLayout = ({
 
                 {children}
 
-                {(label && labelOption?.type === "top-floating") && <>
-                    <label htmlFor={id} className={`
-                    rounded text-text-muted peer-focus:text-text
+                {(label && labelPosition === "top-floating") && <>
+                    <label htmlFor={id} className={` rounded
+                    text-text-muted peer-focus:text-text
                     pointer-events-none absolute left-3 top-3
                     origin-left px-1 text-sm 
                     transition-all
                     peer-focus:-top-2 peer-focus:scale-90 
                     peer-[:not(:placeholder-shown)]:-top-2
                     peer-[:not(:placeholder-shown)]:scale-90
-                     ${labelBg} ${labelOption.required && FIELD_STYLE.validation["*"]}`}
+                     ${labelBg} ${required && FIELD_STYLE.validation["*"]}`}
                     >
                         {label}
 
@@ -129,11 +137,11 @@ export const FieldLayout = ({
 
                     : ""
             }
+
             {
-                (labelOption?.type === "top-floating" || (labelOption?.type === "top" && labelOption.descrPosition === "bottom"))
-                && labelOption.description &&
+                (description && descrPosition === "bottom") &&
                 <p className="text-xs text-text-muted mt-1">
-                    {labelOption.description}
+                    {description}
                 </p>
             }
 

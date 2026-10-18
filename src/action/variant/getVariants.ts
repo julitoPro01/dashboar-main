@@ -24,8 +24,8 @@ export const getVariants = async (props: Props) => {
             select: {
                 id: true,
                 publicId: true,
-                name:true,
-                parentSku:true,
+                name: true,
+                parentSku: true,
                 category: {
                     select: {
                         id: true,
@@ -35,17 +35,34 @@ export const getVariants = async (props: Props) => {
                 },
 
                 productVariants: {
+                    orderBy:{displayOrder:"asc"},
                     select: {
                         id: true,
                         sku: true,
                         stockQuantity: true,
                         minStock: true,
+                        stockMovements: {
+                            where: { type: "ADJUSTMENT" },
+                            orderBy: { date: "desc" },
+                            take: 5,
+                            select: {
+                                id: true,
+                                quantity: true,
+                                reason: true,
+                                date: true,
+                                createdBy: true,
+                            },
+                        },
                         price: true,
                         discount: true,
                         isMainVariant: true,
                         displayOrder: true,
-
+                        
                         recordStatus: { select: { id: true, name: true } },
+                        saleStatus:true,
+                        inventoryStatus:true,
+                        inventoryPolicy: true,
+                        
 
                         tags: true,
 
@@ -69,6 +86,19 @@ export const getVariants = async (props: Props) => {
                                                 value: true
                                             }
                                         }
+                                    }
+                                }
+                            }
+                        },
+
+                        images: {
+                            where: { isPrimary: true },
+                            select: {
+                                id: true,
+                                mediaFile: {
+                                    select: {
+                                        fileName: true,
+                                        filePath: true
                                     }
                                 }
                             }
@@ -97,18 +127,31 @@ export const getVariants = async (props: Props) => {
 
         const buildTreePaths = sortCategoriesByParent(resTree);
 
+        const mapVariants = res.productVariants.map(({ images, price, stockMovements, ...variant }) => ({
+            ...variant,
+            stockAdjustments: stockMovements,
+            properties:variant.varianAttributesValue,
+            // Prisma Decimal no es serializable al pasar props a un Client Component.
+            price: price.toString(),
+            image: {
+                id: images[0].id,
+                name: images[0].mediaFile.fileName,
+                path: images[0].mediaFile.filePath
+            }
+        }));
+
         return ApiResponse.success<VariantListResponse>("Lista de variantes obtenidas correctamente.", {
             product: {
                 id: res.id,
                 publicId: res.publicId,
-                name:res.name,
-                sku:res.parentSku,
+                name: res.name,
+                sku: res.parentSku,
                 category: {
                     ...res.category,
                     paths: buildTreePaths
                 }
             },
-            variants: res.productVariants
+            variants: mapVariants
         })
     })
 }

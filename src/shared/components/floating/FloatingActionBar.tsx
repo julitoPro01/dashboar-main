@@ -1,3 +1,8 @@
+"use client"
+import { useState } from "react";
+import { Button } from "../btn";
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Tooltip } from "./Tooltip";
 
 
 const dirr = {
@@ -15,11 +20,14 @@ const VARIANT = {
 } as const;
 
 interface Props {
-    children: React.ReactNode;
+    children:
+    | React.ReactNode
+    | ((collapsible: boolean) => React.ReactNode);
     position?: keyof typeof dirr | { custom: string };
     padding?: string;
     variant?: keyof typeof VARIANT;
     className?: string;
+    collapsible?: boolean
 }
 
 /**
@@ -27,9 +35,11 @@ interface Props {
  * @param param0 
  * @returns 
  */
-export const FloatingActionBar = ({ children, position = "top-c", padding = "p-1.5", className,
-    variant = "secondary"
+export const FloatingActionBar = ({ children, position = "top-c", padding = "p-1", className,
+    variant = "secondary", collapsible
 }: Props) => {
+
+    const [isCollapsed, setIsCollapsed] = useState(false);
 
     let posit = "";
     if (typeof position === "object")
@@ -45,7 +55,7 @@ export const FloatingActionBar = ({ children, position = "top-c", padding = "p-1
                 ${VARIANT[variant]}
                 z-100
             
-                flex
+                flex items-center
                 flex-col
                 gap-2
 
@@ -57,7 +67,22 @@ export const FloatingActionBar = ({ children, position = "top-c", padding = "p-1
                 `
             }
         >
-            {children}
+            {
+                collapsible &&
+                <Tooltip text={!isCollapsed ? "Expandir" : "Ocultar"} position="left" x="right-12" variant="banderola">
+                    <Button variant="tabLight"
+                        size="sm"
+                        rounded="full"
+                        padding="p-1.5"
+                        onClick={() => setIsCollapsed(!isCollapsed)}
+                        ariaLabel={!isCollapsed ? "Expandir" : "Ocultar"}
+                    >
+                        {isCollapsed ? <ChevronRight size={22} /> : <ChevronLeft size={22} />}
+                    </Button>
+                </Tooltip>
+            }
+
+            {typeof children === "function" ? children(isCollapsed) : children}
         </aside>
     );
 };

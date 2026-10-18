@@ -30,14 +30,16 @@ export const RecordStatus = () => {
             </div>
             <div className="col-span-2">
                 <Select
-                    isValueSelected={true}
-                    fieldSize="sm"
-                    options={statusOptions}
-                    roundedSize="sm"
-                    fieldClass="bg-surface-black"
-                    positionError="floating"
-                    error={errors.operationStatus?.recordStatusId?.message}
-                    isDirty={dirtyFields.operationStatus?.recordStatusId}
+                    custom={{
+                        isValueSelected: true,
+                        fieldSize: "sm",
+                        options: statusOptions,
+                        roundedSize: "sm",
+                        fieldClass: "bg-surface-black",
+                        positionError: "floating",
+                        error: errors.operationStatus?.recordStatusId?.message,
+                        isDirty: dirtyFields.operationStatus?.recordStatusId,
+                    }}
                     {...register("operationStatus.recordStatusId", { valueAsNumber: true })}
                 />
             </div>

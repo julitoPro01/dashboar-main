@@ -29,30 +29,39 @@ export const SupplierForm = ({ register, errors, dirty }: Props) => {
                 </div>
 
                 <Input
-                    label="Nombre del proveedor"
-                    labelOption={{ type: "top", required: true }}
-                    isDirty={dirty?.name}
-                    error={errors.name?.message}
+                    custom={{
+                        label: "Nombre del proveedor",
+                        labelPosition: "top",
+                        isDirty: dirty?.name,
+                        error: errors.name?.message,
+                    }}
+                    required
                     placeholder="Ej: Industrias Globales S.A."
                     {...register("name")}
                 />
 
                 <Input
-                    label="Dirección Fiscal"
-                    labelOption={{ type: "top", required: true }}
-                    isDirty={dirty?.address}
-                    error={errors.address?.message}
+                    custom={{
+                        label: "Dirección Fiscal",
+                        labelPosition: "top",
+                        isDirty: dirty?.address,
+                        error: errors.address?.message,
+                        fieldIcon: <FaLocationDot />,
+                    }}
+                    required
                     placeholder="Calle 123, Ciudad de Lima, CP 01000"
                     {...register("address")}
-                    fieldIcon={<FaLocationDot />}
                 />
                 {/* Description Section */}
                 <Textarea
-                    label="Descripción"
-                    labelOption={{ type: "top", required: true }}
+                    custom={{
+                        label: "Descripción",
+                        labelPosition: "top",
+                        isDirty: dirty?.description,
+                        error: errors.description?.message,
+                    }}
+                    required
                     placeholder="Breve descripción de los productos o servicios ofrecidos por este proveedor..."
-                    isDirty={dirty?.description}
-                    error={errors.description?.message}
                     {...register("description")}
                 />
 

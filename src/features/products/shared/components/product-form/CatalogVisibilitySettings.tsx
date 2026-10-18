@@ -33,9 +33,7 @@ export const CatalogVisibilitySettings = () => {
 
                 <div className="w-full">
                     <Select
-                        fieldSize="sm"
-                        options={[]}
-                        roundedSize="sm"
+                        custom={{ fieldSize: "sm", options: [], roundedSize: "sm" }}
 
                     />
                 </div>
@@ -139,8 +137,8 @@ export const CatalogVisibilitySettings = () => {
                 </div>
                 <div className="w-full">
                     <Input
+                        custom={{ roundedSize: "sm" }}
                         type="datetime-local"
-                        roundedSize="sm"
                     />
 
                 </div>

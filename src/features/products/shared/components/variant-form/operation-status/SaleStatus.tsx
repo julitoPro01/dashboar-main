@@ -1,8 +1,7 @@
-import { INVENTORY_POLICY, SALE_STATUS_BY_INVENTORY_POLICY, SALE_STATUS_OPTIONS } from "@/src/features/products/constants"
+import { INVENTORY_POLICY, SALE_STATUS, SALE_STATUS_BY_INVENTORY_POLICY, SALE_STATUS_OPTIONS, getSaleStatusOptionsByInventoryPolicy } from "@/src/features/products/shared/catalog";
 import { VariantForm } from "@/src/features/products/types"
 import { Select } from "@/src/shared/form"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
-import { getSaleStatusOptionsByInventoryPolicy, SALE_STATUS } from '../../../../constants/saleStatus';
 import { useEffect } from "react";
 
 export const SaleStatus = () => {
@@ -26,14 +25,16 @@ export const SaleStatus = () => {
             </div>
             <div className="col-span-2">
                 <Select
-                    isValueSelected
-                    fieldSize="sm"
-                    options={getSaleStatusOptionsByInventoryPolicy(inventoryPolicy)}
-                    roundedSize="sm"
-                    fieldClass="bg-surface-black"
-                    positionError="floating"
-                    error={errors.operationStatus?.saleStatus?.message}
-                    isDirty={dirtyFields.operationStatus?.saleStatus}
+                    custom={{
+                        isValueSelected: true,
+                        fieldSize: "sm",
+                        options: getSaleStatusOptionsByInventoryPolicy(inventoryPolicy),
+                        roundedSize: "sm",
+                        fieldClass: "bg-surface-black",
+                        positionError: "floating",
+                        error: errors.operationStatus?.saleStatus?.message,
+                        isDirty: dirtyFields.operationStatus?.saleStatus,
+                    }}
                     {...register("operationStatus.saleStatus")}
                 />
             </div>

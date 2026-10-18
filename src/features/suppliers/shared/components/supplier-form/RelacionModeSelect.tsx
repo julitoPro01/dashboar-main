@@ -14,12 +14,15 @@ export const RelacionModeSelect = ({ errorMsg, register, dirty }: Props) => {
     return (
 
         <Select
-            label='Modo de Relación'
-            labelOption={{ type: "top", required: true }}
-            isDirty={dirty}
-            error={errorMsg}
+            custom={{
+                label: 'Modo de Relación',
+                labelPosition: "top",
+                isDirty: dirty,
+                error: errorMsg,
+                options: Object.entries(rest).map(([value, label]) => ({value,label})),
+            }}
+            required
             {...register("relationMode")}
-            options={Object.entries(rest).map(([value, label]) => ({value,label}))}
         />
     )
 }

@@ -1,6 +1,6 @@
 "use client"
 import clsx from "clsx";
-import { FormInputProps, FieldStatusType } from "../types"
+import { FormInputCustomProps, FieldStatusType } from "../types"
 import { SelectHTMLAttributes, useState } from "react";
 import { FIELD_STYLE } from "../style";
 import { FieldLayout } from "./FieldLayout";
@@ -8,10 +8,15 @@ import { IoChevronDown } from "react-icons/io5";
 
 
 
-interface Props extends FormInputProps, SelectHTMLAttributes<HTMLSelectElement> {
-    options?: { value: number | string, label: string, disabled?: boolean }[];
-    placeholder?: string;
-    isValueSelected?: boolean;
+interface Props extends SelectHTMLAttributes<HTMLSelectElement> {
+    custom: {
+        options?: { value: number | string, label: string, disabled?: boolean }[];
+        placeholder?: string;
+        isValueSelected?: boolean;
+        placeholderColor?: string;
+    } & FormInputCustomProps
+
+    children?: React.ReactNode;
 }
 
 
@@ -27,66 +32,52 @@ interface Props extends FormInputProps, SelectHTMLAttributes<HTMLSelectElement> 
  * @returns 
  */
 
-export const Select = (props: Props) => {
+export const Select = ({custom, children, ...rest}: Props) => {
 
-    const {
-        roundedSize,
-        border,
-        fieldSize,
-        textSize,
-        fieldIcon,
-        fieldClass,
-        error,
-        isDirty,
-        labelOption,
-        defaultValue,
-        isValueSelected: selectedValue,
-        onChange,
-        iconPosition,
-        maxLengthLabel,
-        currentLengthLabel,
-        positionError,
-        labelBg,
-        disabledLabel,
-        ...rest
-    } = props;
 
-    const status: FieldStatusType = error ? "error" : isDirty ? "dirty" : "normal";
 
-    const [selected, setSelect] = useState(selectedValue)
+    const status: FieldStatusType = custom.error ? "error" : custom.isDirty ? "dirty" : "normal";
+
+    const [selected, setSelect] = useState(custom.isValueSelected)
 
     const field = clsx(
         FIELD_STYLE.base,
-        selected ? FIELD_STYLE.text : "text-text-subtle",
+        selected ? FIELD_STYLE.text : custom.placeholderColor ?? "text-text-subtle",
 
-        fieldIcon && "ps-10",
-        FIELD_STYLE.borderSize[border ?? 1],
-        FIELD_STYLE.roundedSize[roundedSize ?? "md"],
+        custom.fieldIcon && "ps-10",
+        FIELD_STYLE.borderSize[custom.border ?? 1],
+        FIELD_STYLE.roundedSize[custom.roundedSize ?? "md"],
 
-        FIELD_STYLE.textSize[textSize ?? "sm"],
-        FIELD_STYLE.size[fieldSize ?? "md"],
+        FIELD_STYLE.textSize[custom.textSize ?? "sm"],
+        FIELD_STYLE.size[custom.fieldSize ?? "md"],
         FIELD_STYLE.status[status],
-        fieldClass, "appearance-none pr-6.5"
+        custom.fieldClass, "appearance-none pr-6.5"
     )
 
 
     return (
-        <FieldLayout {...props} >
+        <FieldLayout {...custom} id={rest.id} required={rest.required} >
             <div className="w-full">
                 <select className={field}  {...rest}
                     onChange={(e) => {
-                        onChange?.(e);
+                        rest.onChange?.(e);
                         if (selected === !!e.target.value) return;
 
                         setSelect(!!e.target.value)
                     }}
                 >
-                    <option value={defaultValue ?? ""} className="text-text-muted relative bg-surface-light" > {props.placeholder ?? "Seleccionar"}</option>
-                    {
-                        props.options?.map(v => (
-                            <option key={v.value} value={v.value} disabled={v.disabled} className={`${FIELD_STYLE.text} disabled:text-text-secondary bg-surface-light`}  > {v.label} </option>
-                        ))
-                    }
+                    <option value={rest.defaultValue ?? ""} className="text-text-muted" > {custom.placeholder ?? "Seleccionar"}</option>
+                    {children ??
+                        custom.options?.map((v) => (
+                            <option
+                                key={v.value}
+                                value={v.value}
+                                disabled={v.disabled}
+                                className={`${FIELD_STYLE.text} disabled:text-text-secondary`}
+                            >
+                                {v.label}
+                            </option>
+                        ))}
 
                 </select>
                 <div className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 pr-1">

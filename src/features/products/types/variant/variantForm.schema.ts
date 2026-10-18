@@ -1,7 +1,6 @@
 import { z } from "zod";
-import { InventoryPolicyTypeDb, PublicationStatusTypeDb, SaleStatusTypeDb } from "../variant/typeDb";
-import { SALE_STATUS_BY_INVENTORY_POLICY } from "../../constants";
 import { categorizationSchema, gallerySchema } from "../form.schema";
+import { InventoryPolicyTypeDb, PublicationStatusTypeDb, SALE_STATUS_BY_INVENTORY_POLICY, SaleStatusTypeDb } from "../../shared/catalog";
 
 
 

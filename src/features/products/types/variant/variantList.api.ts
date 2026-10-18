@@ -1,21 +1,36 @@
 import { RecordStatusDb } from "@/src/shared/domains/recordStatus";
+import { InventoryPolicyTypeDb, InventoryStatusTypeDb, SaleStatusTypeDb } from "../../shared/catalog";
 
 
 export type VariantListItemResponse = {
     id: number;
-    recordStatus: {
-        id: number;
-        name: RecordStatusDb;
-    };
+    
+    recordStatus: {  id: number;  name: RecordStatusDb};
+    saleStatus:SaleStatusTypeDb;
+    inventoryStatus:InventoryStatusTypeDb;
+    inventoryPolicy: InventoryPolicyTypeDb;
+
     sku: string;
     stockQuantity: number;
+    stockAdjustments: {
+        id: number;
+        quantity: number;
+        reason: string | null;
+        date: Date;
+        createdBy: string | null;
+    }[];
     minStock: number | null;
-    price: any;
-    discount: any;
+    price: string;
+    discount: number;
     isMainVariant: boolean;
     displayOrder: number;
     tags: any[]; // ProductTag
-    varianAttributesValue: {
+    image: {
+        id: number;
+        name: string;
+        path: string;
+    };
+    properties: {
         id: number;
         valueText: string | null;
         valueNumber: number | null;
@@ -36,8 +51,8 @@ export type VariantListItemResponse = {
 export type VariantBaseProductResponse = {
     id: number,
     publicId: string,
-    name:string,
-    sku:string,
+    name: string,
+    sku: string,
     category: {
         id: number;
         name?: string | undefined;

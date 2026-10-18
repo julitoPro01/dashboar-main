@@ -1,7 +1,6 @@
 // 1.0 Compartidos
 export type * from './systemAttribute.api'
 export type * from './attributeInput';
-export type * from './inventoryStatusTypeDb';
 // 1.1 Formulario
 export * from './form.schema';
 export type * from './form';
@@ -16,7 +15,6 @@ export * from './product/productForm.schema';
 // Domínio - variant
 export type * from './variant/variantDetailst.api';
 export type * from './variant/variantList.api';
-export type * from './variant/typeDb'
 export type * from './variant/variantForm';
 export * from './variant/variantForm.schema';
 

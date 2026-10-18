@@ -12,21 +12,22 @@ export const ShortDescription = () => {
     return (
 
         <Textarea
-            label="Descripción Corta"
-            labelOption={{
-                type: "top", required: true,
-                descrPosition:"bottom",
-                description: "Se mostrará en vistas de lista y tarjetas"
+            custom={{
+                label: "Descripción Corta",
+                labelPosition: "top",
+                descrPosition: "bottom",
+                description: "Se mostrará en vistas de lista y tarjetas",
+                maxLengthLabel: 300,
+                currentLengthLabel: value.length,
+                error: errors.basicInfo?.shortDescription?.message,
+                isDirty: dirtyFields.basicInfo?.shortDescription,
             }}
+            required
             rows={5}
             maxLength={300}
             minLength={10}
-            maxLengthLabel={300}
-            currentLengthLabel={value.length}
 
             placeholder="Resume las principales características y beneficios del producto... (máximo 300 caracteres)"
-            error={errors.basicInfo?.shortDescription?.message}
-            isDirty={dirtyFields.basicInfo?.shortDescription}
             {...register("basicInfo.shortDescription")}
         />
 

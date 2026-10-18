@@ -5,11 +5,14 @@ import { useForm } from "react-hook-form";
 import { VariantForm as VForm, variantFormSchema } from "../../../types"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RECORD_STATUS_ID } from "@/src/shared/domains/recordStatus";
-import { INVENTORY_POLICY, PUBLICATION_STATUS, SALE_STATUS, setInventoryStatusByInventoryPolicy } from "../../../constants";
+import { INVENTORY_POLICY, PUBLICATION_STATUS, SALE_STATUS, setInventoryStatusByInventoryPolicy } from "../../../shared/catalog";
 import { useBootDataStore } from "@/src/store/useBootDataStore";
 import { mapImagesToDb, mapSystemAttributesToDb } from "../../../shared/helpers";
+import { useRouter } from "next/navigation";
 
 export const CreateVariant = () => {
+
+    const router = useRouter();
 
     const user = useBootDataStore(v => v.user);
 
@@ -106,10 +109,11 @@ export const CreateVariant = () => {
             createdById: user.id
         });
 
-        if (res.ok) {
-            form.reset();
-        }
+        if(!res.ok) return;
 
+            form.reset();
+
+            router.refresh();
     }
 
     return (

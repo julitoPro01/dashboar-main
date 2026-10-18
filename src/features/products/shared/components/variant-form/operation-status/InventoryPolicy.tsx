@@ -1,4 +1,4 @@
-import { INVENTORY_POLICY, INVENTORY_POLICY_OPTIONS } from "@/src/features/products/constants";
+import { INVENTORY_POLICY, INVENTORY_POLICY_OPTIONS } from "@/src/features/products/shared/catalog";
 import { VariantForm } from "@/src/features/products/types";
 import { Overlay } from "@/src/shared/components/floating";
 import { Input, Select } from "@/src/shared/form"
@@ -48,14 +48,16 @@ export const InventoryPocily = () => {
 
                 <div className="col-span-2 pb-1">
                     <Select
-                        fieldSize="sm"
-                        options={INVENTORY_POLICY_OPTIONS}
-                        isValueSelected
-                        roundedSize="sm"
-                        fieldClass="bg-surface-black"
-                        positionError="floating"
-                        error={errors.operationStatus?.inventoryPolicy?.type?.message}
-                        isDirty={dirtyFields.operationStatus?.inventoryPolicy?.type}
+                        custom={{
+                            fieldSize: "sm",
+                            options: INVENTORY_POLICY_OPTIONS,
+                            isValueSelected: true,
+                            roundedSize: "sm",
+                            fieldClass: "bg-surface-black",
+                            positionError: "floating",
+                            error: errors.operationStatus?.inventoryPolicy?.type?.message,
+                            isDirty: dirtyFields.operationStatus?.inventoryPolicy?.type,
+                        }}
                         {...register("operationStatus.inventoryPolicy.type", {
 
                             // Asignamos la validación dependiente simepre que useForm este en mode:onChange
@@ -74,17 +76,22 @@ export const InventoryPocily = () => {
                         {/* Initial stock */}
 
                         <Input
+                            custom={{
+                                label: "Stock inicial disponible",
+                                labelBg: "bg-surface-black",
+                                labelPosition: "top-floating",
+                                description: "Unidades físicas listas",
+                                descrPosition:"bottom",
+                                roundedSize: "sm",
+                                error: errors.operationStatus?.inventoryPolicy?.stockQuantity?.message,
+                                isDirty: dirtyFields.operationStatus?.inventoryPolicy?.stockQuantity,
+                            }}
+                            required
                             max={1000000}
                             min={0}
                             disabled={notIncludeInventory}
                             type="number"
                             placeholder="10"
-                            label="Stock inicial disponible"
-                            labelBg="bg-surface-black"
-                            labelOption={{ type: "top-floating", required: true, description: " Unidades física listas" }}
-                            roundedSize="sm"
-                            error={errors.operationStatus?.inventoryPolicy?.stockQuantity?.message}
-                            isDirty={dirtyFields.operationStatus?.inventoryPolicy?.stockQuantity}
                             {...register("operationStatus.inventoryPolicy.stockQuantity", { valueAsNumber: true })}
                         />
 
@@ -92,17 +99,19 @@ export const InventoryPocily = () => {
                         <div>
 
                             <Input
+                                custom={{
+                                    label: "Umbral mínimo de alerta",
+                                    labelBg: "bg-surface-black",
+                                    labelPosition: "top-floating",
+                                    roundedSize: "sm",
+                                    error: errors.operationStatus?.inventoryPolicy?.minStock?.message,
+                                    isDirty: dirtyFields.operationStatus?.inventoryPolicy?.minStock,
+                                }}
                                 type="number"
                                 max={1000}
                                 min={0}
                                 disabled={notIncludeInventory}
                                 placeholder="0"
-                                label="Umbral mínimo de alerta"
-                                labelBg="bg-surface-black"
-                                labelOption={{ type: "top-floating" }}
-                                roundedSize="sm"
-                                error={errors.operationStatus?.inventoryPolicy?.minStock?.message}
-                                isDirty={dirtyFields.operationStatus?.inventoryPolicy?.minStock}
 
                                 {...register("operationStatus.inventoryPolicy.minStock", {
                                     setValueAs: (value) => {

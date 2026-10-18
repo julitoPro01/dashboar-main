@@ -53,23 +53,25 @@ export const Status = () => {
 
                     <span className="text-text-muted font-semibold tracking-wider text-xs">Estado</span>
                     <Select
-                        fieldSize="sm"
-                        placeholder="Todos"
+                        custom={{ fieldSize: "sm", placeholder: "Todos" }}
                         value={value}
                         onChange={({ target }) => { handleStatusChange(target.value ? target.value as any : undefined) }}
-                        options={
-                            RECORD_STATUS_OPTIONS
-                        }
-
-                    />
+                    >
+                        {RECORD_STATUS_OPTIONS.map(option => (
+                            <option key={option.value} value={option.value}>{option.label}</option>
+                        ))}
+                    </Select>
 
                     <span className="text-text-muted font-semibold tracking-wider text-xs">Verificación</span>
                     <Select
-                        fieldSize="sm"
-                        placeholder="Todos"
+                        custom={{ fieldSize: "sm", placeholder: "Todos" }}
                         value={verificationId}
                         onChange={({ target }) => { handleVerificationChange(target.value ? +target.value : undefined) }}
-                        options={VERIFICATION_STATUS_OPTIONS.map(v => ({ label: v.label, value: v.id }))} />
+                    >
+                        {VERIFICATION_STATUS_OPTIONS.map(option => (
+                            <option key={option.id} value={option.id}>{option.label}</option>
+                        ))}
+                    </Select>
 
                 </div>
             </FloatingWrapper>

@@ -156,10 +156,9 @@ export const ListCustomProperties = ({ originalLong }: Props) => {
                         {/* PROPIEDAD */}
                         <div>
                             <Input
+                                custom={{ fieldSize: "sm", fieldClass: "bg-surface-black" }}
                                 type="text"
                                 placeholder="Propiedad..."
-                                fieldSize="sm"
-                                fieldClass="bg-surface-black"
                                 value={state.label}
                                 onChange={({ target }) =>
                                     handleChange("label", target.value)
@@ -177,9 +176,8 @@ export const ListCustomProperties = ({ originalLong }: Props) => {
                         {/* VALOR */}
                         <div>
                             <Textarea
+                                custom={{ fieldSize: "sm", fieldClass: "bg-surface-black" }}
                                 placeholder="Valor..."
-                                fieldSize="sm"
-                                fieldClass="bg-surface-black"
                                 value={state.value}
                                 onChange={({ target }) =>
                                     handleChange("value", target.value)

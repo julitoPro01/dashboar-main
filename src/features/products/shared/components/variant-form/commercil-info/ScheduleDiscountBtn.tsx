@@ -150,29 +150,33 @@ export const ScheduleDiscount = ({ onClose, open }: ScheduleProps) => {
         >
             <div className="space-y-5 p-5">
                 <Input
+                    custom={{
+                        label: "Fecha y hora de inicio",
+                        labelPosition: "top-floating",
+                        roundedSize: "sm",
+                        labelBg: "bg-surface-black",
+                        error: errors.discountStartsAt,
+                    }}
                     type="datetime-local"
-                    label="Fecha y hora de inicio"
-                    labelOption={{ type: "top-floating" }}
-                    roundedSize="sm"
-                    labelBg="bg-surface-black"
                     value={state.discountStartsAt}
                     onChange={({ target }) =>
                         handleChange("discountStartsAt", target.value)
                     }
-                    error={errors.discountStartsAt}
                 />
 
                 <Input
+                    custom={{
+                        label: "Fecha y hora de finalización",
+                        labelPosition: "top-floating",
+                        roundedSize: "sm",
+                        labelBg: "bg-surface-black",
+                        error: errors.discountEndsAt,
+                    }}
                     type="datetime-local"
-                    label="Fecha y hora de finalización"
-                    labelOption={{ type: "top-floating" }}
-                    roundedSize="sm"
-                    labelBg="bg-surface-black"
                     value={state.discountEndsAt}
                     onChange={({ target }) =>
                         handleChange("discountEndsAt", target.value)
                     }
-                    error={errors.discountEndsAt}
                 />
 
                 <div className="flex justify-end gap-8">

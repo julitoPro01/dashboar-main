@@ -1,5 +1,5 @@
 import { RECORD_STATUS_ID } from "@/src/shared/domains/recordStatus";
-import { INVENTORY_POLICY, PUBLICATION_STATUS, SALE_STATUS } from "../../../constants";
+import { INVENTORY_POLICY, PUBLICATION_STATUS, SALE_STATUS } from "../../../shared/catalog";
 import { VariantForm } from "../../../shared/components/variant-form";
 import { useStore } from "@/src/store/useStore";
 import { useSystemAttributes } from "../../../shared/hooks";

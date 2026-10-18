@@ -15,3 +15,6 @@ export * from './product/useProducts'
 
 // variant
 export * from './variant/useCreateVariant';
+export * from './variant/useReorderVariant';
+export * from './variant/useSetMainVariant';
+export * from './variant/useAdjustVariantStock';

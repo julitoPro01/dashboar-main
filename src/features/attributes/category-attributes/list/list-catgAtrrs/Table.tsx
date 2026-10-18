@@ -51,6 +51,8 @@ export const Table = () => {
 
     }, [invalidationReason])
 
+    const enabledDrag = actionType==="edit";
+
     return (
         <>
             <DragDropProvider onDragEnd={handleDragEnd} >
@@ -63,7 +65,9 @@ export const Table = () => {
                             <SortableItemProvider
                                 key={row.id}
                                 index={i}
-                                id={row.original.id}>
+                                id={row.original.id}
+                                disabled={!enabledDrag}
+                                >
                                 <SortableRow
                                     row={row}
                                     isSelected={row.getIsSelected()}

@@ -5,7 +5,7 @@ export const OperationStatusInfo = () => {
         <InfoPopover>
                 <div className="h-[50dvh] space-y-4 text-text-muted text-xs">
                     <div>
-                        <p className="font-semibold text-text">Estado del registro</p>
+                        <h4 className="font-semibold text-text">Estado del registro</h4>
                         <p >
                             Controla el ciclo de vida de la variante dentro del sistema.
                             Una variante debe estar activa para poder publicarse en los canales de venta.

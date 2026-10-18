@@ -25,7 +25,7 @@ export const CommercialInfo = () => {
             </h3>
 
             {/* Identifiers */}
-            <div className="grid grid-cols-2 gap-y-4 gap-x-4">
+            <div className="grid grid-cols-2 gap-y-6 gap-x-4">
                 {/* #1 */}
                 <IdentifiersFields/>
                 {/* #2 */}
