@@ -1,0 +1,45 @@
+"use client"
+import { SideModal } from "@/src/shared/components/modal";
+import { SIDE_MODAL_TYPE } from "@/src/store/uiSlice";
+import { useStore } from "@/src/store/useStore";
+import { CreateVariant } from "./CreateVariant";
+import { EditVariant } from "./EditVariant";
+
+export const UpsertVariantSideModal = () => {
+
+    const upsertVariant = useStore(v => v.variantUpsert);
+    const product = useStore(v => v.variantBaseProduct);
+
+    const clearSelection = useStore((state) => state.setVariantSelect);
+
+    const desc = `Producto base: ${product?.name} (${product?.sku})`
+
+    if (!upsertVariant) return;
+
+    if (upsertVariant.type === "create")
+        return (
+            <SideModal
+                sideType={SIDE_MODAL_TYPE.PRODUCT_VARIANT_CREATE}
+                title="Agregar  variante"
+                description={desc}
+                keepMounted
+            >
+                <CreateVariant />
+            </SideModal>
+        )
+
+    if (upsertVariant.type === "edit")
+        return (
+            <SideModal
+                sideType={SIDE_MODAL_TYPE.PRODUCT_VARIANT_EDIT}
+                title="Actualizar  variante"
+                description={desc}
+                keepMounted
+                onEffectClose={clearSelection}
+            >
+                <EditVariant variantId={upsertVariant.variantId} />
+            </SideModal>
+        )
+
+    return null;
+}

@@ -1,6 +1,7 @@
 import { normalizeRecordStatusFromURL, parseRecordStatus, RecordStatusDb, RecordStatusValue } from "@/src/shared/domains/recordStatus";
-import { DEFAULT_ORDER_DESC, DEFAULT_PAGE_1, DEFAULT_PAGE_SIZE_20, DEFAULT_SORTBY_CREATED_AT, MAX_PAGE_SIZE_100 } from "../constants";
-import { OptionNormalizePag, PaginationQuery, SortByType } from "../types";
+import { DEFAULT_ORDER_DESC, DEFAULT_PAGE_1, DEFAULT_PAGE_SIZE_20, DEFAULT_SORTBY_ORDER, MAX_PAGE_SIZE_100 } from "../constants";
+import { OptionNormalizePag, PaginationQuery, SortByTypeOld } from "../types";
+import { OrderType, PaginationParams, PaginationState, SortByType } from "../types/pagination";
 
 type ParseStateResult<T extends boolean | undefined> = T extends true
     ? RecordStatusDb
@@ -11,7 +12,7 @@ type ParseStateResult<T extends boolean | undefined> = T extends true
  * @param options 
  * @returns 
  */
-export const normalizePaginationParams = <O extends OptionNormalizePag>(query: Partial<PaginationQuery>, options?: O) => {
+export const normalizePaginationParamsOld = <O extends OptionNormalizePag>(query: Partial<PaginationQuery>, options?: O) => {
 
     const page = (typeof query.page !== "object")
         ? +(query.page && !isNaN(query.page) && query.page > 0
@@ -46,11 +47,11 @@ export const normalizePaginationParams = <O extends OptionNormalizePag>(query: P
 
         const acceptOnly = options.sortByAcceptOnly;
         if (typeof query?.sortBy !== "object") {
-            sortBy = acceptOnly.includes(query.sortBy?.trim() as any) ? query.sortBy! : (options?.default_sortBy ?? DEFAULT_SORTBY_CREATED_AT) as SortByType
+            sortBy = acceptOnly.includes(query.sortBy?.trim() as any) ? query.sortBy! : (options?.default_sortBy ?? DEFAULT_SORTBY_ORDER) as SortByTypeOld
         } else
-            sortBy = options?.default_sortBy ?? DEFAULT_SORTBY_CREATED_AT;
+            sortBy = options?.default_sortBy ?? DEFAULT_SORTBY_ORDER;
     } else {
-        sortBy = query.sortBy ?? DEFAULT_SORTBY_CREATED_AT
+        sortBy = query.sortBy ?? DEFAULT_SORTBY_ORDER
     }
 
     return {
@@ -60,4 +61,43 @@ export const normalizePaginationParams = <O extends OptionNormalizePag>(query: P
                 : (state as RecordStatusValue)) as ParseStateResult<O["parseState"]>
         })
     };
+};
+
+
+const toPositiveInt = (value: unknown, fallback: number, max?: number): number => {
+    if (typeof value !== 'string' && typeof value !== 'number') return fallback;
+    const n = Number(value);
+    if (!Number.isInteger(n) || n <= 0) return fallback;
+    if (max !== undefined && n > max) return fallback;
+    return n;
+};
+
+const toOrder = (value: unknown): OrderType =>
+    value === 'asc' || value === 'desc' ? value : 'desc';
+
+const isInArray = <T extends string>(value: string, arr: readonly T[]): value is T =>
+  (arr as readonly string[]).includes(value);
+
+export const toSortBy = <T extends string>(
+  value: unknown,
+  allowed: readonly T[] = [],
+  fallback: T,
+): T => {
+  if (typeof value !== 'string') return fallback;
+
+  const normalized = value.toLowerCase();
+  return isInArray(normalized, allowed) ? normalized : fallback;
+};
+
+
+type Options = {
+    acceptOnlySortBy?: SortByType[]
+}
+export const normalizePaginationParams = (searchParams: PaginationParams, options: Options = {}): PaginationState => {
+    const page = toPositiveInt(searchParams.page, DEFAULT_PAGE_1);
+    const pageSize = toPositiveInt(searchParams.pageSize, DEFAULT_PAGE_SIZE_20, MAX_PAGE_SIZE_100);
+    const order = toOrder(searchParams.order);
+    let sortBy = toSortBy(searchParams.sortBy, options.acceptOnlySortBy, DEFAULT_SORTBY_ORDER)
+
+    return { page, pageSize, order, sortBy };
 };

@@ -10,9 +10,9 @@ model ProductImage {
   displayOrder Int
   featuredOrder Int?                    // ← Orden específico en slider
 
-  product       Product?       @relation(fields: [productId], references: [id])
-  productvariant       ProductVariant? @relation(fields: [variantId], references: [id])
-  mediaFile    MediaFile     @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  product       Product?       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productvariant       ProductVariant? @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  mediaFile    MediaFile     @relation(fields: [fileId], references: [id], onDelete: Cascade )
 
   @@index([productId])
   @@index([variantId])
@@ -30,8 +30,8 @@ model ProductMovie {
   isPrimary  Boolean
   displayOrder Int
 
-  product       Product?       @relation(fields: [productId], references: [id])
-  productvariant       ProductVariant? @relation(fields: [variantId], references: [id])
+  product       Product?       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productvariant       ProductVariant? @relation(fields: [variantId], references: [id], onDelete: Cascade)
   mediaFile    MediaFile     @relation(fields: [fileId], references: [id], onDelete: Cascade)
 
   @@index([productId])

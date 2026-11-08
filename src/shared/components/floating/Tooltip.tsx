@@ -5,11 +5,12 @@ interface TooltipProps {
     size?: "xs" | "sm" | "md" | "lg";
     className?: string;
     x?: string; y?: string
-    variant?: "banderola" | "default"
+    variant?: "banderola" | "default";
+    descrip?: React.ReactNode
 }
 
 export const Tooltip = ({
-    text,
+    text, descrip,
     children,
     position = "top",
     size = "xs",
@@ -24,7 +25,7 @@ export const Tooltip = ({
                 text-xs
                 rounded
                 opacity-0
-                group-hover:opacity-100
+                group-hover/tooltip:opacity-100
                 transition-opacity
                 z-50
                 ${getPosition(position, x, y)}
@@ -32,12 +33,12 @@ export const Tooltip = ({
 
     return (
 
-        <div className={`relative group inline-flex ${className}`}>
+        <div className={`relative group/tooltip inline-flex ${className}`}>
             {children}
 
             {variant === "banderola" && text
                 ? <div className={`${s}`}>
-                    <div className="relative inline-flex items-center">
+                    <div className="relative inline-flex items-center ">
                         <span className=" wrap-break-word bg-black text-white px-2 py-1 rounded-l-md">
                             {text}
                         </span>
@@ -50,12 +51,17 @@ export const Tooltip = ({
                         />
                     </div>
                 </div>
-                : text ? <span
-                    className={`flex whitespace-normal  bg-black text-white
-                wrap-break-word  px-2 py-1 ${s}`}
-                >
-                    {text}
-                </span> : ""
+                : text ? <>
+                    <span
+                        className={`flex whitespace-normal  bg-black text-white
+                        wrap-break-word  px-2 py-1 ${s}`}
+                    >
+                        {text}
+                        <br />
+                        {descrip}
+                    </span>
+                </>
+                    : ""
             }
         </div>
 

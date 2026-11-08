@@ -18,7 +18,6 @@ export const useCreateVariant = () => {
         },
         onSuccess(res) {
             if (res.ok) {
-
                 // Invalidamos la ruta base
                 queryClient.invalidateQueries({ queryKey: QUERY_KEYS.products.all });
 

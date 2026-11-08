@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 import { SystemAttributeGroupResponse } from "@/src/features/products/types";
 import { Prisma } from "@/src/generated/prisma/client";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
-import { formatInputDate } from "@/src/shared/utils/date";
+import { toPeruDateTimeInput } from "@/src/shared/utils/date";
 
 export type SystemAttributesPayload = {
     categoryId: number,
@@ -103,7 +103,7 @@ export const getSystemAttributes = async ({ categoryId, ...props }: SystemAttrib
                         valueNumber: rest.attributeDefinition.productAttributeValues?.[0]?.valueNumber ?? 0,
                         valueBoolean: rest.attributeDefinition.productAttributeValues?.[0]?.valueBoolean ?? false,
                         valueDate: rest.attributeDefinition.productAttributeValues?.[0]?.valueDate
-                            ? formatInputDate(rest.attributeDefinition.productAttributeValues?.[0]?.valueDate) : "",
+                            ? toPeruDateTimeInput(rest.attributeDefinition.productAttributeValues?.[0]?.valueDate, "date") ?? "" : "",
                         valueOptionIds: rest.attributeDefinition.productAttributeValues?.[0]?.valueOptionIds ?? [],
                     }
                     : {
@@ -111,7 +111,7 @@ export const getSystemAttributes = async ({ categoryId, ...props }: SystemAttrib
                         valueNumber: rest.attributeDefinition.variantAttributeValues?.[0]?.valueNumber ?? 0,
                         valueBoolean: rest.attributeDefinition.variantAttributeValues?.[0]?.valueBoolean ?? false,
                         valueDate: rest.attributeDefinition.variantAttributeValues?.[0]?.valueDate
-                            ? formatInputDate(rest.attributeDefinition.variantAttributeValues?.[0]?.valueDate) : "",
+                            ? toPeruDateTimeInput(rest.attributeDefinition.variantAttributeValues?.[0]?.valueDate, "date") ?? "" : "",
                         valueOptionIds: rest.attributeDefinition.variantAttributeValues?.[0]?.valueOptionIds ?? [],
                     }
                 ),

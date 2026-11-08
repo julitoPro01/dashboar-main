@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ApiSuccessReturn } from "@/src/shared/utils";
 import { CATEGORY_ATTR_PAGINATION_OPTIONS, CATEGORY_ATTR_SORTBY_ACCEPT_ONLY } from "../constants/filters";
 import { CategoryAttrResponse, CategoryAttrsResponse } from "../types";
-import { getPaginationParams, parsePaginationParams } from "@/src/shared/table/pagination";
+import { getPaginationParams, parsePaginationParamsOld } from "@/src/shared/table/pagination";
 import { isSortable } from "@dnd-kit/react/sortable";
 import { DragEndEvent } from "@dnd-kit/react";
 
@@ -52,7 +52,7 @@ export const useSortableQuery = () => {
 
     const undoSortable = (data: CategoryAttrResponse[]) => {
         const search = window.location.search;
-        const parse = parsePaginationParams(search, { sortByAcceptOnly: CATEGORY_ATTR_SORTBY_ACCEPT_ONLY, default_sortBy: "order" })
+        const parse = parsePaginationParamsOld(search, { sortByAcceptOnly: CATEGORY_ATTR_SORTBY_ACCEPT_ONLY, default_sortBy: "order" })
         const filter = useStore.getState().categoryAttrsFilters;
 
         clientQuery.setQueryData(

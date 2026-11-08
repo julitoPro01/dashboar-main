@@ -213,5 +213,5 @@ const init = {
 
 const schema = {
   name: (v: string) => (v.trim().length < 3 ? inputMsg.minLength({ min: 3 }) : v.trim().length > 100 ? inputMsg.maxLength({ max: 100 }) : true),
-  recordStatusId: (id: string) => +id !== 0 ? true : inputMsg.required()
+  recordStatusId: (id: number) => id !== 0 ? true : inputMsg.required()
 }

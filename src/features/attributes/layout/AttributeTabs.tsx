@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useStore } from "@/src/store/useStore";
 import { FaPlus } from "react-icons/fa";
 import { CategorySelectorBar } from "../category-attributes/list/CategorySelectorBar";
-import { createURLPaginationParams } from "@/src/shared/table/pagination";
+import { createURLPaginationParamsOld } from "@/src/shared/table/pagination";
 
 export const AttributeTabs = () => {
 
@@ -17,14 +17,14 @@ export const AttributeTabs = () => {
     const setOpenModalCreate = useStore(v => v.setAttributeCreateModal);
 
     const urlAttr = () => {
-        return createURLPaginationParams({
+        return createURLPaginationParamsOld({
             basePath: APP_ROUTES.ATTRIBUTES.INDEX,
             searchParams: window.location.search,
         })
     }
 
     const urlCatrAttr = () => {
-        return createURLPaginationParams({
+        return createURLPaginationParamsOld({
             basePath: APP_ROUTES.ATTRIBUTES.CATEGORY,
             searchParams: window.location.search,
         }, { deleteState: true })

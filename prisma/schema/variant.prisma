@@ -27,8 +27,6 @@ model ProductVariant {
   saleStatus SaleStatusType @default(COMING_SOON)
   inventoryPolicy InventoryPolicyType @default(AUTO_DECREMENT)
   inventoryStatus InventoryStatusType
-  // saleStatus SaleStatus @relation(fields: [saleStatusId], references: [id])
-  // inventoryStatus InventoryStatus @relation(fields: [inventoryStatusId], references: [id])
 
   createdBy   String
   createdById Int
@@ -45,7 +43,7 @@ model ProductVariant {
   orderItems            OrderItem[]
   images                ProductImage[]
   movies                ProductMovie[]
-  product               Product                 @relation(fields: [productId], references: [id])
+  product               Product                 @relation(fields: [productId], references: [id], onDelete: Restrict)
   stockMovements        StockMovement[]
   variantChannel        VariantChannel[]
   reservations          InventoryReservation[]
@@ -56,8 +54,6 @@ model ProductVariant {
   @@index([productId])
   @@index([productId, recordStatusId])
   @@index([recordStatusId])
-  // @@index([saleStatusId])
-  // @@index([inventoryStatusId])
   @@index([productId, isMainVariant])
   @@map("product_variants")
 }
@@ -68,7 +64,7 @@ model VariantChannel {
   channel           DistributionChannel
   publicationStatus PublicationStatusType @default(DRAFT)
 
-  variant ProductVariant @relation(fields: [variantId], references: [id])
+  variant ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -87,7 +83,7 @@ model InventoryReservation {
   id Int @id @default(autoincrement())
 
   variantId Int
-  variant   ProductVariant @relation(fields: [variantId], references: [id])
+  variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
 
   quantity Int
 
@@ -129,7 +125,7 @@ model VariantAttributeValue {
   id        Int @id @default(autoincrement())
   variantId Int
 
-  productVariant ProductVariant @relation(fields: [variantId], references: [id])
+  productVariant ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
 
   attributeDefinitionId Int
   attributeDefinition   AttributeDefinition? @relation(fields: [attributeDefinitionId], references: [id])
@@ -147,4 +143,36 @@ model VariantAttributeValue {
   @@index([attributeDefinitionId, valueBoolean])
   @@index([attributeDefinitionId, valueDate])
   @@map("variant_attribute_values")
+}
+
+
+// =============================================
+// 11. INVENTORY & STOCK MANAGEMENT
+// =============================================
+
+model StockMovement {
+  id          Int       @id @default(autoincrement())
+  variantId  Int
+  type        StockMovementType    // IN, OUT, ADJUSTMENT
+  quantity    Int
+  date        DateTime  @default(now())
+  reason      String?
+  reference   String?   // PO number, etc.
+
+  createdBy   String?
+  createdById Int?
+  creator     UserAuthentication? @relation("StockMovementCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+
+  productvariant ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+  @@map("stock_movements")
+}
+enum StockMovementType {
+  IN          // compra / devolución
+  OUT         // venta
+  RETURN      // devolución cliente
+  ADJUSTMENT  // corrección manual
+  DAMAGED     // pérdida
+  RESERVED    // carrito
+  RELEASED   // cancelación
 }

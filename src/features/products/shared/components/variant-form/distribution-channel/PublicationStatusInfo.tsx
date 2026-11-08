@@ -2,19 +2,19 @@ import { InfoPopover } from "@/src/shared/components/floating";
 
 const PUBLICATION_STATUS_INFO = [
     {
-        label: "Activo",
+        label: "Seleccionado",
         description:
             "La variante está habilitada para comercialización en este canal.",
     },
     {
-        label: "Borrador",
-        description:
-            "La configuración está en preparación y aún no está habilitada.",
-    },
-    {
-        label: "Inactivo",
+        label: "No seleccionado",
         description:
             "La variante está temporalmente deshabilitada en este canal.",
+    },
+    {
+        label: "No disponible",
+        description:
+            "La configuración está en preparación y aún no está habilitada.",
     },
 ];
 

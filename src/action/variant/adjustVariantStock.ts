@@ -1,8 +1,8 @@
 "use server";
 
-import { auth } from "@/auth.config";
 import prisma from "@/lib/prisma";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
+import { getAuthenticatedActor } from "../auth/getAuthenticatedActor";
 import { z } from "zod";
 
 const adjustVariantStockSchema = z.object({
@@ -17,12 +17,10 @@ export type AdjustVariantStockPayload = z.infer<typeof adjustVariantStockSchema>
 export const adjustVariantStock = async (input: AdjustVariantStockPayload) => {
     return PromiseReturn(async () => {
         const { productId, variantId, newStock, reason } = adjustVariantStockSchema.parse(input);
-        const session = await auth();
-        const actor = session?.user;
-        const actorId = Number(actor?.id);
+        const actor = await getAuthenticatedActor();
 
-        if (!actor || !Number.isSafeInteger(actorId) || actorId <= 0) {
-            return ApiResponse.badRequest("Inicia sesión para ajustar el inventario.", "VALIDATION");
+        if (!actor) {
+            return ApiResponse.unauthorized("Inicia sesión para ajustar el inventario.");
         }
 
         return prisma.$transaction(async tx => {
@@ -53,8 +51,8 @@ export const adjustVariantStock = async (input: AdjustVariantStockPayload) => {
                 data: {
                     stockQuantity: newStock,
                     inventoryStatus: newStock > 0 ? "IN_STOCK" : "OUT_OF_STOCK",
-                    updatedBy: actor.name ?? actor.email ?? "Usuario",
-                    updatedById: actorId,
+                    updatedBy: actor.name ?? "Usuario",
+                    updatedById: actor.id,
                 },
             });
 
@@ -68,8 +66,8 @@ export const adjustVariantStock = async (input: AdjustVariantStockPayload) => {
                     type: "ADJUSTMENT",
                     quantity: difference,
                     reason,
-                    createdBy: actor.name ?? actor.email ?? "Usuario",
-                    createdById: actorId,
+                    createdBy: actor.name  ?? "Usuario",
+                    createdById: actor.id,
                 },
             });
 

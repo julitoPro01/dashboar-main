@@ -4,9 +4,9 @@ import { getSuppliers } from "@/src/action";
 import { useStore } from "@/src/store/useStore";
 import { useDelayedFetchState } from "@/src/shared/hooks";
 import { SupplierFilters } from "../../types";
-import { PaginationState } from "@/src/shared/table/pagination";
+import { PaginationStateOld } from "@/src/shared/table/pagination";
 
-export const useSuppliers = (pagination: PaginationState, filters: SupplierFilters, enabled: boolean = true) => {
+export const useSuppliers = (pagination: PaginationStateOld, filters: SupplierFilters, enabled: boolean = true) => {
 
     const setFetchStatus = useStore(v => v.setFetchStatus);
 

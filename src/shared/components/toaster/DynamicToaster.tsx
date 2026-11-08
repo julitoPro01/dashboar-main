@@ -4,7 +4,7 @@ import { Toaster } from "sonner";
 
 export const DynamicToaster = () => {
   return (
-      <Toaster />
+      <Toaster style={{ pointerEvents: "auto" }} />
   )
 }
   

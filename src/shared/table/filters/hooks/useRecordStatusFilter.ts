@@ -2,7 +2,7 @@
 import { RecordStatusDb, serializeRecordStatus } from "@/src/shared/domains/recordStatus";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { createURLPaginationParams, parsePaginationParams } from "../../pagination/utils";
+import { createURLPaginationParamsOld, parsePaginationParamsOld } from "../../pagination/utils";
 
 export const useRecordStatusFilter = () => {
 
@@ -19,7 +19,7 @@ export const useRecordStatusFilter = () => {
 
         const par = serializeRecordStatus(value);
 
-        const u = createURLPaginationParams({
+        const u = createURLPaginationParamsOld({
             basePath: "",
             searchParams: searchPar,
             query: { state: par, page: 1 }
@@ -35,7 +35,7 @@ export const useRecordStatusFilter = () => {
 
     useEffect(() => {
 
-        const state = parsePaginationParams(searchPar, { includeState: true }).state
+        const state = parsePaginationParamsOld(searchPar, { includeState: true }).state
         setStatus(v => ({ ...v, value: state }))
 
     }, [state]);

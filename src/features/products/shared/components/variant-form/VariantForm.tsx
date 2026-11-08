@@ -9,27 +9,30 @@ import { ImageGallery } from "./ImageGallery"
 import { FormProvider } from "@/src/shared/form"
 import { FieldValues, SubmitHandler, UseFormReturn } from "react-hook-form"
 import { DistributionChannel } from "./DistributionChannel"
+import { Overlay } from "@/src/shared/components/floating"
+import { useIsFetching } from "@tanstack/react-query"
 
 interface Props<T extends FieldValues> {
     form: UseFormReturn<T>;
     onSubmit: SubmitHandler<T>;
+    submitLabel?: string;
+    isEdit?:boolean;
+    isLoading?:boolean
 }
 
-export const VariantForm = <T extends FieldValues>({ form, onSubmit }: Props<T>) => {
+export const VariantForm = <T extends FieldValues>({ form, isEdit, onSubmit, submitLabel, isLoading }: Props<T>) => {
+
 
     return (
 
 
-        <FormProvider form={form} onSubmit={onSubmit}>
+        <FormProvider form={form} onSubmit={onSubmit} className=" relative">
+
+            <Overlay open={isLoading ?? false} description="Cargando datos..." clickable={false} />
 
             <div className="py-4 px-6 space-y-6 text-sm">
 
                 {/* 01 */}
-                {/* {
-                    props.isEdit
-                        ? <SystemProperties />
-                        : <SystemProperties />
-                } */}
                 <SystemProperties />
 
                 <div className="border-b border-border-subtle"></div>
@@ -40,18 +43,18 @@ export const VariantForm = <T extends FieldValues>({ form, onSubmit }: Props<T>)
                 <ImageGallery />
                 <div className="border-b border-border-subtle"></div>
                 {/* 04 */}
-                <DistributionChannel />
+                <DistributionChannel isEdit={isEdit} />
                 <div className="border-b border-border-subtle"></div>
                 {/* 05 */}
-                <OperationalStatus />
+                <OperationalStatus isEdit={isEdit} />
                 <div className="border-b border-border-subtle"></div>
                 {/* 06 */}
-                <CatalogRules />
-                {/* 07 */}
 
             </div>
 
-            <FormActions />
+            <FormActions submitLabel={submitLabel}
+             isEdit={isEdit}
+             />
         </FormProvider>
     )
 }

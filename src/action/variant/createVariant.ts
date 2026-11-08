@@ -5,19 +5,39 @@ import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
 import { VariantAttributeValueCreateManyInput } from "@/src/generated/prisma/models";
 import { createVariantSchema } from "./upsertSchema";
 import { z } from "zod";
-import { generateSku } from "../product/utils/generateSku";
+import { RECORD_STATUS_ID } from "@/src/shared/domains/recordStatus";
+import { parsePeruDateTime } from "@/src/shared/utils/date";
+import { generateSku, mapImagesToPayload, deriveInventoryStatus } from "../shared/utils";
+import { getAuthenticatedActor } from "../auth";
 
-type Data = z.infer<typeof createVariantSchema> & {
-    createdBy: string, createdById: number
-};
+type Data = z.infer<typeof createVariantSchema> ;
 
 
 export const createVariant = async (pars: Data) => {
     return PromiseReturn(async () => {
 
-        const { createdBy, createdById, ...data } = pars
 
-        const parse = createVariantSchema.parse(data);
+        const parse = createVariantSchema.parse(pars);
+
+        let discountStartsAt: Date | null | undefined;
+        let discountEndsAt: Date | null | undefined;
+
+        try {
+            discountStartsAt = parse.discountStartsAt === undefined
+                ? undefined
+                : parsePeruDateTime(parse.discountStartsAt);
+            discountEndsAt = parse.discountEndsAt === undefined
+                ? undefined
+                : parsePeruDateTime(parse.discountEndsAt);
+        } catch {
+            return ApiResponse.badRequest("Revisa las fechas y horas del descuento.", "VALIDATION");
+        }
+
+          const actor = await getAuthenticatedActor();
+        
+            if (!actor) {
+                return ApiResponse.unauthorized("Inicia sesión para actualizar la variante.");
+            }
 
         const res = await prisma.$transaction(async (tx) => {
 
@@ -29,13 +49,21 @@ export const createVariant = async (pars: Data) => {
 
             const displayOrder = (lastVariant?.displayOrder ?? 0) + 1;
 
+            // Existe al menos una variante Activa, por lo tando
+            // Tambien existe una variante "Primaria"
+            const existsVariant = await tx.productVariant.findFirst({
+                where: { productId: parse.productId, recordStatusId: RECORD_STATUS_ID.ACTIVE }
+            });
+
+            const isPrimary = existsVariant ? false : parse.recordStatusId === RECORD_STATUS_ID.ACTIVE;
+
             // #1
             const variant = await tx.productVariant.create({
                 data: {
                     productId: parse.productId,
 
                     recordStatusId: parse.recordStatusId,
-                    inventoryStatus: parse.inventoryStatus,
+                    inventoryStatus:deriveInventoryStatus(parse.stockQuantity,parse.inventoryPolicy),
                     saleStatus: parse.saleStatus,
                     inventoryPolicy: parse.inventoryPolicy,
 
@@ -45,18 +73,20 @@ export const createVariant = async (pars: Data) => {
 
                     price: parse.price,
                     discount: parse.discount,
+                    discountStartsAt: discountStartsAt,
+                    discountEndsAt: discountEndsAt,
 
-                    isMainVariant: parse.isMainVariant,
+                    isMainVariant: isPrimary,
                     displayOrder: displayOrder,
                     tags: parse.tags as any,
 
-                    createdBy: createdBy,
-                    createdById: createdById
+                    createdBy: actor.name,
+                    createdById: actor.id
                 }
             });
 
             // #2 - Imagenes
-            for (const image of parse.images) {
+            for (const image of mapImagesToPayload(parse.images)) {
                 await tx.mediaFile.create({
                     data: {
                         fileName: image.mediaFile.fileName,
@@ -71,7 +101,7 @@ export const createVariant = async (pars: Data) => {
                             }
                         }
                     }
-                });
+                }); 
             }
 
 
@@ -90,6 +120,18 @@ export const createVariant = async (pars: Data) => {
                     }))
                 })
             }
+
+            // #4 - Canales de comercializaciones
+            const { storeFront, marketplace, physicalStore, wholesale } = parse.distributionChannels;
+            await tx.variantChannel.createMany({
+                data: [
+                    { variantId: variant.id, channel: "STOREFRONT", publicationStatus: storeFront.publicationStatus },
+                    { variantId: variant.id, channel: "MARKETPLACE", publicationStatus: marketplace.publicationStatus },
+                    { variantId: variant.id, channel: "PHYSICAL_STORE", publicationStatus: physicalStore.publicationStatus },
+                    { variantId: variant.id, channel: "WHOLESALE", publicationStatus: wholesale.publicationStatus },
+                ]
+            })
+
 
             return { id: variant.id, productId: variant.productId }
 

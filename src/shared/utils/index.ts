@@ -11,9 +11,6 @@ export * from './deleteProperties';
 export * from './validation/fieldValidation';
 export * from './validation/isValidImagSrc';
 
-export * from './date/dateFormatter';
-export * from './date/parseLocalDate';
-
 export * from './transform/capitalize';
 
 export * from './formatPrice';

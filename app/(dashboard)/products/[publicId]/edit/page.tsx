@@ -1,5 +1,5 @@
 import { getProductForm } from "@/src/action/product";
-import { EditProduct } from "@/src/features/products/edit";
+import { EditProduct } from "@/src/features/products/base-product/edit";
 import { BackTo } from "@/src/shared/components/btn";
 import { ErrorServer } from "@/src/shared/components/error";
 import { APP_ROUTES } from "@/src/shared/routes";

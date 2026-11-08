@@ -1,4 +1,4 @@
-import { IoWarningOutline } from "react-icons/io5";
+import { IoInformationCircleOutline, IoWarningOutline } from "react-icons/io5";
 import { Button } from "../btn";
 
 export const ConfirmDialog = ({
@@ -21,6 +21,7 @@ export const ConfirmDialog = ({
         danger: "text-error bg-error/10",
         info: "text-primary bg-primary/10",
     }[variant];
+    const Icon = variant === "info" ? IoInformationCircleOutline : IoWarningOutline;
 
     return (
         <div className="space-y-6 p-6">
@@ -30,7 +31,7 @@ export const ConfirmDialog = ({
                 <div
                     className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${iconColor}`}
                 >
-                    <IoWarningOutline size={22} />
+                    <Icon size={22} />
                 </div>
 
                 <div className="space-y-1">

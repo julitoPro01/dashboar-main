@@ -1,8 +1,7 @@
 import { ReadonlyURLSearchParams } from "next/navigation";
-import { OptionNormalizePag, OrderType, ParsePagination, SortByType } from "../types";
-import { normalizePaginationParams } from "./normalizePaginationParams";
-import { RecordStatusDb } from "@/src/shared/domains/status";
-
+import { OrderTypeOld, ParsePagination, SortByTypeOld } from "../types";
+import { normalizePaginationParamsOld } from "./normalizePaginationParams";
+import { RecordStatusDb } from "@/src/shared/domains/recordStatus";
 
 
 /**
@@ -11,22 +10,22 @@ import { RecordStatusDb } from "@/src/shared/domains/status";
  * @param options 
  * @returns ReturnParse
  */
-export const parsePaginationParams = (searchParams: string | ReadonlyURLSearchParams, options: ParsePagination = {}): {
+export const parsePaginationParamsOld = (searchParams: string | ReadonlyURLSearchParams, options: ParsePagination = {}): {
     page: number;
     pageSize: number;
     order: "asc" | "desc";
-    sortBy: SortByType;
+    sortBy: SortByTypeOld;
     state?: RecordStatusDb;
 } => {
     const params = new URLSearchParams(searchParams);
 
     const valPage = params.get("page")?.toLowerCase();
     const valPageSize = params.get("pageSize")?.toLowerCase();
-    const valOrder = params.get("order")?.toLowerCase() as OrderType;
-    const valSortBy = params.get("sortBy")?.toLowerCase() as SortByType;
+    const valOrder = params.get("order")?.toLowerCase() as OrderTypeOld;
+    const valSortBy = params.get("sortBy")?.toLowerCase() as SortByTypeOld;
     const valState = params.get("state")?.toLowerCase();
 
-    let { page, pageSize, order, sortBy, state } = normalizePaginationParams({
+    let { page, pageSize, order, sortBy, state } = normalizePaginationParamsOld({
         page: valPage,
         pageSize: valPageSize,
         order: valOrder,
@@ -39,5 +38,3 @@ export const parsePaginationParams = (searchParams: string | ReadonlyURLSearchPa
         ...(state && { state: state as RecordStatusDb | undefined })
     };
 }
-
-

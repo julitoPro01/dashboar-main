@@ -3,7 +3,7 @@
 import prisma from "@/lib/prisma";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
 import { getProductsRaw } from "./getProductsRaw";
-import { buildMeta, PaginationState } from "@/src/shared/table/pagination";
+import { buildMeta, PaginationStateOld } from "@/src/shared/table/pagination";
 import {
     ProductFilters,
     ProductListItemResponse,
@@ -11,7 +11,7 @@ import {
 } from "@/src/features/products/types";
 
 export const getProducts = async (
-    pagination: PaginationState,
+    pagination: PaginationStateOld,
     filters: ProductFilters
 ) => {
     const { page, pageSize } = pagination;

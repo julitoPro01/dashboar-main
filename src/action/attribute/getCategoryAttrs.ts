@@ -3,11 +3,11 @@
 import prisma from "@/lib/prisma";
 import { CategoryAttrsResponse, CategoryAttrFilters } from "@/src/features/attributes/category-attributes/types";
 import { Prisma } from "@/src/generated/prisma/client";
-import { buildMeta, PaginationState } from "@/src/shared/table/pagination";
+import { buildMeta, PaginationStateOld } from "@/src/shared/table/pagination";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils"
 import { Sql } from "@prisma/client/runtime/client";
 
-export const getCategoryAttrs = async (pag: PaginationState, fls: CategoryAttrFilters) => {
+export const getCategoryAttrs = async (pag: PaginationStateOld, fls: CategoryAttrFilters) => {
 
     const limit = pag.pageSize;
     const offset = (pag.page - 1) * pag.pageSize;

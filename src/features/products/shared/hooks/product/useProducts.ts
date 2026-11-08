@@ -1,4 +1,4 @@
-import { PaginationState } from "@/src/shared/table/pagination";
+import { PaginationStateOld } from "@/src/shared/table/pagination";
 import { ProductFilters } from "../../types";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "@/src/shared/react-query";
@@ -6,7 +6,7 @@ import { useDelayedFetchState } from "@/src/shared/hooks";
 import { useStore } from "@/src/store/useStore";
 import { getProducts } from "@/src/action/product";
 
-export const useProducts = (pag: PaginationState, fil: ProductFilters) => {
+export const useProducts = (pag: PaginationStateOld, fil: ProductFilters) => {
 
     const setFetchStatus = useStore(v => v.setFetchStatus);
 

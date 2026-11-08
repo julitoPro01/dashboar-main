@@ -1,12 +1,11 @@
 
 import { VariantForm } from '@/src/features/products/types';
-import { Button } from '@/src/shared/components/btn';
 import { Overlay } from '@/src/shared/components/floating';
 import { formatPrice } from '@/src/shared/utils';
-import { formatCustomerDate } from '@/src/shared/utils/date';
 import { useFormContext, useFormState, useWatch } from 'react-hook-form';
 import { IoCalendarOutline } from 'react-icons/io5';
 import { ScheduleDiscountBtn } from './ScheduleDiscountBtn';
+import { dateFormatter, parsePeruDateTime } from '@/src/shared/utils/date';
 
 export const PriceCalculationCard = () => {
 
@@ -14,25 +13,54 @@ export const PriceCalculationCard = () => {
     const { errors } = useFormState({ control, name: "commercialInfo" });
 
     const errorPrice = errors.commercialInfo?.basePrice?.message;
-    const errorDiscount = errors.commercialInfo?.basePrice?.message;
+    const errorDiscount = errors.commercialInfo?.discount?.message;
 
     const comercialInfo = useWatch({ control, name: "commercialInfo" });
-
     // Precios
     const price = comercialInfo?.basePrice;
     const discount = comercialInfo?.discount;
     // Programación de descuento
-    const discountStartsAt = formatCustomerDate(comercialInfo?.discountStartsAt);
-    const discountEndsAt = formatCustomerDate(comercialInfo?.discountEndsAt);
-    // si existen precios 
+    const parseScheduleDate = (value?: string | null): Date | null => {
+        if (!value) return null;
+
+        try {
+            return parsePeruDateTime(value);
+        } catch {
+            return null;
+        }
+    };
+
+    const startsAt = parseScheduleDate(comercialInfo?.discountStartsAt);
+    const endsAt = parseScheduleDate(comercialInfo?.discountEndsAt);
+    const discountStartsAt = dateFormatter.format(startsAt, "dateTime");
+    const discountEndsAt = dateFormatter.format(endsAt, "dateTime");
+    const hasSchedule = Boolean(
+        comercialInfo?.discountStartsAt || comercialInfo?.discountEndsAt
+    );
+    const hasInvalidScheduleDate = Boolean(
+        (comercialInfo?.discountStartsAt && !startsAt)
+        || (comercialInfo?.discountEndsAt && !endsAt)
+    );
+    const hasConfiguredDiscount = Number.isFinite(discount) && discount! > 0;
+    const now = Date.now();
+    const expired = hasConfiguredDiscount && !!endsAt && endsAt.getTime() <= now;
+    const scheduled = hasConfiguredDiscount
+        && !expired
+        && !!startsAt
+        && startsAt.getTime() > now;
+    const discountIsActive = hasConfiguredDiscount
+        && !expired
+        && !scheduled
+        && !hasInvalidScheduleDate;
+
+    // si existen precios
     const hasPrice = Number.isFinite(price);
-    const hasDiscount = Number.isFinite(discount);
 
     //-----
-    const isFree = hasPrice &&
+    const isFree = !errorPrice && !errorDiscount && hasPrice &&
         (
             price === 0 ||
-            (hasDiscount && discount === 100)
+            (discountIsActive && discount === 100)
         );
 
     //----------
@@ -40,7 +68,7 @@ export const PriceCalculationCard = () => {
         !errorPrice &&
             !errorDiscount &&
             hasPrice &&
-            hasDiscount
+            discountIsActive
             ? price! * (discount! / 100)
             : 0;
 
@@ -49,22 +77,36 @@ export const PriceCalculationCard = () => {
             ? price! - discountAmount
             : null;
 
+    const scheduleStatus = expired
+        ? "Vencido"
+        : hasInvalidScheduleDate
+            ? "Fecha no válida"
+            : scheduled
+                ? "Programado"
+                : discountIsActive
+                    ? "Activo"
+                    : null;
+
     return (
         <div className="rounded-md border border-border-subtle bg-bg-soft-blue px-4 py-3 text-sm">
 
             {/* Descuento */}
             <div className="space-y-3 w-full">
 
-                <ScheduleDiscountBtn hasNoDiscount={!discount} isAlreadyScheduled={!!(discountStartsAt || discountEndsAt)} />
+                <ScheduleDiscountBtn hasNoDiscount={!discount} isAlreadyScheduled={hasSchedule} />
 
-                {(discountStartsAt || discountEndsAt) && (
+                {hasSchedule && (
                     <div className="relative rounded-md border border-border-subtle bg-surface-light p-3">
                         <div className="mb-2 flex items-center gap-2 text-sm font-medium text-text">
                             <IoCalendarOutline
                                 size={16}
                                 className="text-text-muted"
                             />
-                            Vigencia del descuento
+                            Vigencia del descuento {scheduleStatus && (
+                                <span className={expired ? "text-amber-500" : hasInvalidScheduleDate ? "text-error-strong" : "text-primary-light"}>
+                                    ({scheduleStatus})
+                                </span>
+                            )}
                         </div>
 
                         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -89,6 +131,12 @@ export const PriceCalculationCard = () => {
                             )}
                         </div>
 
+                        {hasInvalidScheduleDate && (
+                            <p className="mt-2 text-xs text-error-strong">
+                                Revisa las fechas y horas de vigencia del descuento.
+                            </p>
+                        )}
+
                         <Overlay open={!discount} />
                     </div>
                 )}
@@ -104,9 +152,11 @@ export const PriceCalculationCard = () => {
                     </div>
 
                     <span className="shrink-0 font-semibold tabular-nums text-error-strong">
-                        {hasPrice && hasDiscount
+                        {hasPrice && hasConfiguredDiscount && discountIsActive
                             ? `−S/ ${discountAmount.toFixed(2)}`
-                            : "—"}
+                            : hasPrice && hasConfiguredDiscount
+                                ? "S/ 0.00"
+                                : "—"}
                     </span>
                 </div>
             </div>

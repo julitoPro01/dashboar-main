@@ -25,6 +25,7 @@ export const QUERY_KEYS = {
         list: (pag: Object, fil: Object) => [...QUERY_KEYS.products.all, 'list', pag, fil] as const,
         detail: (id: string) => [...QUERY_KEYS.products.all, 'detail', id] as const,
         categoryAttributes: (params: any[]) => [...QUERY_KEYS.products.all, "category-attributes", ...params] as const,
-        variants: (productId: number) => [...QUERY_KEYS.products.all, 'list-variant', productId] as const
+        variants: (productId: number) => [...QUERY_KEYS.products.all, 'list-variant', productId] as const,
+        editVariantForm:(variantId:number)=>[...QUERY_KEYS.products.all,'edit-variant',variantId] as const
     }
 } as const;

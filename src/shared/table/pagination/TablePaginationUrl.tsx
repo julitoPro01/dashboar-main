@@ -6,16 +6,18 @@ import { useRouter } from "next/navigation";
 
 import { MetaPagination, PaginationState } from "./types";
 import { getSortByLabel } from "./constants";
-import { createURLPaginationParams, parsePage, parsePagination, updatePaginationParams } from "./utils";
+import { createURLPaginationParamsOld, parsePage, parsePagination, updatePaginationParams } from "./utils";
 
 interface Props {
     pagination: PaginationState;
     metaPagination: MetaPagination;
 
-    reagent?: { client: true, basePath: string } | { client: false, basePath?: string }
+    reagent?: { client: true, basePath: string } | { client: false, basePath?: string };
+
+    onChange?:()=>void
 }
 
-export const TablePaginationUrl = ({ pagination: pag, metaPagination: meta, reagent }: Props) => {
+export const TablePaginationUrl = ({ pagination: pag, metaPagination: meta, reagent,onChange }: Props) => {
 
     const { page, isNotValidPage, showing, availablePage, availablePageSize } = parsePagination({
         currentPage: pag.page,
@@ -40,13 +42,14 @@ export const TablePaginationUrl = ({ pagination: pag, metaPagination: meta, reag
                 query: { page: newPage, pageSize: +value }
             })
         } else {
-            const url = createURLPaginationParams({
+            const url = createURLPaginationParamsOld({
                 basePath: reagent?.basePath ?? "",
                 searchParams: window.location.search, query: { page: newPage, pageSize: +value }
             });
             router.replace(url, { scroll: false });
         }
 
+        onChange?.()
     }
 
     const goToPage = (newPage: number) => {
@@ -60,12 +63,14 @@ export const TablePaginationUrl = ({ pagination: pag, metaPagination: meta, reag
                 query: { page: newPage }
             })
         } else {
-            const url = createURLPaginationParams({
+            const url = createURLPaginationParamsOld({
                 basePath: "",
                 searchParams: window.location.search, query: { page: newPage }
             });
             router.replace(url, { scroll: false });
         }
+
+        onChange?.()
     };
 
     const sortLabel = getSortByLabel(pag.sortBy, pag.order);

@@ -3,7 +3,7 @@ import { Button } from "@/src/shared/components/btn";
 import { ListDropDownMemo } from "@/src/shared/components/navigation";
 import { RecordStatusDb, serializeRecordStatus } from "@/src/shared/domains/recordStatus";
 import { APP_ROUTES } from "@/src/shared/routes";
-import { createURLPaginationParams } from "@/src/shared/table/pagination/utils";
+import { createURLPaginationParamsOld } from "@/src/shared/table/pagination/utils";
 
 import { useEffect, useMemo, useState } from "react";
 import { AiOutlineProduct } from "react-icons/ai"
@@ -91,7 +91,7 @@ const Items = ({ pathName, state }: { pathName: string, state?: RecordStatusDb }
 const urlQuery = (state?: RecordStatusDb) => {
     const currentSearch = typeof window !== "undefined" ? window.location.search : "";
 
-    return createURLPaginationParams({
+    return createURLPaginationParamsOld({
         basePath: APP_ROUTES.PRODUCTS.INDEX,
         searchParams: currentSearch,
         query: { state: serializeRecordStatus(state), page: 1 }

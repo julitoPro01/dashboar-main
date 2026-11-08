@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
 import { z } from "zod";
+import { RECORD_STATUS_ID } from "@/src/shared/domains/recordStatus";
 
 const setMainVariantSchema = z.object({
     productId: z.number().int().positive(),
@@ -17,12 +18,17 @@ export const setMainVariant = async (input: SetMainVariantPayload) => {
         const { productId, variantId } = setMainVariantSchema.parse(input);
 
         const variant = await prisma.productVariant.findFirst({
-            where: { id: variantId, productId },
+            where: {
+                id: variantId,
+                productId,
+                deletedAt: null,
+                recordStatusId: RECORD_STATUS_ID.ACTIVE,
+            },
             select: { id: true, isMainVariant: true },
         });
 
         if (!variant) {
-            return ApiResponse.badRequest("La variante seleccionada no pertenece a este producto.", "VALIDATION");
+            return ApiResponse.badRequest("Selecciona una variante activa de este producto.", "VALIDATION");
         }
 
         if (variant.isMainVariant) {

@@ -1,16 +1,16 @@
+import { ListProducts } from "@/src/features/products/base-product/list";
 import { PRODUCT_SORTBY_ACCEPT_ONLY } from "@/src/features/products/constants";
-import { ListProducts } from "@/src/features/products/list";
-import { normalizePaginationParams, PaginationQuery } from "@/src/shared/table/pagination";
+import { normalizePaginationParamsOld, PaginationQuery } from "@/src/shared/table/pagination";
 
 
 interface Props {
-  searchParams: PaginationQuery
+  searchParams: Promise< PaginationQuery>
 }
 
 export default async function ProductsPage({ searchParams }: Props) {
 
   const query = await searchParams;
-  const norPage = normalizePaginationParams(query, { includeState: true, parseState: true, sortBy_acceptOnly: PRODUCT_SORTBY_ACCEPT_ONLY });
+  const norPage = normalizePaginationParamsOld(query, { includeState: true, parseState: true, sortBy_acceptOnly: PRODUCT_SORTBY_ACCEPT_ONLY });
 
 
   return (

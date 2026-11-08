@@ -18,10 +18,9 @@ export const PricingFields = () => {
                     fieldClass: "ps-8",
                     error: errors.commercialInfo?.basePrice?.message,
                     isDirty: dirtyFields.commercialInfo?.basePrice,
-                    labelBg:"bg-surface"
+                    labelBg:"bg-surface",
+                    requiredLabel:true
                 }}
-                
-                required
                 type="number"
                 min={0}
                 step={0.01}

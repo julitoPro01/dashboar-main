@@ -5,12 +5,12 @@ import { CatgAttrActions } from "./CatgAttrActions";
 import { useEffect, useState } from "react";
 import { useStore } from "@/src/store/useStore";
 import { Table } from "./list-catgAtrrs/Table";
-import { PaginationState, useStableUrlPagination } from "@/src/shared/table/pagination";
+import { PaginationStateOld, useStableUrlPagination } from "@/src/shared/table/pagination";
 import { TableProvider } from "@/src/shared/table/core";
 import { APP_ROUTES } from "@/src/shared/routes";
 import { ColumnSizingState, RowSelectionState } from "@tanstack/react-table";
 
-interface Props { pagination: PaginationState }
+interface Props { pagination: PaginationStateOld }
 
 export const ListCatgAttrs = ({ pagination }: Props) => {
 

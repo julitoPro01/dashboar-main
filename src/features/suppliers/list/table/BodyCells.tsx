@@ -1,7 +1,7 @@
 
 import Image from "next/image";
 import { IMAGE_STYLE } from "@/src/shared/theme/image/imageStyle";
-import { dateFormatter } from "@/src/shared/utils";
+import { dateFormatter } from "@/src/shared/utils/date";
 import { RecordStatusBadge, RecordStatusDb } from "@/src/shared/domains/recordStatus";
 import { Badge } from "@/src/shared/components/badge";
 import { SUPPLIER_CAPABILITIES_LABELS, SUPPLIER_RELATION_MODE_LABEL } from "../../constants";

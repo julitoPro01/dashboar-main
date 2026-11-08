@@ -5,7 +5,7 @@ import { useShallow } from "zustand/react/shallow";
 import { BodyRowMemo, DynamicReactTable, HeaderRow, OpenPanelParams, TableProvider, useTableContext } from "@/src/shared/table/core";
 import { FLOATING_PANEL_TYPE } from "@/src/store/uiSlice";
 import { APP_ROUTES } from "@/src/shared/routes";
-import { PaginationState, TablePaginationUrl, useStableUrlPagination } from "@/src/shared/table/pagination";
+import { PaginationStateOld, TablePaginationUrl, useStableUrlPagination } from "@/src/shared/table/pagination";
 import { SupplierResponse } from "../types";
 import { ColumnSizingState } from "@tanstack/react-table";
 import { useSuppliers } from "../shared/hooks";
@@ -13,7 +13,7 @@ import { columnDef } from "./table/ColumnDef";
 
 
 interface Props {
-    pagination: PaginationState;
+    pagination: PaginationStateOld;
 }
 export const ListSuppliers = ({ pagination }: Props) => {
 

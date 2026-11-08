@@ -30,8 +30,8 @@ export const TextField = ({ label, isRequired, id, dataType, error, isDirty, ...
         id={id}
         type={dataType === "DATE" ? "date" : "text"}
         placeholder={`${label}...`}
-        custom={{ border: 1, fieldSize: "sm", error, isDirty }}
-        required={isRequired}
+        custom={{ fieldSize: "sm", error, isDirty }}
+        // required={isRequired}
         {...register}
       >
       </Input>

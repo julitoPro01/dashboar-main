@@ -1,10 +1,10 @@
-import { PaginationState, ParsePagination } from "../types";
-import { parsePaginationParams } from "./parsePaginationParams";
+import { PaginationStateOld, ParsePagination } from "../types";
+import { parsePaginationParamsOld } from "./parsePaginationParams";
 
 
 
-export const getPaginationParams = (options: ParsePagination = {}): PaginationState => {
+export const getPaginationParams = (options: ParsePagination = {}): PaginationStateOld => {
     const search = window.location.search;
-    return parsePaginationParams(search, options);
+    return parsePaginationParamsOld(search, options);
 }
 

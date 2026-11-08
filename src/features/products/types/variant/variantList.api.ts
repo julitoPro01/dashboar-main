@@ -1,13 +1,16 @@
 import { RecordStatusDb } from "@/src/shared/domains/recordStatus";
-import { InventoryPolicyTypeDb, InventoryStatusTypeDb, SaleStatusTypeDb } from "../../shared/catalog";
+import { DistributionChannelDb, InventoryPolicyTypeDb, InventoryStatusTypeDb, PublicationStatusTypeDb, SaleStatusTypeDb } from "../../shared/catalog";
+import { VariantFilterCounts } from "./variantFilters";
+import { MetaPagination } from "@/src/shared/table/pagination";
 
+export type VariantDiscountStatus = "NONE" | "SCHEDULED" | "ACTIVE" | "EXPIRED";
 
 export type VariantListItemResponse = {
     id: number;
-    
-    recordStatus: {  id: number;  name: RecordStatusDb};
-    saleStatus:SaleStatusTypeDb;
-    inventoryStatus:InventoryStatusTypeDb;
+
+    recordStatus: { id: number; name: RecordStatusDb };
+    saleStatus: SaleStatusTypeDb;
+    inventoryStatus: InventoryStatusTypeDb;
     inventoryPolicy: InventoryPolicyTypeDb;
 
     sku: string;
@@ -22,6 +25,10 @@ export type VariantListItemResponse = {
     minStock: number | null;
     price: string;
     discount: number;
+    discountStartsAt: Date | null;
+    discountEndsAt: Date | null;
+    discountStatus: VariantDiscountStatus;
+
     isMainVariant: boolean;
     displayOrder: number;
     tags: any[]; // ProductTag
@@ -30,7 +37,7 @@ export type VariantListItemResponse = {
         name: string;
         path: string;
     };
-    properties: {
+    attributes: {
         id: number;
         valueText: string | null;
         valueNumber: number | null;
@@ -46,6 +53,10 @@ export type VariantListItemResponse = {
             }[];
         } | null;
     }[];
+
+    variantChannel: {
+        id: number, channel: DistributionChannelDb, publicationStatus: PublicationStatusTypeDb
+    }[]
 };
 
 export type VariantBaseProductResponse = {
@@ -67,4 +78,6 @@ export type VariantBaseProductResponse = {
 export type VariantListResponse = {
     product: VariantBaseProductResponse
     variants: VariantListItemResponse[]
+    counts: VariantFilterCounts
+    meta: MetaPagination;
 }

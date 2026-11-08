@@ -10,15 +10,18 @@ export const uiSlice: StateCreator<Store, [], [], UiSlice> = (set) => ({
     floatingPanel: initFP,
     fetchStatus: { status: "idle", titleMsg: undefined, descMsg: undefined },
 
-    
+
     setLeftNavBarOpen: (open) => (set({ leftNavBarOpen: open })),
     setFloatingPanel: (state) => (set(s => ({ floatingPanel: { ...s.floatingPanel, ...state } }))),
     setCloseFloatingPanel() {
         set({ floatingPanel: initFP })
     },
-    
+
     setFetchStatus: (status) => set({ fetchStatus: status }),
 
-    sideModal:{open:false, type:null},
-    setSideModal:v=>set({sideModal:v}),
+    sideModal: { open: false, type: null },
+    setSideModal: v => set({ sideModal: v }),
+    closeSideModal() {
+        set({ sideModal: { open: false, type: null } })
+    },
 })

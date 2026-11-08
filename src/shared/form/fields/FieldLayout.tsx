@@ -6,7 +6,7 @@ interface Props extends FormInputCustomProps {
     id?: string;
     children: React.ReactElement;
     className?: string;
-    required?: boolean;
+    requiredLabel?: boolean;
 }
 
 /**
@@ -40,7 +40,7 @@ export const FieldLayout = ({
     disabledLabel,
     description,
     descrPosition = "top",
-    required
+    requiredLabel
 }: Props) => {
 
 
@@ -52,7 +52,7 @@ export const FieldLayout = ({
                 <div className="flex flex-col gap-1 mb-1">
                     {label && labelPosition === "top" &&
                         <div className="flex justify-between gap-4">
-                            <label htmlFor={id} className={clsx(FIELD_STYLE.label, labelBg, required && FIELD_STYLE.validation["*"])} >
+                            <label htmlFor={id} className={clsx(FIELD_STYLE.label, labelBg, requiredLabel && FIELD_STYLE.validation["*"])} >
                                 {label}
                             </label>
                             {maxLengthLabel &&
@@ -92,7 +92,7 @@ export const FieldLayout = ({
                         rounded-l-lg
                         ${FIELD_STYLE.textSize[textSize]}
                         ${FIELD_STYLE.size[fieldSize]}
-                        ${required && FIELD_STYLE.validation["*"]}
+                        ${requiredLabel && FIELD_STYLE.validation["*"]}
                         `}>
                         {label}
                     </label>
@@ -104,7 +104,7 @@ export const FieldLayout = ({
                         inline-flex items-center  whitespace-nowrap pr-3
                         ${labelBg}
                         ${FIELD_STYLE.label}
-                        ${required && FIELD_STYLE.validation["*"]}
+                        ${requiredLabel && FIELD_STYLE.validation["*"]}
                         `}>
                         {label}
                     </label>
@@ -121,7 +121,7 @@ export const FieldLayout = ({
                     peer-focus:-top-2 peer-focus:scale-90 
                     peer-[:not(:placeholder-shown)]:-top-2
                     peer-[:not(:placeholder-shown)]:scale-90
-                     ${labelBg} ${required && FIELD_STYLE.validation["*"]}`}
+                     ${labelBg} ${requiredLabel && FIELD_STYLE.validation["*"]}`}
                     >
                         {label}
 

@@ -1,12 +1,11 @@
-import { INVENTORY_POLICY, SALE_STATUS, SALE_STATUS_BY_INVENTORY_POLICY, SALE_STATUS_OPTIONS, getSaleStatusOptionsByInventoryPolicy } from "@/src/features/products/shared/catalog";
+import { getSaleStatusOptionsByInventoryPolicy } from "@/src/features/products/shared/catalog";
 import { VariantForm } from "@/src/features/products/types"
 import { Select } from "@/src/shared/form"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
-import { useEffect } from "react";
 
 export const SaleStatus = () => {
 
-    const { register, control, trigger } = useFormContext<VariantForm>()
+    const { register, control } = useFormContext<VariantForm>()
     const { errors, dirtyFields, } = useFormState({ control, name: "operationStatus.saleStatus" });
 
     const inventoryPolicy = useWatch({ control, name: "operationStatus.inventoryPolicy.type" })

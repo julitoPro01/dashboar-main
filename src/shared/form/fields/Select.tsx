@@ -8,15 +8,16 @@ import { IoChevronDown } from "react-icons/io5";
 
 
 
-interface Props extends SelectHTMLAttributes<HTMLSelectElement> {
+interface Props extends Omit<SelectHTMLAttributes<HTMLSelectElement>,"children"> {
     custom: {
-        options?: { value: number | string, label: string, disabled?: boolean }[];
+        options?: readonly { value: number | string, label: string, disabled?: boolean }[];
         placeholder?: string;
         isValueSelected?: boolean;
         placeholderColor?: string;
+        disabledPlaceholder?:boolean;
     } & FormInputCustomProps
 
-    children?: React.ReactNode;
+    children?:(style:string)=> React.ReactNode;
 }
 
 
@@ -56,7 +57,7 @@ export const Select = ({custom, children, ...rest}: Props) => {
 
 
     return (
-        <FieldLayout {...custom} id={rest.id} required={rest.required} >
+        <FieldLayout {...custom} id={rest.id} >
             <div className="w-full">
                 <select className={field}  {...rest}
                     onChange={(e) => {
@@ -66,8 +67,12 @@ export const Select = ({custom, children, ...rest}: Props) => {
                         setSelect(!!e.target.value)
                     }}
                 >
-                    <option value={rest.defaultValue ?? ""} className="text-text-muted" > {custom.placeholder ?? "Seleccionar"}</option>
-                    {children ??
+                    <option value={rest.defaultValue ?? ""}
+                     className="text-text-muted" 
+                     disabled={custom.disabledPlaceholder ?? false}
+                     > {custom.placeholder ?? "Seleccionar"}</option>
+                     
+                    {children?.(`${FIELD_STYLE.text} disabled:text-text-secondary`) ??
                         custom.options?.map((v) => (
                             <option
                                 key={v.value}

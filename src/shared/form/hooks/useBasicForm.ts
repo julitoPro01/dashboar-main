@@ -9,7 +9,9 @@ interface Modif<T> {
 
 }
 
-type Schema<T> = Partial<Record<keyof T, (v: string, state: T) => boolean | string>>;
+type Schema<T> = {
+  [K in keyof T]?: (value: T[K], state: T) => boolean | string;
+};
 
 
 export interface BasicFormReturn<T> extends Modif<T> {
@@ -42,6 +44,9 @@ export const useBasicForm = <T extends Record<string, any>>(iniState: T, schema:
 
   const listenErrors = useRef(false);
 
+  const validateField = <K extends keyof T>(field: K, value: T[K], currentState: T) =>
+    schema[field]?.(value, currentState);
+
   const handleChange = <K extends keyof T>(field: K, value: T[K]) => {
     setState((val) => {
       const newState = { ...val, [field]: value }
@@ -49,7 +54,7 @@ export const useBasicForm = <T extends Record<string, any>>(iniState: T, schema:
       const isDirty = newState[field] !== iniState[field] && (newState[field] || iniState[field]);
 
       const validator = schema[field];
-      const validationResult = validator ? validator(String(value ?? ""), newState) : undefined;
+      const validationResult = validateField(field, value, newState);
       setModified(prevMod => {
         const nextDirty = { ...prevMod.isDirty };
 
@@ -98,10 +103,9 @@ export const useBasicForm = <T extends Record<string, any>>(iniState: T, schema:
   const isValidate = () => {
 
     const nextError = { ...modified.isError } as any;
-    Object.entries(state).forEach(([field, value]) => {
-
+    (Object.keys(state) as (keyof T)[]).forEach((field) => {
       const validator = schema[field];
-      const validationResult = validator ? validator(String(value ?? ""), state) : undefined;
+      const validationResult = validateField(field, state[field], state);
 
 
       if (typeof validationResult === "boolean" && validationResult) {

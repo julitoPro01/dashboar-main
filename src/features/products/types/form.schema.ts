@@ -41,7 +41,6 @@ export const categorizationSchema = z.object({
                     if (!value.isRequired) return;
 
                     const { field } = ATTRIBUTE_INPUT_CONFIG[value.dataType];
-
                     switch (field) {
                         case "valueText":
                             if (!value.valueText?.trim()) {

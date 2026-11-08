@@ -20,6 +20,7 @@ const TEXT_SIZE = {
 interface Props {
   children: React.ReactNode,
   title?: string,
+  titleIcon?: React.ReactNode,
   Search?: React.ReactNode;
   description?: string,
   open: boolean,
@@ -35,8 +36,8 @@ interface Props {
 
 export const DynamicModal = ({
   children, title, description, open = false, Search,
-  onClose, effectOnEndModal,
-  clickBgClose, inactiveClose, size = "3xl", sizeTitle, inactiveScroll = false, fixedHeight: minHeightInclude
+  onClose, effectOnEndModal, titleIcon,
+  clickBgClose, inactiveClose, size = "3xl", sizeTitle="xl", inactiveScroll = false, fixedHeight: minHeightInclude
 }: Props) => {
 
   const [okModal, setOkModal] = useState(open)
@@ -56,6 +57,8 @@ export const DynamicModal = ({
 
 
   }, [open])
+
+
 
   return (
     <Dialog.Root open={okModal}>
@@ -84,21 +87,24 @@ export const DynamicModal = ({
           onAnimationEnd={onAnimationEnd}
         >
           <Dialog.Title className="text-lg font-bold bg-background">
-            <div className="w-full flex  relative border-b border-border py-4 px-6 sm:px-8 sm:py-6" >
+            <div className="w-full flex  relative border-b border-border py-4 px-6" >
               <div className="flex-1 flex flex-col ">
-
                 <p className={`${inactiveClose ? "" : "pe-4"}`}>
-                  <span className={`block text-text ${TEXT_SIZE[sizeTitle ?? "3xl"]} leading-tight`}>{title}</span>
+                  {titleIcon && <span> {titleIcon} </span>}
+
+                  {title &&
+                    <span className={`block text-text ${TEXT_SIZE[sizeTitle]} leading-tight`}>{title}</span>
+                  }
+
                   {description &&
                     <span className="block font-normal text-text-muted text-sm mt-1">{description}</span>
                   }
                 </p>
+
                 {(Search && title) && <div className="mt-3" />}
-                {
-                  Search &&
-                  <div className="pr-6">
-                    {Search}
-                  </div>
+
+                {Search &&
+                  <div className="pr-6">    {Search}</div>
                 }
               </div>
               <div>
@@ -107,7 +113,7 @@ export const DynamicModal = ({
                   <Dialog.Close
                     onClick={() => onClose()}
                     className="ml-auto px-2 py-1 cursor-pointer text-text rounded bg-background border border-border hover:bg-hover">
-                    <IoClose size={25} />
+                    <IoClose className=" shrink-0" size={18} />
                   </Dialog.Close>
                 }
               </div>

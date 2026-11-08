@@ -17,6 +17,7 @@ export type * from './variant/variantDetailst.api';
 export type * from './variant/variantList.api';
 export type * from './variant/variantForm';
 export * from './variant/variantForm.schema';
+export * from './variant/variantFilters';
 
 
 

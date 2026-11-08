@@ -1,4 +1,4 @@
-import { CreateProduct } from '@/src/features/products/create';
+import { CreateProduct } from '@/src/features/products/base-product/create';
 import { BackTo } from '@/src/shared/components/btn';
 import { APP_ROUTES } from '@/src/shared/routes';
 

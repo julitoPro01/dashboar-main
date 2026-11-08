@@ -1,7 +1,7 @@
-import { CreateUrlOptions, PaginationParams } from "../types";
-import { createURLPaginationParams } from "./createURLPaginationParams";
+import { CreateUrlOptions, PaginationParamsOld } from "../types";
+import { createURLPaginationParamsOld } from "./createURLPaginationParams";
 
-interface UpdatePag extends PaginationParams {
+interface UpdatePag extends PaginationParamsOld {
     options?: CreateUrlOptions,
     reagent?: boolean
 }
@@ -11,7 +11,7 @@ interface UpdatePag extends PaginationParams {
  * @param param
  */
 export const updatePaginationParams = ({ basePath, searchParams, query, options, reagent = true }: UpdatePag) => {
-    const url = createURLPaginationParams({ basePath, searchParams, query }, options);
+    const url = createURLPaginationParamsOld({ basePath, searchParams, query }, options);
     if (reagent)
         window.history.replaceState(null, "", url);
     else

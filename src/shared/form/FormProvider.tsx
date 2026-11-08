@@ -10,16 +10,18 @@ interface Props<T extends FieldValues> {
     children: React.ReactNode;
     form: UseFormReturn<T>;
     onSubmit: SubmitHandler<T>;
+    className?:string;
 }
 
 export const FormProvider = <T extends FieldValues>({
     children,
     form,
     onSubmit,
+    className
 }: Props<T>) => {   
     return (
         <Provider {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className={className}>
                 {children}
             </form>
         </Provider>

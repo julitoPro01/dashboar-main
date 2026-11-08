@@ -38,7 +38,7 @@ const operationStatusSchema = z.object({
                 .int("El valor debe ser un número entero")
                 .min(0, "El valor no puede ser negativo")
                 .max(1_000, "El valor no puede superar 1,000")
-                .optional()
+                .optional().nullable()
         }),
 
     }).refine(
@@ -53,12 +53,12 @@ const operationStatusSchema = z.object({
     )
 });
 
-const catalogRulesSchema = z.object({
-    catalogRules: z.object({
-        isMainVariant: z.boolean(),
 
-    })
-})
+// const catalogRulesSchema = z.object({
+//     catalogRules: z.object({
+
+//     })
+// })
 
 export const publicationStatusSchema = z.enum(PublicationStatusTypeDb, {
     error: "Selecciona un valor"
@@ -78,5 +78,5 @@ export const variantFormSchema = z.object({
     ...gallerySchema.shape,
     ...operationStatusSchema.shape,
     ...distributionChannelsSchema.shape,
-    ...catalogRulesSchema.shape
+    // ...catalogRulesSchema.shape
 })

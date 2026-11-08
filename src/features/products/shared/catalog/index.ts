@@ -1,13 +1,14 @@
+export * from './channel/channel.constants';
+export * from './channel/publication.constants';
+export * from './channel/type';
+
 export * from './inventory-policy/constants';
 export * from './inventory-policy/type';
 
-export * from './status/inventory/constants';
-export * from './status/inventory/InventoryStatusBadge';
-export * from './status/inventory/type';
+export * from './status/inventory.constants';
+export * from './status/Inventory.StatusBadge';
+export * from './status/inventory.type';
 
-export * from './status/pulication/constants';
-export * from './status/pulication/type';
-
-export * from './status/sale/constants';
-export * from './status/sale/SaleStatusBadge';
-export * from './status/sale/type';
+export * from './status/sale.constants';
+export * from './status/Sale.StatusBadge';
+export * from './status/sale.type';

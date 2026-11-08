@@ -492,36 +492,6 @@ model Currency {
 }
 
 
-// =============================================
-// 11. INVENTORY & STOCK MANAGEMENT
-// =============================================
-
-model StockMovement {
-  id          Int       @id @default(autoincrement())
-  variantId  Int
-  type        StockMovementType    // IN, OUT, ADJUSTMENT
-  quantity    Int
-  date        DateTime  @default(now())
-  reason      String?
-  reference   String?   // PO number, etc.
-
-  createdBy   String?
-  createdById Int?
-  creator     UserAuthentication? @relation("StockMovementCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
-
-  productvariant ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
-
-  @@map("stock_movements")
-}
-enum StockMovementType {
-  IN          // compra / devolución
-  OUT         // venta
-  RETURN      // devolución cliente
-  ADJUSTMENT  // corrección manual
-  DAMAGED     // pérdida
-  RESERVED    // carrito
-  RELEASED   // cancelación
-}
 
 // =============================================
 // 12. SHIPPING & DELIVERY
@@ -712,7 +682,7 @@ model CartItem {
   addedAt    DateTime  @default(now())
 
   shoppingCart        ShoppingCart? @relation(fields: [cartId], references: [id])
-  productVariant     ProductVariant @relation(fields: [variantId], references: [id])
+  productVariant     ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
 
   @@index([cartId])
   @@index([variantId])
@@ -869,7 +839,7 @@ model OrderItem {
   variantId       Int
 
   order        Order?          @relation(fields: [orderId], references: [id])
-  productVariant      ProductVariant? @relation(fields: [variantId], references: [id])
+  productVariant      ProductVariant  @relation(fields: [variantId], references: [id], onDelete: Restrict)
 
   @@index([orderId])
   @@index([variantId])
@@ -933,7 +903,7 @@ model InvoiceItem {
   taxAmount       Decimal?  @db.Decimal(10,2)
 
   invoice   Invoice?         @relation(fields: [invoiceId], references: [id])
-  productVariant   ProductVariant  @relation(fields: [variantId], references: [id])
+  productVariant   ProductVariant  @relation(fields: [variantId], references: [id], onDelete: Restrict)
 
   @@index([invoiceId])
   @@index([variantId])
@@ -1157,7 +1127,7 @@ model SupplierProduct {
   creator UserAuthentication? @relation(fields: [createdById], references: [id],name: "SupplierProductCreatedBy")
   updater UserAuthentication? @relation(fields: [updatedById], references: [id],name: "SupplierProductUpdatedBy")
 
-  productVariant   ProductVariant? @relation(fields: [variantId], references: [id])
+  productVariant   ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
   supplier  Supplier?        @relation(fields: [supplierId], references: [id])
   product   Product          @relation(fields: [productId], references: [id])
 

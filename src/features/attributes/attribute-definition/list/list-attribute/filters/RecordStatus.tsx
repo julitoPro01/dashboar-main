@@ -3,7 +3,7 @@ import { SelectableItem } from "@/src/shared/components/items";
 import { RECORD_STATUS_LABEL, RECORD_STATUS_STYLE, RecordStatusDb, serializeRecordStatus } from "@/src/shared/domains/recordStatus";
 import { CellTitle } from "@/src/shared/table/core";
 import { OpenFilterButton, AppliedFilterLabel} from "@/src/shared/table/filters"
-import { createURLPaginationParams, parsePaginationParams } from "@/src/shared/table/pagination";
+import { createURLPaginationParamsOld, parsePaginationParamsOld } from "@/src/shared/table/pagination";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -19,7 +19,7 @@ export const RecordStatus = () => {
     setStatus(v => ({ ...v, value }));
     const par = serializeRecordStatus(value);
 
-    const url = createURLPaginationParams({
+    const url = createURLPaginationParamsOld({
       basePath:"",
       searchParams:searchPar,
       query:{state:par,page:1}
@@ -30,7 +30,7 @@ export const RecordStatus = () => {
 
   useEffect(() => {
 
-    const state = parsePaginationParams(searchPar, { includeState: true }).state
+    const state = parsePaginationParamsOld(searchPar, { includeState: true }).state
     setStatus(v => ({ ...v, value: state }))
 
   }, [state]);

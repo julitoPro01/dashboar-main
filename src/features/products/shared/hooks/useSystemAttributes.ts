@@ -21,7 +21,10 @@ export const useSystemAttributes = (params: SystemAttributesPayload, enabled: bo
             }
             return response.data ?? [];
         },
-        enabled: enabled
+        enabled: enabled,
+        staleTime: 1 * 60 * 1000,
+        gcTime: 5 * 60 * 1000,
+        refetchOnWindowFocus: false,
     });
 
     const getAttributes = async () => {
@@ -32,6 +35,7 @@ export const useSystemAttributes = (params: SystemAttributesPayload, enabled: bo
 
     return {
         getAttributes,
-        data: enabled ? query.data : []
+        isLoading:query.isLoading
     };
 };
+

@@ -5,6 +5,7 @@ import prisma from "@/lib/prisma";
 import { z } from "zod";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
 import { updateGallerySchema } from "./schema/upsertProduct";
+import { mapImagesToPayload } from "../../shared/utils";
 
 interface PayloadProps {
     productId: number;
@@ -21,6 +22,8 @@ export const updateGallery = async ({
         const parse = updateGallerySchema.parse(images)
 
         await prisma.$transaction(async (tx) => {
+
+            const images = mapImagesToPayload(parse)
 
             const keepImageIds = parse
                 .filter(image => image.id)

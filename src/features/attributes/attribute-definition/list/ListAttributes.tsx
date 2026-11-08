@@ -6,12 +6,12 @@ import { useStore } from "@/src/store/useStore";
 import { APP_ROUTES } from "@/src/shared/routes";
 import { FLOATING_PANEL_TYPE } from "@/src/store/uiSlice";
 import { AttributeDefinitionResponse } from "../types";
-import { PaginationState, TablePaginationUrl, useStableUrlPagination } from "@/src/shared/table/pagination";
+import { PaginationStateOld, TablePaginationUrl, useStableUrlPagination } from "@/src/shared/table/pagination";
 import { useAttributes } from "../shared/hook";
 import { columnDef } from "./list-attribute/ColumnDef";
 import { ColumnSizingState } from "@tanstack/react-table";
 
-interface Props { pagination: PaginationState }
+interface Props { pagination: PaginationStateOld }
 
 export const ListAttributes = ({ pagination }: Props) => {
 

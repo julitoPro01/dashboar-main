@@ -1,5 +1,7 @@
 "use client";
 
+import { useCallback, useState } from "react";
+
 import {
     autoUpdate,
     flip,
@@ -18,7 +20,11 @@ import {
 } from "@floating-ui/react";
 
 interface Props {
-    trigger: React.ReactNode;
+    trigger: React.ReactNode | ((state: {
+        open: boolean;
+        referenceRef: React.RefCallback<HTMLButtonElement>;
+        referenceProps: React.ButtonHTMLAttributes<HTMLButtonElement>;
+    }) => React.ReactNode);
     children: React.ReactNode;
     placement?: Placement;
     fallbackPlacements?: Placement[];
@@ -26,11 +32,13 @@ interface Props {
     className?: string;
 
     open?: boolean;
+    defaultOpen?: boolean;
     onOpenChange?: (open: boolean) => void;
     outClose?: boolean;
     interaction?: "click" | "hover" | "both";
     zIndex?: number
     portalRoot?: HTMLElement | null;
+    keepMounted?: boolean;
 }
 /**
  * Componente carta flotante
@@ -42,20 +50,28 @@ export function FloatingCard({
     children,
     placement,
     fallbackPlacements,
-    offsetDistance = 8,
+    offsetDistance = 0,
     className,
     outClose = true, interaction = "click",
-    open, onOpenChange, zIndex = 50, portalRoot
+    open, defaultOpen = false, onOpenChange, zIndex = 50, portalRoot, keepMounted = false
 }: Props) {
+
+    const [internalOpen, setInternalOpen] = useState(defaultOpen);
+    const isControlled = open !== undefined;
+    const isOpen = isControlled ? open : internalOpen;
 
 
     const { refs, floatingStyles, context } = useFloating({
-        open,
-        onOpenChange(open) {
-            if ((interaction === "click" || interaction === "both") && !outClose) {
-                onOpenChange?.(true)
-            } else
-                onOpenChange?.(open)
+        open: isOpen,
+        onOpenChange(nextOpen) {
+            const resolvedOpen = (interaction === "click" || interaction === "both") && !outClose
+                ? true
+                : nextOpen;
+
+            if (!isControlled) {
+                setInternalOpen(resolvedOpen);
+            }
+            onOpenChange?.(resolvedOpen);
         },
         placement,
         middleware: [
@@ -97,20 +113,32 @@ export function FloatingCard({
         role,
     ]);
 
+    const referenceRef = useCallback((element: HTMLButtonElement | null) => {
+        refs.setReference(element);
+    }, [refs.setReference]);
 
+    const referenceProps = getReferenceProps();
+    const triggerContent = typeof trigger === "function"
+        ? trigger({
+            open: isOpen,
+            referenceRef,
+            referenceProps: referenceProps as React.ButtonHTMLAttributes<HTMLButtonElement>,
+        })
+        : trigger;
 
     return (
         <>
-            <div ref={refs.setReference} {...getReferenceProps()}>
-                {trigger}
-            </div>
-            {open && (
+            {typeof trigger === "function"
+                ? triggerContent
+                : <div ref={refs.setReference} {...referenceProps}>{trigger}</div>}
+            {(isOpen || keepMounted) && (
                 <FloatingPortal root={portalRoot}>
                     <div
                         ref={refs.setFloating}
                         style={{...floatingStyles, zIndex}}
                         {...getFloatingProps()}
-                        className={`${className}`}
+                        aria-hidden={!isOpen}
+                        className={`${className} w-max ${!isOpen ? "invisible pointer-events-none" : ""}`}
                     >
                         {children}
                     </div>

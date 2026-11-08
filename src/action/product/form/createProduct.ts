@@ -7,10 +7,9 @@ import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
 
 import { ProductAttributeValueCreateManyInput } from "@/src/generated/prisma/models";
 
-
-import { generateSku } from "../utils/generateSku";
 import { generateSlugSuffix } from "../utils/generateSlugSuffix";
 import { createProductSchema } from "./schema/upsertProduct";
+import { generateSku, mapImagesToPayload } from "../../shared/utils";
 
 interface CreateProductPayload extends z.infer<typeof createProductSchema> {
     createdBy: string; createdById: number;
@@ -52,7 +51,7 @@ export const createProduct = async (dataProduct: CreateProductPayload) => {
             });
 
             //#4 IMAGENES
-            for (const image of parse.images) {
+            for (const image of mapImagesToPayload( parse.images)) {
                 await tx.mediaFile.create({
                     data: {
                         fileName: image.mediaFile.fileName,

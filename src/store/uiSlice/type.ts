@@ -5,10 +5,13 @@ export const FLOATING_PANEL_TYPE = {
     PRODUCT: "product", // pagina
     PRODUCT_STAT_CARD: "product_stat_card",
 
+    VARIANT:"variant", // pagina
+    VARIANT_CELL_EDITOR_CONTENT:"variant_cell_editor_content",
+
     SUPPLIER: "supplier",// pagina
 
     ATTRIBUTE: "attribute",//pagina
-    CATG_ATTR_SELECTED_ROWS: "catg_attr_selected_rows"// pagina -> panel para filtrar attributos seleccionados;
+    CATG_ATTR_SELECTED_ROWS: "catg_attr_selected_rows",// pagina -> panel para filtrar attributos seleccionados;
 
 } as const;
 
@@ -16,6 +19,7 @@ export const FLOATING_PANEL_TYPE = {
 export const SIDE_MODAL_TYPE ={
     PRODUCT_VARIANT_CREATE:"product_variant_CREATE",
     PRODUCT_VARIANT_EDIT:"product_variant_EDIT",
+    PRODUCT_VARIANT_DETAILS:"product_variant_DETAILS",
 
 } as  const;
 
@@ -46,6 +50,7 @@ export interface ActionUi {
     setFetchStatus: (_: FetchStatus) => void;
 
     setSideModal:(_:SideModalState)=>void;
+    closeSideModal:()=>void;
 }
 
 export type UiSlice = StateUi & ActionUi;

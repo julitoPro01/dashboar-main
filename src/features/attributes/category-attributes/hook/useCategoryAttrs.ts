@@ -5,9 +5,9 @@ import { useStore } from "@/src/store/useStore";
 import { useDelayedFetchState } from "@/src/shared/hooks";
 
 import { CategoryAttrFilters, CategoryAttrsResponse } from "../types";
-import { PaginationState } from "@/src/shared/table/pagination";
+import { PaginationStateOld } from "@/src/shared/table/pagination";
 
-export const useCategoryAttrs = (pag: PaginationState, fil: CategoryAttrFilters) => {
+export const useCategoryAttrs = (pag: PaginationStateOld, fil: CategoryAttrFilters) => {
 
 
     const setFetchStatus = useStore(v => v.setFetchStatus);

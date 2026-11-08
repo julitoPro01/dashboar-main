@@ -21,7 +21,7 @@ export const useReorderVariant = () => {
 
         if (res.ok) {
 
-            toast.success(res.msg, { style: TOAST_STYLE.success })
+            toast.success(res.msg, { style: TOAST_STYLE.success });
             
         } else {
             const { title, description } = getErrorMessage(res.errorType);
@@ -37,6 +37,6 @@ export const useReorderVariant = () => {
 
     return {
         saveChange,
-        isPending
+        isPending,
     }
 }

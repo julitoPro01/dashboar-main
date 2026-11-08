@@ -1,4 +1,4 @@
-import {  FloatingActions, Header, RowFloatingActions } from "@/src/features/products/list";
+import { FloatingActions, Header, RowFloatingActions } from "@/src/features/products/base-product/list";
 
 export default function LayoutList({ children }: { children: React.ReactNode }) {
     return (

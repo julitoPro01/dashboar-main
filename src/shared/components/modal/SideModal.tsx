@@ -19,7 +19,10 @@ interface Props {
     clickBgClose?: boolean;
     inactiveClose?: boolean;
     inactiveScroll?: boolean;
-    sideType: SideModalType
+    sideType: SideModalType;
+    keepMounted?: boolean
+    modal?: boolean;
+    onEffectClose?: () => void;
 }
 
 export const SideModal = ({
@@ -32,44 +35,50 @@ export const SideModal = ({
     clickBgClose = false,
     inactiveClose = false,
     inactiveScroll = false,
-    sideType
+    sideType, keepMounted, modal = true,
+    onEffectClose
 }: Props) => {
 
     const { open, type } = useStore(v => v.sideModal);
-    const setClose = useStore(v => v.setSideModal);
+    const closeSideModal = useStore(v => v.closeSideModal);
 
     const [showPanel, setShowPanel] = useState<{ type: SideModalType | null, open: boolean }>({ type, open });
 
 
     const onAnimationEnd = () => {
-        if (!open)
-            setShowPanel({open:false, type});
+        if (!open){
+            setShowPanel({ open: false, type });
+            onEffectClose?.()
+        }
+        
     };
 
     useEffect(() => {
         if (open)
-            setShowPanel({open:true, type});
+            setShowPanel({ open: true, type });
     }, [open]);
 
-    if (showPanel.type !== sideType){
+    if (showPanel.type !== sideType) {
         return null;
     }
 
     return (
-        <Dialog.Root open={showPanel.open}>
+        <Dialog.Root open={showPanel.open} modal={modal}>
             <Dialog.Portal>
 
                 {/* Overlay */}
-                <Dialog.Overlay
-                    className={clsx(
-                        "fixed inset-0 z-50 bg-black/50",
-                        {
-                            "DialogOverlayOpen": showPanel,
-                            "DialogOverlayClose": !open,
-                        }
-                    )}
-                    onClick={() => clickBgClose && setClose({ open: false, type: null })}
-                />
+                {modal && (
+                    <Dialog.Overlay
+                        className={clsx(
+                            "fixed inset-0 z-50 bg-black/50",
+                            {
+                                "DialogOverlayOpen": showPanel,
+                                "DialogOverlayClose": !open,
+                            }
+                        )}
+                        onClick={() => clickBgClose && closeSideModal()}
+                    />
+                )}
 
                 {/* Panel */}
                 <Dialog.Content
@@ -108,7 +117,7 @@ export const SideModal = ({
 
                                 {!inactiveClose && (
                                     <Dialog.Close
-                                        onClick={() => setClose({ open: false, type: null })}
+                                        onClick={closeSideModal}
                                         className="
                                         shrink-0 cursor-pointer
                                         rounded-md border border-border
@@ -134,7 +143,7 @@ export const SideModal = ({
                                 : "overflow-auto scrollbar-hide"
                         )}
                     >
-                        {showPanel && children}
+                        {(showPanel || keepMounted) && children}
                     </div>
 
                 </Dialog.Content>

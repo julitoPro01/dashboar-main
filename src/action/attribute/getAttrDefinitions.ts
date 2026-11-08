@@ -2,12 +2,12 @@
 import prisma from "@/lib/prisma";
 import { Prisma } from "@/src/generated/prisma/client";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
-import { createDateRangePrisma } from "../utils/dateRanger.filter";
 import { AttributeDefinitionsResponse, AttributeFilters } from "@/src/features/attributes/attribute-definition/types";
-import { buildMeta, PaginationState } from "@/src/shared/table/pagination";
+import { buildMeta, PaginationStateOld } from "@/src/shared/table/pagination";
 import { buildOrderBy } from "@/src/shared/table/filters";
+import { createDateRangePrisma } from "../shared/utils";
 
-type Pag = PaginationState;
+type Pag = PaginationStateOld;
 type Filters = AttributeFilters;
 
 export const getAttrDefinitions = async (pag: Pag, fil: Filters) => {

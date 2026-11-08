@@ -32,12 +32,7 @@ export const FloatingWrapper = ({ children, open, onClose,
         {overlay && <div className=" fixed inset-0 z-40" onClick={onClose} />}
 
         <div className={`overflow-auto absolute scrollbar-thin scrollbar-track-transparent  scrollbar-thumb-bg-select 
-            ${y} 
-            ${x}
-             z-50
-            ${SIZE[size]}
-             ${className}
-             `}>
+            ${y} ${x} z-50 ${SIZE[size]} ${className}`}>
             {children}
         </div>
     </> : null

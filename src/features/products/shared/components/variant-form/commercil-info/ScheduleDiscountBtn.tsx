@@ -6,7 +6,7 @@ import { SURFACE_VARIANTS } from "@/src/shared/theme/surface-variant";
 import { parsePeruDateTime } from "@/src/shared/utils/date";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { BiCheckCircle, BiChevronDown } from "react-icons/bi";
+import { BiChevronDown } from "react-icons/bi";
 import { CgLock } from "react-icons/cg";
 import { FaRegClock } from "react-icons/fa";
 import { FaCalendarDays } from "react-icons/fa6";

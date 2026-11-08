@@ -7,7 +7,7 @@ import { RecordStatus } from "./operation-status/RecordStatus";
 import { SaleStatus } from "./operation-status/SaleStatus";
 import { OperationStatusInfo } from "./operation-status/OperationStatusInfo";
 
-export const OperationalStatus = () => {
+export const OperationalStatus = ({ isEdit = false }: { isEdit?: boolean }) => {
 
     return (
         <section className="space-y-3">
@@ -32,7 +32,7 @@ export const OperationalStatus = () => {
             <div className="space-y-2 text-sm">
 
                 {/* Record status */}
-                <RecordStatus />
+                <RecordStatus isEdit={isEdit} />
 
                 {/* Inventory policy */}
                 <InventoryPocily />

@@ -54,7 +54,7 @@ export const Input = ({ custom, ...rest }: Props) => {
 
 
     return (
-        <FieldLayout {...custom} id={rest.id} required={rest.required} >
+        <FieldLayout {...custom} id={rest.id} >
             <input className={field} {...rest} />
         </FieldLayout>
     )

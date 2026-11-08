@@ -1,10 +1,10 @@
 import { MdArrowBackIosNew, MdArrowForwardIos } from "react-icons/md"
 import { Button } from "../../components/btn"
-import { MetaPagination, PaginationState } from "./types"
+import { MetaPagination, PaginationStateOld } from "./types"
 import { getPaginationItems, parsePagination } from "./utils";
 
 interface Props {
-    pagination: PaginationState;
+    pagination: PaginationStateOld;
     metaPagination: MetaPagination;
     onGoToPage: (page: number) => void;
     onPageSizeChange: (page: number, pageSize: number) => void;

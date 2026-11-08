@@ -28,6 +28,8 @@ export interface FormInputCustomProps {
     labelPosition?:"left"|"left-join"|"top"|"top-floating"
     label?: string;
     labelBg?:string;
+    disabledLabel?:boolean;
+    requiredLabel?:boolean;
 
     fieldIcon?: React.ReactNode;
     iconPosition?: "left" | "right"
@@ -35,7 +37,6 @@ export interface FormInputCustomProps {
     maxLengthLabel?: number
     currentLengthLabel?: number
 
-    disabledLabel?:boolean
 }
 
 export type FieldStatusType = "error" | "normal" | "dirty";

@@ -3,6 +3,7 @@
 import { ProductProperty } from "@/src/store/productSlice";
 import { ATTRIBUTE_INPUT_CONFIG } from "../../constants";
 import { CategorizationForm } from "../../types";
+import { dateFormatter } from "@/src/shared/utils/date";
 
 export const mapSystemAttributesToView = (
     groups: CategorizationForm["categorization"]["systemAttributes"] = []
@@ -35,12 +36,15 @@ export const mapSystemAttributesToView = (
                 }
 
                 case "valueDate": {
+                    try {
+                        value = attribute.valueDate
+                            ? dateFormatter.format(attribute.valueDate, "date")
+                            : null; break;
+                    } catch {
+                        value = null;
+                    }
 
-                    value = attribute.valueDate
-                        ? new Date(attribute.valueDate).toLocaleDateString(
-                            "es-PE"
-                        )
-                        : null; break;
+
                 }
 
                 case "valueOptionIds": {

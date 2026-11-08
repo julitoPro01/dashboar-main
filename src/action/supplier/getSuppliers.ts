@@ -2,12 +2,12 @@
 
 import { Prisma } from "@/src/generated/prisma/client";
 import prisma from "@/lib/prisma";
-import { createDateRangePrisma } from "../utils/dateRanger.filter";
 import { ApiResponse, PromiseReturn } from "@/src/shared/utils";
-import { PaginationState } from "@/src/shared/table/pagination";
+import { PaginationStateOld } from "@/src/shared/table/pagination";
 import { SuppliersResponse, SupplierFilters } from "@/src/features/suppliers/types";
+import { createDateRangePrisma } from "../shared/utils";
 
-type QueryProps = PaginationState;
+type QueryProps = PaginationStateOld;
 type FilterProps = SupplierFilters;
 
 export async function getSuppliers(query: QueryProps, filter: FilterProps) {

@@ -1,12 +1,12 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "@/src/shared/react-query";
 import { getAttrDefinitions } from "@/src/action/attribute";
-import { PaginationState } from "@/src/shared/table/pagination";
+import { PaginationStateOld } from "@/src/shared/table/pagination";
 import { AttributeFilters } from "../../types";
 import { useStore } from "@/src/store/useStore";
 import { useDelayedFetchState } from "@/src/shared/hooks";
 
-export const useAttributes = (pag: PaginationState, fil: AttributeFilters, enabled?: boolean) => {
+export const useAttributes = (pag: PaginationStateOld, fil: AttributeFilters, enabled?: boolean) => {
 
     const setFetchStatus = useStore(v => v.setFetchStatus);
 

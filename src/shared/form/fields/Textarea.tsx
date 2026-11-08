@@ -41,7 +41,7 @@ export const Textarea = ({custom, ...rest}: Props) => {
     )
 
     return (
-        <FieldLayout {...custom} id={rest.id} required={rest.required} >
+        <FieldLayout {...custom} id={rest.id}>
             <textarea className={field+" scrollbar-thin"} {...rest} >
             </textarea>
         </FieldLayout>

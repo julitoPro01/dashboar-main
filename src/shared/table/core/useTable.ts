@@ -1,7 +1,7 @@
 "use client"
 import { ColumnDef, ColumnSizingState, getCoreRowModel, Row, RowSelectionState, useReactTable, VisibilityState } from "@tanstack/react-table";
 import { Dispatch, SetStateAction } from "react";
-import { type PaginationState } from "../pagination/types/pagination";
+import { type PaginationStateOld } from "../pagination/types/pagination.old";
 import { MetaPagination } from "../pagination";
 
 export type MetaActionType = "view" | "assign" | "edit";
@@ -12,13 +12,14 @@ export interface MetaOptions {
     styleHeader?: string
     styleBody?: string
     styleHover?: string
+    editable?:boolean
     fill?: boolean
 
     selectedId?: number
     // Paginacion
     filters?: Object
     metaPagination?: MetaPagination
-    pagination?: PaginationState
+    pagination?: PaginationStateOld
 
     // funcionalidad de la tabla
     actionType?: MetaActionType

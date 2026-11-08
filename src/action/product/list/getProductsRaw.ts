@@ -1,10 +1,10 @@
 import { Prisma } from "@/src/generated/prisma/client";
-import { PaginationState } from "@/src/shared/table/pagination";
+import { PaginationStateOld } from "@/src/shared/table/pagination";
 import { ProductFilters } from "@/src/features/products/types";
-import { createDateRangeSql } from "../../utils/dateRanger.filter";
+import { createDateRangeSql } from "../../shared/utils";
 
 export const getProductsRaw = (
-    pag: PaginationState,
+    pag: PaginationStateOld,
     filters: ProductFilters
 ) => {
     const whereConditions: Prisma.Sql[] = [

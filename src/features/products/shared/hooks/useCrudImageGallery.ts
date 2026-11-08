@@ -1,7 +1,7 @@
 import { useFieldArray, useFormContext, useFormState } from "react-hook-form";
-import { GalleryForm } from "../../../types";
 import { moveDragEnd } from "@/src/shared/sortable";
 import { ChangeEvent, useEffect } from "react";
+import { GalleryForm } from "../../types";
 
 const MAX_IMAGES = 4;
 export const useCrudImageGallery = () => {

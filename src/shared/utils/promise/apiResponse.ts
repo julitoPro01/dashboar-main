@@ -11,7 +11,7 @@ export type ApiEntityInUseData = { entity: string, count: number, isOk?: boolean
 
 //-----------------------
 
-type ErrorCode = 404 | 400 | 409 | 500;
+type ErrorCode = 401 | 404 | 400 | 409 | 500;
 
 export type ApiErrorType =
   | "BAD_REQUEST"
@@ -72,6 +72,15 @@ export const ApiResponse = {
     msg,
     error,
     data
+  }),
+
+  unauthorized: <T>(msg = "Inicia sesión para continuar", data?: T): ApiErrorReturn<T> => ({
+    ok: false,
+    code: 401,
+    errorType: "UNAUTHORIZED",
+    errorCode: "UNKNOWN",
+    msg,
+    data,
   }),
 
   serverError: <T>(msg = "Error interno del servidor", error?: unknown, data?: T): ApiErrorReturn<T> => ({

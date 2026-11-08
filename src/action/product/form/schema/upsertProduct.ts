@@ -1,3 +1,4 @@
+import { imageSchema } from "@/src/action/shared/schema";
 import { InventoryStatusType, SaleStatusType } from "@/src/generated/prisma/enums";
 import { z } from "zod";
 
@@ -44,17 +45,7 @@ export const createProductSchema = z.object({
         .string()
         .min(3, "Slug inválido"),
 
-    images: z.array(z.object({
-        isPrimary: z.boolean(),
-        displayOrder: z.number().positive(),
-        mediaFile: z.object({
-            fileName: z.string().trim(),
-            filePath: z.string().trim(),
-            fileSize: z.number(),
-            mimeType: z.string().trim()
-        })
-    })).min(1, "Agrega al menos una imagen"),
-
+    images:imageSchema.array().min(1, "Agrega al menos una imagen"),
 
     systemAttributes: z.array(z.object({
         attributeDefinitionId: z.number().int(),
@@ -88,18 +79,7 @@ export const updateBasicInformationSchema = z.object({
         .min(3).optional(),
 })
 
-export const updateGallerySchema = z.array(
-    z.object({
-        id: z.number().optional(),
-        isPrimary: z.boolean(),
-        displayOrder: z.number().positive(),
-        mediaFile: z.object({
-            fileName: z.string().trim(),
-            filePath: z.string().trim(),
-            fileSize: z.number(),
-            mimeType: z.string().trim()
-        })
-    }))
+export const updateGallerySchema = imageSchema.array()
 
 export const updateCustomAttrsSchema = z.array(
     z.object({

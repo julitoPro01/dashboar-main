@@ -20,7 +20,6 @@ import { usePathname } from "next/navigation";
 import { useFloatingPanel } from "./useFloatingPanel";
 import { FloatingPanelType } from "@/src/store/uiSlice";
 
-type FloatingSize = "sm" | "md" | "lg" | "xl";
 interface Props {
     panelType: FloatingPanelType;
     children: React.ReactNode;
@@ -30,7 +29,6 @@ interface Props {
     isVirtual?: boolean;
     overlay?: boolean;
     className?: string;
-    size?: FloatingSize;
 }
 /**
  * Aplica una apariencia predefinida.
@@ -45,7 +43,6 @@ export const FloatingPanel = ({
     isVirtual = true,
     overlay = true,
     className = "",
-    size = "sm",
 }: Props) => {
     const { isOpen, cx, cy, close } = useFloatingPanel(panelType);
     const pathname = usePathname();
@@ -123,25 +120,13 @@ export const FloatingPanel = ({
                 }} />
             }
 
-            <div
-                ref={refs.setFloating}
-                style={floatingStyles}
+            <div ref={refs.setFloating}
                 {...getFloatingProps()}
-                className={`z-50
-                    ${sizeClasses[size]}
-                    ${className}`}
-            >
+                className={`z-50 w-max ${className}`}
+                style={floatingStyles}
+                    >
                 {children}
             </div>
         </FloatingPortal>
     );
 };
-
-
-const sizeClasses: Record<FloatingSize, string> = {
-    sm: "w-52",
-    md: "w-72",
-    lg: "w-96",
-    xl: "w-[32rem]",
-};
-

@@ -2,12 +2,12 @@
 import { shallowEqual } from "@/src/shared/utils";
 import { useMemo, useRef } from "react";
 import { updatePaginationParams } from "./utils";
-import { PaginationState } from "./types";
+import { PaginationStateOld } from "./types";
 
 export const useStableUrlPagination = <
   T extends Record<string, unknown>
 >(
-  pag: PaginationState,
+  pag: PaginationStateOld,
   fil: T,
   basePath: string
 ) => {

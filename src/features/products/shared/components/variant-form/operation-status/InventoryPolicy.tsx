@@ -7,7 +7,7 @@ import { useFormContext, useFormState, useWatch } from "react-hook-form"
 
 export const InventoryPocily = () => {
 
-    const { register, control, setValue } = useFormContext<VariantForm>();
+    const { register, control, resetField } = useFormContext<VariantForm>();
 
     const { errors, dirtyFields } = useFormState({ control, name: "operationStatus.inventoryPolicy" });
 
@@ -17,15 +17,8 @@ export const InventoryPocily = () => {
 
     useEffect(() => {
 
-        setValue("operationStatus.inventoryPolicy.stockQuantity", 0, {
-            shouldDirty: true,
-            shouldValidate: true
-        });
-
-        setValue("operationStatus.inventoryPolicy.minStock", 0, {
-            shouldDirty: true,
-            shouldValidate: true
-        })
+        resetField("operationStatus.inventoryPolicy.stockQuantity");
+        resetField("operationStatus.inventoryPolicy.minStock");
 
 
     }, [notIncludeInventory])
@@ -42,7 +35,7 @@ export const InventoryPocily = () => {
                     </span>
 
                     <span className="block text-xs text-text-muted">
-                         Define cómo se gestionan las existencias de la variante
+                        Define cómo se gestionan las existencias de la variante
                     </span>
                 </div>
 
@@ -55,6 +48,7 @@ export const InventoryPocily = () => {
                             roundedSize: "sm",
                             fieldClass: "bg-surface-black",
                             positionError: "floating",
+                            disabledPlaceholder:true,
                             error: errors.operationStatus?.inventoryPolicy?.type?.message,
                             isDirty: dirtyFields.operationStatus?.inventoryPolicy?.type,
                         }}
@@ -81,7 +75,7 @@ export const InventoryPocily = () => {
                                 labelBg: "bg-surface-black",
                                 labelPosition: "top-floating",
                                 description: "Unidades físicas listas",
-                                descrPosition:"bottom",
+                                descrPosition: "bottom",
                                 roundedSize: "sm",
                                 error: errors.operationStatus?.inventoryPolicy?.stockQuantity?.message,
                                 isDirty: dirtyFields.operationStatus?.inventoryPolicy?.stockQuantity,

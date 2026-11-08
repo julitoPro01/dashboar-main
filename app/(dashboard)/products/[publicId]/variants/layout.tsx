@@ -1,13 +1,18 @@
-import { FloatingActions, UpsertVariantSideModal } from "@/src/features/products/variants";
+import { FloatingActionsBarRight, VariantRowActions, UpsertVariantSideModal, ViewVariantDetailsSideModal, CellEditorContent } from "@/src/features/products/variants";
 
 export default function LayoutVariantPage({ children }: { children: React.ReactElement }) {
     return (
         <>
             {children}
 
-            <FloatingActions />
+            <FloatingActionsBarRight/>
 
             <UpsertVariantSideModal/>
+            <CellEditorContent/>
+
+            <ViewVariantDetailsSideModal />
+
+            <VariantRowActions/>
         </>
     );
 }

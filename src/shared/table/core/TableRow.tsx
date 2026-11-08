@@ -7,7 +7,9 @@ export const HeaderRow = <T extends Record<string, any>>({ group }: { group: Hea
     return (
         <tr className="border-b border-border bg-surface">
             {group.headers.map(cell => (
-                <HeaderCell key={cell.id} header={cell} size={cell.getSize()} isResizing={cell.column.getIsResizing()} />
+                <HeaderCell key={cell.id} header={cell} size={cell.getSize()}
+                    isResizing={cell.column.getIsResizing()}
+                />
             ))}
             <th className=" w-full  border-b border-border"></th>
         </tr>
@@ -20,7 +22,6 @@ const HeaderCell = memo(({ header, size, isResizing }: HeaderCell) => {
 
     const column = header.column;
     const columnDef = column.columnDef;
-
     return (
         <th
             className={clsx("group/resize", columnDef.meta?.styleHeader)}
@@ -62,7 +63,8 @@ export type OpenPanelParams<T = Record<string, any>> = {
 
 interface RowProps {
     isSelected?: boolean,
-    canSelect?: boolean
+    canSelect?: boolean,
+    enableRowClick?: boolean,
     row: Row<any>,
     onSelect?: (original: any) => void;
     onOpenPanel?: (_: OpenPanelParams<any>) => void;
@@ -74,14 +76,15 @@ export const BodyRowMemo = memo(({ row, rowIndexId, isSelected = false, canSelec
         onSelect={onSelect} onOpenPanel={onOpenPanel} rowIndexId={rowIndexId} />
 })
 
-export const BodyRow = ({ row, rowIndexId, isSelected = false, canSelect = false, onSelect, onOpenPanel }: RowProps) => {
-
+export const BodyRow = ({ row, rowIndexId, enableRowClick = true, isSelected = false, canSelect = false, onSelect, onOpenPanel }: RowProps) => {
     return (
         <tr
-            className={`group relative cursor-pointer border-b border-border transition-colors duration-200
-                ${isSelected ? selectedStyle : "hover:bg-slate-100  hover:dark:bg-slate-800/95 "}`}
+            className={`group relative border-b border-border transition-colors duration-200
+                ${isSelected ? selectedStyle : "hover:bg-slate-100  hover:dark:bg-slate-800/95 "}
+                ${enableRowClick ? "cursor-pointer" : ""}
+                `}
             onClick={({ clientX, clientY }) => {
-
+                if (!enableRowClick) return;
                 onOpenPanel && onOpenPanel({ cx: clientX, cy: clientY, original: row.original })
                 onSelect && onSelect(row.original)
                 canSelect && row.toggleSelected();
@@ -108,24 +111,24 @@ export const BodyRow = ({ row, rowIndexId, isSelected = false, canSelect = false
     )
 }
 
-export const SortableRow = memo(({ row, isSelected = false, canSelect = false, onSelect, onOpenPanel }: RowProps) => {
+export const SortableRow = ({ row, isSelected = false, canSelect = false, onSelect, onOpenPanel, enableRowClick = true }: RowProps) => {
     const { ref, isDragging } = useSortableItemContext();
 
     return (
         <>
 
             <tr
-                className={`group relative ${isDragging ? "z-50 opacity-50" : "opacity-100"} border-b border-border transition-colors duration-200
+                className={`group relative ${isDragging ? "z-50 opacity-50" : "opacity-100"}  border-b border-border transition-colors duration-200
                 ${isSelected ? selectedStyle : "hover:bg-slate-100  hover:dark:bg-slate-800/95 "}
-                ${canSelect ? "cursor-pointer":""}
+                ${enableRowClick ? "cursor-pointer" : ""}
                 `}
                 onClick={({ clientX, clientY }) => {
-
+                    if (!enableRowClick) return;
                     onOpenPanel && onOpenPanel({ cx: clientX, cy: clientY, original: row.original })
                     onSelect && onSelect(row.original)
                     canSelect && row.toggleSelected();
                 }}
-                ref={ref }
+                ref={ref}
             >
                 {
                     row.getVisibleCells().map((cell) => {
@@ -146,29 +149,30 @@ export const SortableRow = memo(({ row, isSelected = false, canSelect = false, o
 
         </>
     )
-})
+}
 
-// TODO: Solo de prueba
-export const DynamicBodyRow = ({ row, isSelected = false, canSelect = false, onSelect, onOpenPanel }: RowProps) => {
+export const DynamicSortableRow = ({ row, isSelected = false, canSelect = false, onSelect, onOpenPanel, enableRowClick = true }: RowProps) => {
+    const { ref, isDragging } = useSortableItemContext();
+
     return (
         <>
+
             <tr
-                className={`group relative cursor-pointer hover:bg-slate-100 hover:dark:bg-slate-800 transition-colors duration-200
-                ${isSelected && selectedStyle}`}
+                className={`group relative ${isDragging ? "z-50 opacity-50" : "opacity-100"}  border-b border-border transition-colors duration-200
+                ${isSelected ? selectedStyle : enableRowClick ? "hover:bg-slate-100  hover:dark:bg-slate-800/95 cursor-pointer" : ""}
+                `}
                 onClick={({ clientX, clientY }) => {
+                    if (!enableRowClick) return;
                     onOpenPanel && onOpenPanel({ cx: clientX, cy: clientY, original: row.original })
                     onSelect && onSelect(row.original)
                     canSelect && row.toggleSelected();
                 }}
+                ref={ref}
             >
                 {
                     row.getVisibleCells().map((cell) => {
 
                         return <td key={cell.id}
-                            className={clsx(
-                                cell.column.columnDef.meta?.styleBody,
-                                cell.column.getIsFirstColumn() && isSelected ? selectedStyle : cell.column.columnDef.meta?.styleHover
-                            )}
                             style={{ width: cell.column.getSize() }}
                         >
                             {flexRender(cell.column.columnDef.cell, cell.getContext())}

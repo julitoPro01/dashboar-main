@@ -1,4 +1,4 @@
-import { dateFormatter } from "../../utils";
+import { dateFormatter } from "../../utils/date";
 
 export const DateColumn = ({ createdAt, updatedAt }: { createdAt: Date, updatedAt: Date | null }) => (
   <div className="flex flex-col items-end leading-tight">

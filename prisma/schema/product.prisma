@@ -23,9 +23,10 @@ model Product {
 
   saleStatus SaleStatusType @default(COMING_SOON)
   inventoryStatus InventoryStatusType
-  // saleStatus SaleStatus @relation(fields: [saleStatusId], references: [id])
-  // inventoryStatus InventoryStatus @relation(fields: [inventoryStatusId], references: [id])
-  
+
+  inactiveReason ProductInactiveReason?
+
+
   createdBy String
   createdById Int
   updatedBy String?
@@ -67,14 +68,11 @@ model Product {
   @@map("products")
 }
 
+enum ProductInactiveReason {
+  MANUAL
+  NO_ACTIVE_VARIANTS
+}
 
-// model SaleStatus{
-//   id Int @id
-//   name SaleStatusType
-//   productVariants ProductVariant[]
-//   products Product[]
-//   @@map("sales_status")
-// }
 
 enum SaleStatusType {
   AVAILABLE

@@ -2,16 +2,16 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { withQueryParams } from "@/src/shared/routes";
-import { SortByType } from "../../pagination/types/pagination";
-import { parsePaginationParams } from "../../pagination/utils";
+import { SortByTypeOld } from "../../pagination/types/pagination.old";
+import { parsePaginationParamsOld } from "../../pagination/utils";
 import { toggleSortOrder } from "../toggleSortOrder";
 
-export const useSortOrderFilter = ( defSort: SortByType, sortByAcceptOnly: SortByType[] ) => {
+export const useSortOrderFilter = ( defSort: SortByTypeOld, sortByAcceptOnly: SortByTypeOld[] ) => {
 
     const search = useSearchParams();
     const router = useRouter();
 
-    const parsed = parsePaginationParams(search, { sortByAcceptOnly: sortByAcceptOnly })
+    const parsed = parsePaginationParamsOld(search, { sortByAcceptOnly: sortByAcceptOnly })
 
     const handleToggle = () => {
         
